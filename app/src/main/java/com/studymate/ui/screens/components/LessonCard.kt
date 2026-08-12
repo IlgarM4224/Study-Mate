@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -30,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.studymate.data.Lesson
+import com.studymate.data.TestData
 import com.studymate.ui.theme.StudyMateTheme
 
 
@@ -42,21 +47,25 @@ fun LessonCard(
     location: String,
     startTime: String
 ) {
+    val smallPadding = 8.dp
     ElevatedCard (
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(8.dp)
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column( modifier = Modifier.padding(8.dp) ) {
             LessonName(
                 name = name,
                 onEditClick = {},
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(smallPadding)
             )
 
             Text(
                 text = teacher,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = smallPadding)
             )
 
             Spacer(Modifier.height(12.dp))
@@ -65,8 +74,9 @@ fun LessonCard(
                 type = type,
                 location = location,
                 startTime = startTime,
-                modifier = Modifier.fillMaxWidth()
-
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(smallPadding)
             )
         }
     }
@@ -165,7 +175,30 @@ private fun LessonTypeChip(type: String) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = false)
+@Composable
+fun LessonsList(
+    modifier: Modifier = Modifier,
+    lessons: List<Lesson> = emptyList()
+) {
+    LazyColumn(modifier = modifier) {
+        items(lessons.size) { lesson ->
+            LessonCard(
+                name = lessons[lesson].name,
+                teacher = lessons[lesson].teacher,
+                type = lessons[lesson].type,
+                location = lessons[lesson].location,
+                startTime = lessons[lesson].startTime,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+    }
+}
+
+// Preview section
+
+@Preview
 @Composable
 fun LessonCardPreview() {
     StudyMateTheme(darkTheme = false) {
@@ -184,7 +217,7 @@ fun LessonCardPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = false)
+@Preview
 @Composable
 fun LessonCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -198,6 +231,32 @@ fun LessonCardDarkPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun LessonsListPreview(){
+    StudyMateTheme {
+        Surface {
+            LessonsList(
+                modifier = Modifier.fillMaxSize(),
+                lessons = TestData.getLessons()
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun LessonsListDarkPreview(){
+    StudyMateTheme(darkTheme = true) {
+        Surface {
+            LessonsList(
+                modifier = Modifier.fillMaxSize().statusBarsPadding(),
+                lessons = TestData.getLessons()
             )
         }
     }
