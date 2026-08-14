@@ -5,9 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.studymate.data.TestData
+import androidx.compose.ui.unit.dp
 import com.studymate.ui.screens.ScheduleScreen
 import com.studymate.ui.theme.StudyMateTheme
 
@@ -19,8 +20,9 @@ class MainActivity : ComponentActivity() {
             StudyMateTheme{
                 Surface {
                     ScheduleScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        lessons = TestData.getLessons()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp),
                     )
                 }
             }
