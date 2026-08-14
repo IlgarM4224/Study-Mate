@@ -18,8 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,17 +44,19 @@ fun LessonCard(
     teacher: String,
     type: String,
     location: String,
-    startTime: String
+    startTime: String,
+    onCardClick: () -> Unit,
+    onEditClick: () -> Unit
 ) {
     val smallPadding = 8.dp
-    ElevatedCard (
+    Card (
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(2.dp)
+        onClick = onCardClick
     ) {
         Column( modifier = Modifier.padding(8.dp) ) {
             LessonName(
                 name = name,
-                onEditClick = {},
+                onEditClick = onEditClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(smallPadding)
@@ -178,9 +179,19 @@ private fun LessonTypeChip(type: String) {
 @Composable
 fun LessonsList(
     modifier: Modifier = Modifier,
-    lessons: List<Lesson> = emptyList()
+    lessons: List<Lesson> = emptyList(),
+    onCardClick: () -> Unit,
+    onEditClick: () -> Unit,
+    weekRowAndType: @Composable () -> Unit = {}
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            weekRowAndType()
+        }
+
         items(lessons.size) { lesson ->
             LessonCard(
                 name = lessons[lesson].name,
@@ -188,9 +199,9 @@ fun LessonsList(
                 type = lessons[lesson].type,
                 location = lessons[lesson].location,
                 startTime = lessons[lesson].startTime,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                onCardClick = onCardClick,
+                onEditClick = onEditClick,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
@@ -209,6 +220,8 @@ fun LessonCardPreview() {
                 type = "Lecture",
                 location = "301",
                 startTime = "8:30",
+                onCardClick = {},
+                onEditClick = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -228,6 +241,8 @@ fun LessonCardDarkPreview() {
                 type = "Lecture",
                 location = "301",
                 startTime = "8:30",
+                onCardClick = {},
+                onEditClick = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -243,7 +258,9 @@ fun LessonsListPreview(){
         Surface {
             LessonsList(
                 modifier = Modifier.fillMaxSize(),
-                lessons = TestData.getLessons()
+                lessons = TestData.getLessons(),
+                onEditClick = {},
+                onCardClick = {}
             )
         }
     }
@@ -256,7 +273,9 @@ fun LessonsListDarkPreview(){
         Surface {
             LessonsList(
                 modifier = Modifier.fillMaxSize().statusBarsPadding(),
-                lessons = TestData.getLessons()
+                lessons = TestData.getLessons(),
+                onEditClick = {},
+                onCardClick = {}
             )
         }
     }
