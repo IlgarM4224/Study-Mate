@@ -11,5 +11,4 @@ data class Lesson(
 data class Day(
     val day: String,
     val date: String,
-    val selected: Boolean = false
 )

@@ -52,7 +52,7 @@ object TestData {
     )
 
     fun getWeek() = listOf(
-        Day(day = "Mon", date = "13 may", selected = true),
+        Day(day = "Mon", date = "13 may"),
         Day(day = "Tue", date = "14 may"),
         Day(day = "Wed", date = "15 may"),
         Day(day = "Thu", date = "16 may"),
