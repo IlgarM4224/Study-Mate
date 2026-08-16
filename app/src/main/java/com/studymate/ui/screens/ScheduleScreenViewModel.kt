@@ -6,30 +6,98 @@ import com.studymate.data.Lesson
 import com.studymate.data.TestData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
+import java.util.Locale
+
+data class ScheduleUIState(
+    val lessons: List<Lesson>,
+    val weekUiState: WeekUiState
+)
+
+data class WeekUiState(
+    val week: List<Day>,
+    val weekType: String,
+    val isCurrentWeek: Boolean,
+    val selectedDay: Day,
+    val currentDay: LocalDate = LocalDate.now()
+)
 
 class ScheduleScreenViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(
         ScheduleUIState(
             lessons = TestData.getLessons(),
-            week = TestData.getWeek(),
-            weekType = "Current"
+            weekUiState = WeekUiState(
+                week = getWeekDays(LocalDate.now()),
+                weekType = "Upper",
+                isCurrentWeek = true,
+                selectedDay = LocalDate.now().toDay(),
+                currentDay = LocalDate.now()
+            )
         )
     )
     val uiState = _uiState.asStateFlow()
 
+    // Card functions
     fun onEditeClick() {}
 
     fun onCardClick() {}
 
-    fun onNextWeekClick() {}
-    fun onCurrentWeekClick() {}
+    // WeekRowAndType functions
+    fun onNextWeekClick() {
+        val nextWeekDay = LocalDate.now().plusDays(7)
+        val nextWeek = getWeekDays(currentDay = nextWeekDay)
 
-    fun onDayClick() {}
+        _uiState.update {
+            it.copy(
+                weekUiState = it.weekUiState.copy(
+                    week = nextWeek,
+                    isCurrentWeek = false,
+                    selectedDay = nextWeek[0]
+                )
+            )
+        }
+    }
+    fun onCurrentWeekClick() {
+        _uiState.update {
+            it.copy(
+                weekUiState = it.weekUiState.copy(
+                    week = getWeekDays(LocalDate.now()),
+                    isCurrentWeek = true,
+                    selectedDay = LocalDate.now().toDay()
+                )
+            )
+        }
+    }
+
+    fun onDayClick(day: Day) {
+        _uiState.update {
+            it.copy(
+                weekUiState = it.weekUiState.copy(selectedDay = day)
+            )
+        }
+    }
 
 }
 
-data class ScheduleUIState(
-    val lessons: List<Lesson>,
-    val week: List<Day>,
-    val weekType: String,
-)
+private fun getWeekDays(currentDay: LocalDate): List<Day> {
+    val currentMonday = currentDay.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+
+    return (0..6L).map { offset ->
+        val date = currentMonday.plusDays(offset)
+        date.toDay()
+    }
+}
+
+private fun LocalDate.toDay(): Day {
+    val dayNameFormatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
+    val dateFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+
+    return Day(
+        day = format(dayNameFormatter).replaceFirstChar { it.uppercase() },
+        date = format(dateFormatter),
+    )
+}

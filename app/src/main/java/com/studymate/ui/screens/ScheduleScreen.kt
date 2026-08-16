@@ -19,23 +19,23 @@ import com.studymate.ui.screens.components.LessonTopAppBar
 import com.studymate.ui.screens.components.LessonsList
 import com.studymate.ui.screens.components.WeekRowAndType
 import com.studymate.ui.theme.StudyMateTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Composable
 fun ScheduleScreen(
     modifier: Modifier = Modifier,
-    viewModel: ScheduleScreenViewModel = ScheduleScreenViewModel()
+    viewModel: ScheduleScreenViewModel =  viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     ScheduleScreenContend(
         modifier = modifier,
         lessons = uiState.lessons,
-        week = uiState.week,
-        weekType = uiState.weekType,
+        weekUiState = uiState.weekUiState,
         onEditClick = { viewModel.onEditeClick() },
         onCardClick = { viewModel.onCardClick() },
-        onDayClick = { viewModel.onDayClick()},
+        onDayClick =  viewModel::onDayClick,
         onNextWeekClick = { viewModel.onNextWeekClick() },
         onCurrentWeekClick = { viewModel.onCurrentWeekClick() },
     )
@@ -44,11 +44,10 @@ fun ScheduleScreen(
 fun ScheduleScreenContend(
     modifier: Modifier = Modifier,
     lessons: List<Lesson> = emptyList(),
-    week: List<Day> = emptyList(),
-    weekType: String,
+    weekUiState: WeekUiState,
     onEditClick: () -> Unit,
     onCardClick: () -> Unit,
-    onDayClick: () -> Unit,
+    onDayClick: (Day) -> Unit,
     onNextWeekClick: () -> Unit,
     onCurrentWeekClick: () -> Unit
 ) {
@@ -75,8 +74,7 @@ fun ScheduleScreenContend(
                 onCardClick = onCardClick,
                 weekRowAndType = {
                     WeekRowAndType(
-                        week = week,
-                        weekType = weekType,
+                        weekUiState = weekUiState,
                         onDayClick = onDayClick,
                         onNextWeekClick = onNextWeekClick,
                         onCurrentWeekClick = onCurrentWeekClick,
@@ -98,8 +96,12 @@ fun ScheduleScreenContendLightPreview() {
                     .fillMaxSize()
                     .padding(4.dp),
                 lessons = TestData.getLessons(),
-                week = TestData.getWeek(),
-                weekType = "Upper",
+                weekUiState = WeekUiState(
+                    week = TestData.getWeek(),
+                    weekType = "Upper",
+                    isCurrentWeek = false,
+                    selectedDay = TestData.getWeek()[0],
+                ),
                 onEditClick = {},
                 onCardClick = {},
                 onNextWeekClick = {},
@@ -120,8 +122,12 @@ fun ScheduleScreenContendDarkPreview() {
                     .fillMaxSize()
                     .padding(4.dp),
                 lessons = TestData.getLessons(),
-                week = TestData.getWeek(),
-                weekType = "Lower",
+                weekUiState = WeekUiState(
+                    week = TestData.getWeek(),
+                    weekType = "Upper",
+                    isCurrentWeek = true,
+                    selectedDay = TestData.getWeek()[0],
+                ),
                 onEditClick = {},
                 onCardClick = {},
                 onNextWeekClick = {},

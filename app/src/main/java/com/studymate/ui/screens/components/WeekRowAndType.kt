@@ -2,6 +2,7 @@ package com.studymate.ui.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,15 +28,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.data.Day
 import com.studymate.data.TestData
+import com.studymate.ui.screens.WeekUiState
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
 fun WeekRowAndType(
     modifier: Modifier,
-    week: List<Day>,
-    weekType: String,
-    onDayClick: () -> Unit = {},
-    isCurrentWeek: Boolean = true,
+    weekUiState: WeekUiState,
+    onDayClick: (Day) -> Unit = {},
     onCurrentWeekClick: () -> Unit,
     onNextWeekClick: () -> Unit
 ) {
@@ -44,8 +44,8 @@ fun WeekRowAndType(
         verticalArrangement = Arrangement.Center,
     ) {
         WeekType(
-            type = weekType,
-            isCurrentWeek = isCurrentWeek,
+            type = weekUiState.weekType,
+            isCurrentWeek = weekUiState.isCurrentWeek,
             onCurrentWeekClick = onCurrentWeekClick,
             onNextWeekClick = onNextWeekClick,
             modifier = Modifier.fillMaxWidth()
@@ -55,7 +55,8 @@ fun WeekRowAndType(
         Spacer(Modifier.height(4.dp))
 
         WeekRow(
-            week = week,
+            week = weekUiState.week,
+            selectedDay = weekUiState.selectedDay,
             onDayClick = onDayClick,
             modifier = Modifier.fillMaxWidth()
         )
@@ -122,19 +123,21 @@ private fun WeekChoiceButton(
 private fun WeekRow(
     modifier: Modifier = Modifier,
     week: List<Day>,
-    onDayClick: () -> Unit = {}
+    selectedDay: Day,
+    onDayClick: (Day) -> Unit = {}
 ) {
-    LazyRow(
+    Row(
         modifier = modifier
+            .horizontalScroll(rememberScrollState())
             .clip(RoundedCornerShape(12.dp))
             .padding(vertical = 8.dp, horizontal = 4.dp)
     ) {
-        items(week.size) { day ->
+        week.forEach { day ->
             DayChip(
-                day = week[day].day,
-                date = week[day].date,
-                selected = week[day].selected,
-                onClick = onDayClick,
+                day = day.day,
+                date = day.date,
+                selected = day == selectedDay,
+                onClick = { onDayClick(day) },
             )
             Spacer(Modifier.width(4.dp))
         }
@@ -199,8 +202,12 @@ fun WeekRowAndTypePreview() {
     StudyMateTheme {
         Surface {
             WeekRowAndType(
-                week = TestData.getWeek(),
-                weekType = "Upper",
+                weekUiState = WeekUiState(
+                    week = TestData.getWeek(),
+                    weekType = "Upper",
+                    isCurrentWeek = true,
+                    selectedDay = TestData.getWeek()[0],
+                ),
                 onDayClick = {},
                 onNextWeekClick = {},
                 onCurrentWeekClick = {},
@@ -218,8 +225,12 @@ fun WeekRowAndTypeDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             WeekRowAndType(
-                week = TestData.getWeek(),
-                weekType = "Upper",
+                weekUiState = WeekUiState(
+                    week = TestData.getWeek(),
+                    weekType = "Upper",
+                    isCurrentWeek = false,
+                    selectedDay = TestData.getWeek()[0],
+                ),
                 onDayClick = {},
                 onNextWeekClick = {},
                 onCurrentWeekClick = {},
@@ -282,7 +293,8 @@ fun WeekRowPreview() {
         Surface {
             WeekRow(
                 modifier = Modifier.fillMaxWidth(),
-                week = TestData.getWeek()
+                week = TestData.getWeek(),
+                selectedDay = TestData.getWeek()[0]
             )
         }
     }
@@ -295,7 +307,8 @@ fun WeekRowDarkPreview() {
         Surface {
             WeekRow(
                 modifier = Modifier.fillMaxWidth(),
-                week = TestData.getWeek()
+                week = TestData.getWeek(),
+                selectedDay = TestData.getWeek()[2]
             )
         }
     }
