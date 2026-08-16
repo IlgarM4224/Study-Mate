@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.studymate"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -47,6 +47,11 @@ dependencies {
 
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.compose.material.icons.extended)
+
+    implementation(libs.androidx.compose.material3.window.size.class1)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
