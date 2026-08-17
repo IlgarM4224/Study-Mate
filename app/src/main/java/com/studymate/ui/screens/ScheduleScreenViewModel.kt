@@ -28,7 +28,7 @@ data class WeekUiState(
 
 data class LessonCardUIState(
     val lessons: List<Lesson>,
-    var clickedCardId: Int? = null
+    val clickedCardId: Int? = null
 )
 
 class ScheduleScreenViewModel: ViewModel() {
@@ -47,7 +47,7 @@ class ScheduleScreenViewModel: ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     // Card functions
-    fun onEditeClick() {}
+    fun onEditClick() {}
 
     fun onCardClick(cardId: Int) {
         _uiState.update {

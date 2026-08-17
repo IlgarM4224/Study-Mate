@@ -28,11 +28,11 @@ fun ScheduleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    ScheduleScreenContend(
+    ScheduleScreenContent(
         modifier = modifier,
         lessonCardUIState = uiState.lessonCardUIState,
         weekUiState = uiState.weekUiState,
-        onEditClick = { viewModel.onEditeClick() },
+        onEditClick = { viewModel.onEditClick() },
         onCardClick = viewModel::onCardClick,
         onDayClick =  viewModel::onDayClick,
         onNextWeekClick = { viewModel.onNextWeekClick() },
@@ -40,7 +40,7 @@ fun ScheduleScreen(
     )
 }
 @Composable
-fun ScheduleScreenContend(
+fun ScheduleScreenContent(
     modifier: Modifier = Modifier,
     lessonCardUIState: LessonCardUIState,
     weekUiState: WeekUiState,
@@ -87,10 +87,10 @@ fun ScheduleScreenContend(
 
 @Preview(showSystemUi = true)
 @Composable
-fun ScheduleScreenContendLightPreview() {
+fun ScheduleScreenContentLightPreview() {
     StudyMateTheme {
         Surface {
-            ScheduleScreenContend(
+            ScheduleScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
@@ -113,10 +113,10 @@ fun ScheduleScreenContendLightPreview() {
 
 @Preview(showSystemUi = true)
 @Composable
-fun ScheduleScreenContendDarkPreview() {
+fun ScheduleScreenContentDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
-            ScheduleScreenContend(
+            ScheduleScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
