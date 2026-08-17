@@ -12,14 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.data.Day
-import com.studymate.data.Lesson
 import com.studymate.data.TestData
 import com.studymate.ui.screens.components.LessonTopAppBar
 import com.studymate.ui.screens.components.LessonsList
 import com.studymate.ui.screens.components.WeekRowAndType
 import com.studymate.ui.theme.StudyMateTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Composable
@@ -31,10 +30,10 @@ fun ScheduleScreen(
 
     ScheduleScreenContend(
         modifier = modifier,
-        lessons = uiState.lessons,
+        lessonCardUIState = uiState.lessonCardUIState,
         weekUiState = uiState.weekUiState,
         onEditClick = { viewModel.onEditeClick() },
-        onCardClick = { viewModel.onCardClick() },
+        onCardClick = viewModel::onCardClick,
         onDayClick =  viewModel::onDayClick,
         onNextWeekClick = { viewModel.onNextWeekClick() },
         onCurrentWeekClick = { viewModel.onCurrentWeekClick() },
@@ -43,10 +42,10 @@ fun ScheduleScreen(
 @Composable
 fun ScheduleScreenContend(
     modifier: Modifier = Modifier,
-    lessons: List<Lesson> = emptyList(),
+    lessonCardUIState: LessonCardUIState,
     weekUiState: WeekUiState,
     onEditClick: () -> Unit,
-    onCardClick: () -> Unit,
+    onCardClick: (Int) -> Unit,
     onDayClick: (Day) -> Unit,
     onNextWeekClick: () -> Unit,
     onCurrentWeekClick: () -> Unit
@@ -66,7 +65,7 @@ fun ScheduleScreenContend(
                 .fillMaxSize()
         ) {
             LessonsList(
-                lessons = lessons,
+                lessonsState = lessonCardUIState ,
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
@@ -95,7 +94,7 @@ fun ScheduleScreenContendLightPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessons = TestData.getLessons(),
+                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons()),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",
@@ -121,7 +120,7 @@ fun ScheduleScreenContendDarkPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessons = TestData.getLessons(),
+                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons()),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",

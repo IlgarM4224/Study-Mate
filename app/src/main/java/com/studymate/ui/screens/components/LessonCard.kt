@@ -1,5 +1,6 @@
 package com.studymate.ui.screens.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,9 +34,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.data.Lesson
 import com.studymate.data.TestData
+import com.studymate.ui.screens.LessonCardUIState
 import com.studymate.ui.theme.StudyMateTheme
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -44,14 +48,15 @@ fun LessonCard(
     teacher: String,
     type: String,
     location: String,
-    startTime: String,
+    startTime: LocalTime,
+    isCardClicked: Boolean = false,
     onCardClick: () -> Unit,
     onEditClick: () -> Unit
 ) {
     val smallPadding = 8.dp
     Card (
         modifier = modifier,
-        onClick = onCardClick
+        onClick = { onCardClick() }
     ) {
         Column( modifier = Modifier.padding(8.dp) ) {
             LessonName(
@@ -71,15 +76,64 @@ fun LessonCard(
 
             Spacer(Modifier.height(12.dp))
 
+            AnimatedVisibility(visible = isCardClicked) {
+                LessonStartEndTime(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(smallPadding),
+                    startTime = startTime,
+                    endTime = startTime.plusMinutes(90)
+                )
+            }
+
             LessonTypeLocationTime(
                 type = type,
                 location = location,
-                startTime = startTime,
+                startTime = if(isCardClicked) null else startTime,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(smallPadding)
             )
         }
+    }
+}
+
+@Composable
+private fun LessonStartEndTime(
+    modifier: Modifier = Modifier,
+    startTime: LocalTime,
+    endTime: LocalTime
+) {
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = startTime.format(timeFormatter),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        LinearProgressIndicator(
+            progress = { 0.6f } ,
+            color = MaterialTheme.colorScheme.primary,
+            gapSize = 0.dp,
+            modifier = Modifier.weight(1f)
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        Text(
+            text = endTime.format(timeFormatter),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -122,8 +176,10 @@ private fun LessonTypeLocationTime(
     modifier: Modifier = Modifier,
     type: String,
     location: String,
-    startTime: String
+    startTime: LocalTime?
 ) {
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -150,12 +206,14 @@ private fun LessonTypeLocationTime(
             )
         }
 
-        Text(
-            text = startTime,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.primary
-        )
+        if (startTime != null) {
+            Text(
+                text = startTime.format(timeFormatter),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 
@@ -179,8 +237,8 @@ private fun LessonTypeChip(type: String) {
 @Composable
 fun LessonsList(
     modifier: Modifier = Modifier,
-    lessons: List<Lesson> = emptyList(),
-    onCardClick: () -> Unit,
+    lessonsState: LessonCardUIState,
+    onCardClick: (Int) -> Unit,
     onEditClick: () -> Unit,
     weekRowAndType: @Composable () -> Unit = {}
 ) {
@@ -192,14 +250,16 @@ fun LessonsList(
             weekRowAndType()
         }
 
-        items(lessons.size) { lesson ->
+        items(lessonsState.lessons.size) { id ->
+            val les = lessonsState.lessons
             LessonCard(
-                name = lessons[lesson].name,
-                teacher = lessons[lesson].teacher,
-                type = lessons[lesson].type,
-                location = lessons[lesson].location,
-                startTime = lessons[lesson].startTime,
-                onCardClick = onCardClick,
+                name = les[id].name,
+                teacher = les[id].teacher,
+                type = les[id].type,
+                location = les[id].location,
+                startTime = les[id].startTime,
+                isCardClicked = id == lessonsState.clickedCardId,
+                onCardClick = { onCardClick(id) },
                 onEditClick = onEditClick,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -211,6 +271,34 @@ fun LessonsList(
 
 @Preview
 @Composable
+fun LessonStartEndTimePreview(){
+    StudyMateTheme {
+        Surface {
+            LessonStartEndTime(
+                startTime = LocalTime.of(8,30),
+                endTime = LocalTime.of(8,30).plusMinutes(90),
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun LessonStartEndTimeDarkPreview(){
+    StudyMateTheme(darkTheme = true) {
+        Surface {
+            LessonStartEndTime(
+                startTime = LocalTime.of(8,30),
+                endTime = LocalTime.of(8,30).plusMinutes(90),
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 fun LessonCardPreview() {
     StudyMateTheme(darkTheme = false) {
         Surface {
@@ -219,7 +307,8 @@ fun LessonCardPreview() {
                 teacher = "Abbas",
                 type = "Lecture",
                 location = "301",
-                startTime = "8:30",
+                startTime = LocalTime.of(8,30),
+                isCardClicked = true,
                 onCardClick = {},
                 onEditClick = {},
                 modifier = Modifier
@@ -240,7 +329,8 @@ fun LessonCardDarkPreview() {
                 teacher = "Abbas",
                 type = "Lecture",
                 location = "301",
-                startTime = "8:30",
+                startTime = LocalTime.of(8,30),
+                isCardClicked = true,
                 onCardClick = {},
                 onEditClick = {},
                 modifier = Modifier
@@ -258,7 +348,7 @@ fun LessonsListPreview(){
         Surface {
             LessonsList(
                 modifier = Modifier.fillMaxSize(),
-                lessons = TestData.getLessons(),
+                lessonsState = LessonCardUIState(lessons = TestData.getLessons()),
                 onEditClick = {},
                 onCardClick = {}
             )
@@ -273,7 +363,7 @@ fun LessonsListDarkPreview(){
         Surface {
             LessonsList(
                 modifier = Modifier.fillMaxSize().statusBarsPadding(),
-                lessons = TestData.getLessons(),
+                lessonsState = LessonCardUIState(lessons = TestData.getLessons()),
                 onEditClick = {},
                 onCardClick = {}
             )

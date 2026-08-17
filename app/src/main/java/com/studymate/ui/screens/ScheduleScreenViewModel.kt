@@ -14,7 +14,7 @@ import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 
 data class ScheduleUIState(
-    val lessons: List<Lesson>,
+    val lessonCardUIState: LessonCardUIState,
     val weekUiState: WeekUiState
 )
 
@@ -26,10 +26,15 @@ data class WeekUiState(
     val currentDay: LocalDate = LocalDate.now()
 )
 
+data class LessonCardUIState(
+    val lessons: List<Lesson>,
+    var clickedCardId: Int? = null
+)
+
 class ScheduleScreenViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(
         ScheduleUIState(
-            lessons = TestData.getLessons(),
+            lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons()),
             weekUiState = WeekUiState(
                 week = getWeekDays(LocalDate.now()),
                 weekType = "Upper",
@@ -44,7 +49,15 @@ class ScheduleScreenViewModel: ViewModel() {
     // Card functions
     fun onEditeClick() {}
 
-    fun onCardClick() {}
+    fun onCardClick(cardId: Int) {
+        _uiState.update {
+            it.copy(
+                lessonCardUIState = it.lessonCardUIState.copy(
+                    clickedCardId = if (it.lessonCardUIState.clickedCardId == cardId) null else cardId
+                )
+            )
+        }
+    }
 
     // WeekRowAndType functions
     fun onNextWeekClick() {

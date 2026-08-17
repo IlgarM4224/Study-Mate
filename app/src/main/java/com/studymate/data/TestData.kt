@@ -1,13 +1,15 @@
 package com.studymate.data
 
+import java.time.LocalTime
+
 object TestData {
     fun getLessons() = listOf(
         Lesson(
             name = "Programming basics",
-            teacher = "Hijran",
+            teacher = "Hicran",
             type = "Lecture",
             location = "409",
-            startTime = "8:30",
+            startTime = LocalTime.of(8,30),
         ),
 
         Lesson(
@@ -15,7 +17,7 @@ object TestData {
             teacher = "Alla",
             type = "Seminar",
             location = "401",
-            startTime = "10:15",
+            startTime = LocalTime.of(10,15),
         ),
 
         Lesson(
@@ -23,7 +25,7 @@ object TestData {
             teacher = "Abbas",
             type = "Lecture",
             location = "202",
-            startTime = "12:00",
+            startTime = LocalTime.of(12,0),
         ),
 
         Lesson(
@@ -31,7 +33,7 @@ object TestData {
             teacher = "Adil",
             type = "Seminar",
             location = "311",
-            startTime = "13:50",
+            startTime = LocalTime.of(13,50),
         ),
 
         Lesson(
@@ -39,7 +41,7 @@ object TestData {
             teacher = "Murad",
             type = "Lecture",
             location = "200",
-            startTime = "15:35",
+            startTime = LocalTime.of(15,35),
         ),
 
         Lesson(
@@ -47,7 +49,7 @@ object TestData {
             teacher = "Anton",
             type = "Seminar",
             location = "405",
-            startTime = "17:20",
+            startTime = LocalTime.of(17,20),
         )
     )
 
@@ -56,7 +58,7 @@ object TestData {
         Day(day = "Tue", date = "14 may"),
         Day(day = "Wed", date = "15 may"),
         Day(day = "Thu", date = "16 may"),
-        Day(day = "Fri", date = "17 may",),
+        Day(day = "Fri", date = "17 may"),
         Day(day = "Sat", date = "18 may"),
         Day(day = "Sun", date = "19 may"),
     )
