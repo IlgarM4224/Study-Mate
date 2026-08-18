@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +60,7 @@ fun LessonCard(
         onClick = { onCardClick() }
     ) {
         Column( modifier = Modifier.padding(8.dp) ) {
-            LessonName(
+            SubjectName(
                 name = name,
                 onEditClick = onEditClick,
                 modifier = Modifier
@@ -89,7 +90,8 @@ fun LessonCard(
             LessonTypeLocationTime(
                 type = type,
                 location = location,
-                startTime = if(isCardClicked) null else startTime,
+                startTime = startTime,
+                showTime = !isCardClicked,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(smallPadding)
@@ -138,7 +140,7 @@ private fun LessonStartEndTime(
 }
 
 @Composable
-private fun LessonName(
+fun SubjectName(
     modifier: Modifier = Modifier,
     name: String,
     onEditClick: () -> Unit,
@@ -176,7 +178,8 @@ private fun LessonTypeLocationTime(
     modifier: Modifier = Modifier,
     type: String,
     location: String,
-    startTime: LocalTime?
+    startTime: LocalTime?,
+    showTime: Boolean
 ) {
     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
@@ -186,7 +189,7 @@ private fun LessonTypeLocationTime(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            LessonTypeChip(type = type)
+            Chip(label = type, textStyle = MaterialTheme.typography.labelSmall)
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -207,27 +210,33 @@ private fun LessonTypeLocationTime(
         }
 
         if (startTime != null) {
-            Text(
-                text = startTime.format(timeFormatter),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
-            )
+            AnimatedVisibility(visible = showTime) {
+                Text(
+                    text = startTime.format(timeFormatter),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun LessonTypeChip(type: String) {
+fun Chip(
+    label: String,
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
-            text = type,
-            style = MaterialTheme.typography.labelSmall,
+            text = label,
+            style = textStyle,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             fontWeight = FontWeight.Medium
         )
@@ -261,7 +270,9 @@ fun LessonsList(
                 isCardClicked = id == lessonsState.clickedCardId,
                 onCardClick = { onCardClick(id) },
                 onEditClick = onEditClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
     }
