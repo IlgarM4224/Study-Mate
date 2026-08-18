@@ -62,5 +62,108 @@ object TestData {
         Day(day = "Sat", date = "18 may"),
         Day(day = "Sun", date = "19 may"),
     )
+
+    fun getSubjects() = listOf(
+        Subject(
+            name = "Programming basics",
+            creditScore = 8,
+            hours = 75,
+            teacher = "Hicran",
+            semester = 1,
+            limit = 12,
+            missedLessons = 4
+        ),
+
+        Subject(
+            name = "Web technologies",
+            creditScore = 6,
+            hours = 60,
+            teacher = "Alla",
+            semester = 1,
+            limit = 10,
+            missedLessons = 3
+        ),
+
+        Subject(
+            name = "Mathematical analysis",
+            creditScore = 6,
+            hours = 60,
+            teacher = "Abbas",
+            semester = 1,
+            limit = 10,
+            missedLessons = 1
+        ),
+
+        Subject(
+            name = "Analytical geometry",
+            creditScore = 4,
+            hours = 45,
+            teacher = "Alla",
+            semester = 1,
+            limit = 8,
+            missedLessons = 0
+        ),
+
+        Subject(
+            name = "Physics",
+            creditScore = 4,
+            hours = 30,
+            teacher = "Murad",
+            semester = 1,
+            limit = 30,
+            missedLessons = 1
+        ),
+
+        Subject(
+            name = "Databases",
+            creditScore = 5,
+            hours = 45,
+            teacher = "Anton",
+            semester = 1,
+            limit = 4,
+            missedLessons = 0
+        ),
+
+        Subject(
+            name = "Programming technologies",
+            creditScore = 8,
+            hours = 90,
+            teacher = "Fuad",
+            semester = 1,
+            limit = 15,
+            missedLessons = 4
+        ),
+
+        Subject(
+            name = "Information technology",
+            creditScore = 3,
+            hours = 30,
+            teacher = "Alla",
+            semester = 1,
+            limit = 3,
+            missedLessons = 2
+        ),
+
+        Subject(
+            name = "Comprehensive analysis",
+            creditScore = 6,
+            hours = 60,
+            teacher = "Abbas",
+            semester = 1,
+            limit = 10,
+            missedLessons = 1
+        ),
+
+        Subject(
+            name = "Linear algebra",
+            creditScore = 4,
+            hours = 45,
+            teacher = "Adil",
+            semester = 1,
+            limit = 6,
+            missedLessons = 0
+        ),
+
+    )
 }
 

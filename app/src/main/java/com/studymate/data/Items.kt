@@ -14,3 +14,13 @@ data class Day(
     val day: String,
     val date: String,
 )
+
+data class Subject(
+    val name: String,
+    val creditScore: Int? = null,
+    val hours: Int? = null,
+    val teacher: String? = null,
+    val semester: Int? = null,
+    val limit: Int? = null,
+    val missedLessons: Int? = null
+)
