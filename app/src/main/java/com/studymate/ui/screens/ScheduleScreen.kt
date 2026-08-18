@@ -1,30 +1,43 @@
 package com.studymate.ui.screens
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.studymate.R
 import com.studymate.data.Day
 import com.studymate.data.TestData
-import com.studymate.ui.screens.components.LessonTopAppBar
+import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.LessonsList
+import com.studymate.ui.screens.components.StudyMateBottomAppBar
+import com.studymate.ui.screens.components.StudyMateTopAppBar
 import com.studymate.ui.screens.components.WeekRowAndType
 import com.studymate.ui.theme.StudyMateTheme
 
+object ScheduleDestination: NavigationDestination {
+    override val route = "Schedule"
+    override val titleRes = R.string.schedule_screen
+    override val destinationIcon = Icons.Default.CalendarToday
+}
 
 @Composable
 fun ScheduleScreen(
     modifier: Modifier = Modifier,
-    viewModel: ScheduleScreenViewModel =  viewModel()
+    viewModel: ScheduleScreenViewModel =  viewModel(),
+    navigateSubjectScreen: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -37,6 +50,7 @@ fun ScheduleScreen(
         onDayClick =  viewModel::onDayClick,
         onNextWeekClick = { viewModel.onNextWeekClick() },
         onCurrentWeekClick = { viewModel.onCurrentWeekClick() },
+        navigateSubjectScreen = navigateSubjectScreen
     )
 }
 @Composable
@@ -48,40 +62,44 @@ fun ScheduleScreenContent(
     onCardClick: (Int) -> Unit,
     onDayClick: (Day) -> Unit,
     onNextWeekClick: () -> Unit,
-    onCurrentWeekClick: () -> Unit
+    onCurrentWeekClick: () -> Unit,
+    navigateSubjectScreen: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
-            LessonTopAppBar(
-                title = "Schedule",
+            StudyMateTopAppBar(
+                title = stringResource(ScheduleDestination.titleRes),
                 modifier = Modifier.fillMaxWidth()
             )
         },
+
+        bottomBar = {
+            StudyMateBottomAppBar(
+                modifier = Modifier.clip(
+                    RoundedCornerShape(topStart =  12.dp, topEnd = 12.dp)
+                ),
+                navigateSubjectScreen = navigateSubjectScreen,
+                selectedDestination = ScheduleDestination
+            )
+        },
+
         modifier = modifier
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            LessonsList(
-                lessonsState = lessonCardUIState ,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp),
-                onEditClick = onEditClick,
-                onCardClick = onCardClick,
-                weekRowAndType = {
-                    WeekRowAndType(
-                        weekUiState = weekUiState,
-                        onDayClick = onDayClick,
-                        onNextWeekClick = onNextWeekClick,
-                        onCurrentWeekClick = onCurrentWeekClick,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            )
-        }
+        LessonsList(
+            lessonsState = lessonCardUIState ,
+            modifier = Modifier.padding(innerPadding),
+            onEditClick = onEditClick,
+            onCardClick = onCardClick,
+            weekRowAndType = {
+                WeekRowAndType(
+                    weekUiState = weekUiState,
+                    onDayClick = onDayClick,
+                    onNextWeekClick = onNextWeekClick,
+                    onCurrentWeekClick = onCurrentWeekClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        )
     }
 }
 

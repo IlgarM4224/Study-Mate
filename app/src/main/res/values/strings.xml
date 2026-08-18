@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Study Mate</string>
+    <string name="schedule_screen">Schedule</string>
+    <string name="subject_screen">Subjects</string>
 </resources>
