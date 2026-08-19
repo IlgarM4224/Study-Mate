@@ -1,4 +1,4 @@
-package com.studymate
+package com.studymate.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

@@ -263,7 +263,7 @@ fun LessonsList(
             weekRowAndType()
         }
 
-        if(lessonsState.lessons.isEmpty()) {
+        if(lessonsState.lessons?.isEmpty() ?: true) {
             item {
                 Box(
                     modifier = Modifier

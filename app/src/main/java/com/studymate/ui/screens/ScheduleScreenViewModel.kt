@@ -27,14 +27,14 @@ data class WeekUiState(
 )
 
 data class LessonCardUIState(
-    val lessons: List<Lesson>,
+    val lessons: List<Lesson>?,
     val clickedCardId: Int? = null
 )
 
 class ScheduleScreenViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(
         ScheduleUIState(
-            lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons()),
+            lessonCardUIState = LessonCardUIState(lessons = TestData.getSchedule(LocalDate.now().dayOfWeek)),
             weekUiState = WeekUiState(
                 week = getWeekDays(LocalDate.now()),
                 weekType = "Upper",
@@ -66,6 +66,10 @@ class ScheduleScreenViewModel: ViewModel() {
 
         _uiState.update {
             it.copy(
+                lessonCardUIState = LessonCardUIState(
+                    lessons = TestData.getSchedule(dafOfWeek = DayOfWeek.MONDAY),
+                    clickedCardId = null
+                ),
                 weekUiState = it.weekUiState.copy(
                     week = nextWeek,
                     weekType = "Lower",
@@ -78,6 +82,10 @@ class ScheduleScreenViewModel: ViewModel() {
     fun onCurrentWeekClick() {
         _uiState.update {
             it.copy(
+                lessonCardUIState = LessonCardUIState(
+                    lessons = TestData.getSchedule(dafOfWeek = LocalDate.now().dayOfWeek),
+                    clickedCardId = null
+                ),
                 weekUiState = it.weekUiState.copy(
                     week = getWeekDays(LocalDate.now()),
                     weekType = "Upper",
@@ -91,13 +99,14 @@ class ScheduleScreenViewModel: ViewModel() {
     fun onDayClick(day: Day) {
         _uiState.update {
             it.copy(
+                lessonCardUIState = LessonCardUIState(
+                    lessons = TestData.getSchedule(dafOfWeek = day.dayOfWeek),
+                    clickedCardId = null
+                ),
                 weekUiState = it.weekUiState.copy(selectedDay = day)
             )
         }
     }
-
-    fun onFabClick () {}
-
 }
 
 private fun getWeekDays(currentDay: LocalDate): List<Day> {
@@ -116,5 +125,6 @@ private fun LocalDate.toDay(): Day {
     return Day(
         day = format(dayNameFormatter).replaceFirstChar { it.uppercase() },
         date = format(dateFormatter),
+        dayOfWeek = dayOfWeek
     )
 }

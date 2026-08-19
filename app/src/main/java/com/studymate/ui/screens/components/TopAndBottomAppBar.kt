@@ -51,7 +51,7 @@ fun StudyMateBottomAppBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        tonalElevation = 0.dp
+        tonalElevation = 0.dp,
     ) {
         NavigationBarItem(
             selected = selectedDestination == ScheduleDestination,

@@ -1,5 +1,6 @@
 package com.studymate.data
 
+import java.time.DayOfWeek
 import java.time.LocalTime
 
 data class Lesson(
@@ -13,6 +14,7 @@ data class Lesson(
 data class Day(
     val day: String,
     val date: String,
+    val dayOfWeek: DayOfWeek = DayOfWeek.MONDAY
 )
 
 data class Subject(

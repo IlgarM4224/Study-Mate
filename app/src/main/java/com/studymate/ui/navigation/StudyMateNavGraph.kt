@@ -30,7 +30,7 @@ fun StudyMateNavHost(
                 },
                 modifier = Modifier
                             .fillMaxSize()
-                            .padding(4.dp),
+                            .padding(horizontal = 8.dp),
             )
         }
 
@@ -38,11 +38,10 @@ fun StudyMateNavHost(
             SubjectScreen(
                 navigateScheduleScreen = {
                     navController.popBackStack()
-                    //navController.navigate(route = ScheduleDestination.route)
                 } ,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(4.dp)
+                    .padding(horizontal = 8.dp)
             )
         }
     }

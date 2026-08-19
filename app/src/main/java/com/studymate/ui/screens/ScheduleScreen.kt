@@ -1,20 +1,12 @@
 package com.studymate.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -59,7 +51,6 @@ fun ScheduleScreen(
         onDayClick =  viewModel::onDayClick,
         onNextWeekClick = { viewModel.onNextWeekClick() },
         onCurrentWeekClick = { viewModel.onCurrentWeekClick() },
-        onFabClick = { viewModel.onFabClick() },
         navigateSubjectScreen = navigateSubjectScreen
     )
 }
@@ -73,7 +64,6 @@ fun ScheduleScreenContent(
     onDayClick: (Day) -> Unit,
     onNextWeekClick: () -> Unit,
     onCurrentWeekClick: () -> Unit,
-    onFabClick: () -> Unit,
     navigateSubjectScreen: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
@@ -94,18 +84,6 @@ fun ScheduleScreenContent(
                 navigateSubjectScreen = navigateSubjectScreen,
                 selectedDestination = ScheduleDestination
             )
-        },
-
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = !listState.isScrollInProgress,
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut()
-            ) {
-                FloatingActionButton(onClick = onFabClick) {
-                    Icon(Icons.Filled.Add, "Floating action button.")
-                }
-            }
         },
 
         modifier = modifier
@@ -152,7 +130,6 @@ fun ScheduleScreenContentLightPreview() {
                 onNextWeekClick = {},
                 onDayClick = {},
                 onCurrentWeekClick = {},
-                onFabClick = {}
             )
         }
     }
@@ -179,7 +156,6 @@ fun ScheduleScreenContentDarkPreview() {
                 onNextWeekClick = {},
                 onDayClick = {},
                 onCurrentWeekClick = {},
-                onFabClick = {}
             )
         }
     }
