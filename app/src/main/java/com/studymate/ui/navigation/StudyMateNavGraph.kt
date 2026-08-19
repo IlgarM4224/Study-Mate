@@ -25,7 +25,9 @@ fun StudyMateNavHost(
     ) {
         composable(route = ScheduleDestination.route) {
             ScheduleScreen(
-                navigateSubjectScreen = { navController.navigate(route = SubjectDestination.route) },
+                navigateSubjectScreen = {
+                    navController.navigate(route = SubjectDestination.route)
+                },
                 modifier = Modifier
                             .fillMaxSize()
                             .padding(4.dp),
@@ -34,7 +36,10 @@ fun StudyMateNavHost(
 
         composable(route = SubjectDestination.route) {
             SubjectScreen(
-                navigateScheduleScreen = { navController.navigate(route = ScheduleDestination.route) } ,
+                navigateScheduleScreen = {
+                    navController.popBackStack()
+                    //navController.navigate(route = ScheduleDestination.route)
+                } ,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp)

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -246,6 +248,7 @@ fun Chip(
 @Composable
 fun LessonsList(
     modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
     lessonsState: LessonCardUIState,
     onCardClick: (Int) -> Unit,
     onEditClick: () -> Unit,
@@ -253,27 +256,45 @@ fun LessonsList(
 ) {
     LazyColumn(
         modifier = modifier,
+        state = state,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
             weekRowAndType()
         }
 
-        items(lessonsState.lessons.size) { id ->
-            val les = lessonsState.lessons
-            LessonCard(
-                name = les[id].name,
-                teacher = les[id].teacher,
-                type = les[id].type,
-                location = les[id].location,
-                startTime = les[id].startTime,
-                isCardClicked = id == lessonsState.clickedCardId,
-                onCardClick = { onCardClick(id) },
-                onEditClick = onEditClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
+        if(lessonsState.lessons.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 32.dp, horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No lessons",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        } else {
+            items(lessonsState.lessons.size) { id ->
+                val les = lessonsState.lessons
+                LessonCard(
+                    name = les[id].name,
+                    teacher = les[id].teacher,
+                    type = les[id].type,
+                    location = les[id].location,
+                    startTime = les[id].startTime,
+                    isCardClicked = id == lessonsState.clickedCardId,
+                    onCardClick = { onCardClick(id) },
+                    onEditClick = onEditClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
         }
     }
 }

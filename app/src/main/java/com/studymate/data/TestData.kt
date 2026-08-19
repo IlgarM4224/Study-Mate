@@ -1,6 +1,9 @@
 package com.studymate.data
 
+import java.time.DayOfWeek
 import java.time.LocalTime
+import kotlin.collections.listOf
+import kotlin.to
 
 object TestData {
     fun getLessons() = listOf(
@@ -61,6 +64,16 @@ object TestData {
         Day(day = "Fri", date = "17 may"),
         Day(day = "Sat", date = "18 may"),
         Day(day = "Sun", date = "19 may"),
+    )
+
+    fun getSchedule() = mapOf(
+        DayOfWeek.MONDAY to listOf(getLessons()[0], getLessons()[1], getLessons()[4]),
+        DayOfWeek.TUESDAY to listOf(getLessons()[2], getLessons()[3]),
+        DayOfWeek.WEDNESDAY to listOf(getLessons()[5], getLessons()[1]),
+        DayOfWeek.THURSDAY to listOf(getLessons()[3], getLessons()[0], getLessons()[2]),
+        DayOfWeek.FRIDAY to emptyList(),
+        DayOfWeek.SATURDAY to emptyList(),
+        DayOfWeek.SUNDAY to emptyList()
     )
 
     fun getSubjects() = listOf(

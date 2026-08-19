@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Subject
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material3.Card
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -46,7 +50,7 @@ import com.studymate.ui.theme.StudyMateTheme
 object SubjectDestination: NavigationDestination {
     override val route = "subjects"
     override val titleRes = R.string.subject_screen
-    override val destinationIcon = Icons.AutoMirrored.Filled.Subject
+    override val destinationIcon = Icons.Default.Book
 }
 
 @Composable
@@ -135,42 +139,62 @@ fun SubjectCard(
     onClick: () -> Unit,
     onEditClick: () -> Unit,
 ) {
+    val missed = subject.missedLessons?.toFloat() ?: 0f
+    val limit = if(subject.limit != 0 && subject.limit != null) subject.limit.toFloat() else 1f
+    val progress = missed / limit
+
     Card(
         modifier = modifier,
         onClick = onClick
     ) {
-        SubjectName(
-            name = subject.name,
-            onEditClick = onEditClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ){
-            Text(
-                text = "Lecture: ${subject.teacher ?: ""}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 8.dp)
+        Column(modifier = Modifier.padding(8.dp)) {
+            SubjectName(
+                name = subject.name,
+                onEditClick = onEditClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             )
 
-            Text(
-                text = "Seminar: ${subject.teacher ?: ""}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Text(
+                    text = "Lecture: ${subject.teacher ?: ""}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                Text(
+                    text = "Seminar: ${subject.teacher ?: ""}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding( 8.dp)
+            ) {
+                Chip(
+                    label = "limit ${subject.missedLessons}/${subject.limit}",
+                    textStyle = MaterialTheme.typography.bodySmall
+                )
+
+                LinearProgressIndicator(
+                    progress = { progress } ,
+                    color = MaterialTheme.colorScheme.primary,
+                    gapSize = 0.dp,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding( horizontal = 8.dp)
+                )
+            }
         }
-
-        Chip(
-            label = "limit ${subject.missedLessons}/${subject.limit}",
-            textStyle = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(8.dp)
-        )
     }
 }
 

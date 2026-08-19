@@ -68,6 +68,7 @@ class ScheduleScreenViewModel: ViewModel() {
             it.copy(
                 weekUiState = it.weekUiState.copy(
                     week = nextWeek,
+                    weekType = "Lower",
                     isCurrentWeek = false,
                     selectedDay = nextWeek[0]
                 )
@@ -79,6 +80,7 @@ class ScheduleScreenViewModel: ViewModel() {
             it.copy(
                 weekUiState = it.weekUiState.copy(
                     week = getWeekDays(LocalDate.now()),
+                    weekType = "Upper",
                     isCurrentWeek = true,
                     selectedDay = LocalDate.now().toDay()
                 )
@@ -94,6 +96,8 @@ class ScheduleScreenViewModel: ViewModel() {
         }
     }
 
+    fun onFabClick () {}
+
 }
 
 private fun getWeekDays(currentDay: LocalDate): List<Day> {
@@ -106,8 +110,8 @@ private fun getWeekDays(currentDay: LocalDate): List<Day> {
 }
 
 private fun LocalDate.toDay(): Day {
-    val dayNameFormatter = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
-    val dateFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+    val dayNameFormatter = DateTimeFormatter.ofPattern("EEE", Locale.ENGLISH)
+    val dateFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.ENGLISH)
 
     return Day(
         day = format(dayNameFormatter).replaceFirstChar { it.uppercase() },
