@@ -118,7 +118,7 @@ fun ScheduleScreenContentLightPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessonCardUIState = LessonCardUIState(lessons = emptyList()),
+                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons(), clickedCardId = 0),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",
@@ -144,7 +144,7 @@ fun ScheduleScreenContentDarkPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons()),
+                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons(), clickedCardId = 0),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",

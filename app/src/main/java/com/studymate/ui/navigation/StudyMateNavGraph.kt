@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import com.studymate.ui.screens.ScheduleDestination
 import com.studymate.ui.screens.ScheduleScreen
 import com.studymate.ui.screens.SubjectDestination
+import com.studymate.ui.screens.SubjectDetailDestination
+import com.studymate.ui.screens.SubjectDetailScreen
 import com.studymate.ui.screens.SubjectScreen
 
 @Composable
@@ -42,6 +44,14 @@ fun StudyMateNavHost(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 8.dp)
+            )
+        }
+
+        composable(route = SubjectDetailDestination.route) {
+            SubjectDetailScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
             )
         }
     }

@@ -18,11 +18,14 @@ data class Day(
 )
 
 data class Subject(
+    val id: Int,
     val name: String,
     val creditScore: Int? = null,
     val hours: Int? = null,
     val teacher: String? = null,
     val semester: Int? = null,
     val limit: Int? = null,
-    val missedLessons: Int? = null
+    val missedLessons: Int? = null,
+    val seminarGradesList: List<Int>,
+    val colloquiumGradesList: List<Int>,
 )

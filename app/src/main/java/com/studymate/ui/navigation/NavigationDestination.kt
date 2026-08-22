@@ -11,10 +11,10 @@ interface NavigationDestination {
     /**
      * String resource id to that contains title to be displayed for the screen
      */
-    val titleRes: Int
+    val titleRes: Int?
 
     /**
      * ImageVector icon for the bottom bar
      */
-    val destinationIcon: ImageVector
+    val destinationIcon: ImageVector?
 }

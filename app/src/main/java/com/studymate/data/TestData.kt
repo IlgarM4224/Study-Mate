@@ -77,105 +77,134 @@ object TestData {
 
     fun getSubjects() = listOf(
         Subject(
+            id = 1,
             name = "Programming basics",
             creditScore = 8,
             hours = 75,
             teacher = "Hicran",
             semester = 1,
             limit = 12,
-            missedLessons = 4
+            missedLessons = 4,
+            seminarGradesList = listOf(9,8,10),
+            colloquiumGradesList = listOf(9,9,10)
         ),
 
         Subject(
+            id = 2,
             name = "Web technologies",
             creditScore = 6,
             hours = 60,
             teacher = "Alla",
             semester = 1,
             limit = 10,
-            missedLessons = 3
+            missedLessons = 3,
+            seminarGradesList = listOf(8,7,9),
+            colloquiumGradesList = listOf(9,8,10)
         ),
 
         Subject(
+            id = 3,
             name = "Mathematical analysis",
             creditScore = 6,
             hours = 60,
             teacher = "Abbas",
             semester = 1,
             limit = 10,
-            missedLessons = 1
+            missedLessons = 1,
+            seminarGradesList = listOf(7,7,9),
+            colloquiumGradesList = listOf(7,9,8)
         ),
 
         Subject(
+            id = 4,
             name = "Analytical geometry",
             creditScore = 4,
             hours = 45,
             teacher = "Alla",
             semester = 1,
             limit = 8,
-            missedLessons = 0
+            missedLessons = 0,
+            seminarGradesList = listOf(7,7,7),
+            colloquiumGradesList = listOf(8,7,7)
         ),
 
         Subject(
+            id = 5,
             name = "Physics",
             creditScore = 4,
             hours = 30,
             teacher = "Murad",
             semester = 1,
             limit = 30,
-            missedLessons = 1
+            missedLessons = 1,
+            seminarGradesList = listOf(7,8,8),
+            colloquiumGradesList = listOf(7,9,7)
         ),
 
         Subject(
+            id = 6,
             name = "Databases",
             creditScore = 5,
             hours = 45,
             teacher = "Anton",
             semester = 1,
             limit = 4,
-            missedLessons = 0
+            missedLessons = 0,
+            seminarGradesList = listOf(9,8,10),
+            colloquiumGradesList = listOf(9,9,10)
         ),
 
         Subject(
+            id = 7,
             name = "Programming technologies",
             creditScore = 8,
             hours = 90,
             teacher = "Fuad",
             semester = 1,
             limit = 15,
-            missedLessons = 4
+            missedLessons = 4,
+            seminarGradesList = listOf(10,9,10),
+            colloquiumGradesList = listOf(9,9,10)
         ),
 
         Subject(
+            id = 8,
             name = "Information technology",
             creditScore = 3,
             hours = 30,
             teacher = "Alla",
             semester = 1,
             limit = 3,
-            missedLessons = 2
+            missedLessons = 2,
+            seminarGradesList = listOf(8,8,8),
+            colloquiumGradesList = listOf(8,7,10)
         ),
 
         Subject(
+            id = 9,
             name = "Comprehensive analysis",
             creditScore = 6,
             hours = 60,
             teacher = "Abbas",
             semester = 1,
             limit = 10,
-            missedLessons = 1
+            missedLessons = 1,
+            seminarGradesList = listOf(7,8,8),
+            colloquiumGradesList = listOf(8,7,7)
         ),
 
         Subject(
+            id = 10,
             name = "Linear algebra",
             creditScore = 4,
             hours = 45,
             teacher = "Adil",
             semester = 1,
             limit = 6,
-            missedLessons = 0
+            missedLessons = 0,
+            seminarGradesList = listOf(7,8),
+            colloquiumGradesList = listOf(9,6,7)
         ),
-
     )
 }
 

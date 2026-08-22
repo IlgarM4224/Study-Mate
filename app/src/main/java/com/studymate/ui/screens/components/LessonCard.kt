@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -127,7 +128,9 @@ private fun LessonStartEndTime(
             progress = { 0.6f } ,
             color = MaterialTheme.colorScheme.primary,
             gapSize = 0.dp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .height(8.dp)
         )
 
         Spacer(Modifier.width(8.dp))
@@ -226,20 +229,22 @@ private fun LessonTypeLocationTime(
 
 @Composable
 fun Chip(
+    modifier: Modifier = Modifier,
     label: String,
-    textStyle: TextStyle,
-    modifier: Modifier = Modifier
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    textColor: Color =  MaterialTheme.colorScheme.onPrimaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .background(backgroundColor)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
             text = label,
             style = textStyle,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = textColor,
             fontWeight = FontWeight.Medium
         )
     }

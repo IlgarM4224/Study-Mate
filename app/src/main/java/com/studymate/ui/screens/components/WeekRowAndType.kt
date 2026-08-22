@@ -71,7 +71,7 @@ private fun WeekType(
     onNextWeekClick: () -> Unit
 ) {
     Column( modifier = modifier ) {
-        Row{
+        Row(Modifier.padding(2.dp)){
             WeekChoiceButton(
                 label = "Current",
                 onClick = onCurrentWeekClick,
