@@ -1,32 +1,68 @@
 package com.studymate.ui.screens
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.studymate.data.Subject
 import com.studymate.data.TestData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 data class SubjectDetailState(
-    val id: Int,
-    val name: String,
-    val seminarGradesList: List<Int> = emptyList(),
-    val colloquiumGradesList: List<Int> = emptyList(),
-    val missedLessons: Int? = null,
-    val limit: Int? = null,
+    val subject: Subject,
     val maxScore: Int = 50,
-    val overallScore: Float? = null
-
+    val overallScore: Float? = null,
+    val averageColloquium: Float? = null,
+    val averageSeminar: Float? = null,
+    val independentWork: Int = 10,
+    val attendanceScore: Float = 10f
 )
-class SubjectDetailScreenViewModel: ViewModel() {
+class SubjectDetailScreenViewModel(
+    savedStateHandle: SavedStateHandle,
+): ViewModel() {
+
+private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestination.SUBJECT_ID_ARG])
+
     private val _uiState = MutableStateFlow(
         SubjectDetailState(
-            id = TestData.getSubjects()[0].id,
-            name = TestData.getSubjects()[0].name,
-            seminarGradesList = TestData.getSubjects()[0].seminarGradesList,
-            colloquiumGradesList = TestData.getSubjects()[0].colloquiumGradesList,
-            missedLessons = TestData.getSubjects()[0].missedLessons,
-            limit = TestData.getSubjects()[0].limit
+            subject = TestData.getSubjects()[subjectId - 1],
+            averageSeminar = getAverage(TestData.getSubjects()[subjectId - 1].seminarGradesList),
+            averageColloquium = getAverage(TestData.getSubjects()[subjectId - 1].colloquiumGradesList),
+            overallScore = getOverallScore(
+                averageSeminar = getAverage(TestData.getSubjects()[subjectId - 1].seminarGradesList),
+                averageColloquium = getAverage(TestData.getSubjects()[subjectId - 1].colloquiumGradesList),
+                independentWork = 10,
+                attendanceScore = 10f
+            )
         )
     )
 
     val uiState = _uiState.asStateFlow()
+}
+
+fun Float.toLabel() = (if (this % 1f == 0f) toInt() else this).toString()
+
+// Extension function to round to N places
+fun Float.roundTo(decimals: Int): Float {
+    val factor = 10.0.pow(decimals)
+    return ((this * factor).roundToInt() / factor).toFloat()
+}
+fun getAverage(list: List<Int>): Float {
+    val sum = list.sum()
+    val size = if (list.isEmpty()) 1f else list.size.toFloat()
+
+    return (sum / size).roundTo(2)
+}
+
+fun getOverallScore(
+    averageSeminar: Float = 0f,
+    averageColloquium: Float = 0f,
+    independentWork: Int = 0,
+    attendanceScore: Float = 0f,
+): Float {
+    val seminarAndColloquium = (averageSeminar * 0.4f + averageColloquium * 0.6f) * 3
+    val result = seminarAndColloquium + independentWork + attendanceScore
+
+    return result.roundTo(2)
 }

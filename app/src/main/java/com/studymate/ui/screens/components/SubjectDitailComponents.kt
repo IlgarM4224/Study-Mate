@@ -21,12 +21,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.School
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -48,14 +51,52 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
 
-fun Float.toLabel() = (if (this % 1f == 0f) this.toInt() else this).toString()
+
+@Composable
+fun SubjectNameCard(
+    modifier: Modifier = Modifier,
+    subjectName: String,
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors().copy(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RoundedIcon(
+                    icon = Icons.Outlined.Book,
+                    iconSize = 40.dp,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+
+                Spacer(Modifier.width(4.dp))
+
+                CardLabel(
+                    leftLabel = subjectName,
+                    textStyle = MaterialTheme.typography.headlineSmall
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun OverallScoreCard(
     modifier: Modifier = Modifier,
     overallScore: Float,
+    averageColloquium: Float = 0f,
+    averageSeminar: Float = 0f,
+    independentWork: Int = 0,
+    attendanceScore: Float = 0f,
     maxScore: Int,
 ) {
     ElevatedCard(modifier = modifier) {
@@ -85,7 +126,11 @@ fun OverallScoreCard(
 
                 OverallScoreDiagramComponents(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f),
+                    colloquiumScore = averageColloquium,
+                    seminarScore = averageSeminar,
+                    independentWork = independentWork,
+                    attendanceScore = attendanceScore
                 )
 
             }
@@ -103,7 +148,7 @@ private fun OverallScoreDiagramComponents(
 ) {
     Column(modifier = modifier) {
         OverallScoreElement(
-            name = "Colloquium Score",
+            name = "Average Colloquium",
             score = colloquiumScore,
             icon = Icons.Outlined.School
         )
@@ -111,7 +156,7 @@ private fun OverallScoreDiagramComponents(
         Spacer(Modifier.height(8.dp))
 
         OverallScoreElement(
-            name = "Seminar Score",
+            name = "Average Seminar",
             score = seminarScore,
             icon = Icons.Outlined.Person
         )
@@ -141,6 +186,7 @@ private fun OverallScoreElement(
     iconDescription: String? = null,
     name: String,
     score: Float,
+    maxScore: Int = 10
 ) {
     Row(modifier = modifier) {
         if (icon != null) {
@@ -155,12 +201,13 @@ private fun OverallScoreElement(
             Column {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
-                    text = score.toLabel(),
-                    style = MaterialTheme.typography.bodySmall
+                    text = "${score.toLabel()} / $maxScore",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(horizontal = 4.dp)
                 )
             }
         }
@@ -352,6 +399,8 @@ private fun RoundedIcon(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     iconSize: Dp = 36.dp,
+    iconPadding: Dp = 4.dp,
+    shape: RoundedCornerShape = RoundedCornerShape(8.dp),
     tint: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer
 ) {
@@ -365,9 +414,9 @@ private fun RoundedIcon(
             tint = tint,
             modifier = Modifier
                 .size(iconSize)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(shape)
                 .background(backgroundColor)
-                .padding(4.dp)
+                .padding(iconPadding)
         )
     }
 }
@@ -401,6 +450,38 @@ private fun CardLabel(
     }
 }
 
+
+
+@Preview
+@Composable
+fun SubjectNameCardPreview() {
+    StudyMateTheme {
+        Surface {
+            SubjectNameCard(
+                subjectName = "Programming basics",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SubjectNameCardDarkPreview() {
+    StudyMateTheme(darkTheme = true) {
+        Surface {
+            SubjectNameCard(
+                subjectName = "Programming basics",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun OverallScoreCardPreview() {
@@ -427,38 +508,6 @@ fun OverallScoreCardDarkPreview() {
                 overallScore = 42.89f,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun OverallScoreDiagramPreview() {
-    StudyMateTheme {
-        Surface {
-            OverallScoreDiagram(
-                overallScore = 10F,
-                maxScore = 100,
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(16.dp)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun OverallScoreDiagramDarkPreview() {
-    StudyMateTheme(darkTheme = true) {
-        Surface {
-            OverallScoreDiagram(
-                overallScore = 19.59F,
-                maxScore = 50,
-                modifier = Modifier
-                    .size(200.dp)
                     .padding(16.dp)
             )
         }

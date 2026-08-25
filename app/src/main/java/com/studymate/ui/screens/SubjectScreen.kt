@@ -5,13 +5,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +20,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -42,7 +38,6 @@ import com.studymate.R
 import com.studymate.data.Subject
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.components.Chip
 import com.studymate.ui.screens.components.StudyMateBottomAppBar
 import com.studymate.ui.screens.components.StudyMateTopAppBar
 import com.studymate.ui.screens.components.SubjectName
@@ -59,12 +54,13 @@ fun SubjectScreen(
     modifier: Modifier,
     viewModel: SubjectScreenViewModel = viewModel(),
     navigateScheduleScreen: () -> Unit = {},
+    navigateToDetailScreen: (Int) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     SubjectScreenContent(
         state = state,
-        onSubjectClick = viewModel::onSubjectClick,
+        onSubjectClick = navigateToDetailScreen,
         onEditClick = viewModel::onEditClick,
         onFabClick = { viewModel.onFabClick() },
         navigateScheduleScreen = navigateScheduleScreen,
@@ -76,7 +72,7 @@ fun SubjectScreen(
 fun SubjectScreenContent(
     modifier: Modifier = Modifier,
     state: SubjectUiState,
-    onSubjectClick: () -> Unit = {},
+    onSubjectClick: (Int) -> Unit = {},
     onEditClick: () -> Unit = {},
     onFabClick: () -> Unit = {},
     navigateScheduleScreen: () -> Unit = {},
@@ -137,16 +133,12 @@ fun SubjectScreenContent(
 fun SubjectCard(
     modifier: Modifier = Modifier,
     subject: Subject,
-    onClick: () -> Unit,
+    onClick: (Int) -> Unit,
     onEditClick: () -> Unit,
 ) {
-    val missed = subject.missedLessons?.toFloat() ?: 0f
-    val limit = if(subject.limit != 0 && subject.limit != null) subject.limit.toFloat() else 1f
-    val progress = missed / limit
-
     Card(
         modifier = modifier,
-        onClick = onClick
+        onClick = { onClick(subject.id) }
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             SubjectName(
@@ -173,29 +165,6 @@ fun SubjectCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding( 8.dp)
-            ) {
-                Chip(
-                    label = "limit ${subject.missedLessons}/${subject.limit}",
-                    textStyle = MaterialTheme.typography.bodySmall
-                )
-
-                LinearProgressIndicator(
-                    progress = { progress } ,
-                    color = MaterialTheme.colorScheme.primary,
-                    gapSize = 0.dp,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(8.dp)
-                        .padding( horizontal = 8.dp)
                 )
             }
         }

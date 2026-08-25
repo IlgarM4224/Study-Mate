@@ -23,12 +23,15 @@ import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.GradesCard
 import com.studymate.ui.screens.components.LimitCard
 import com.studymate.ui.screens.components.OverallScoreCard
+import com.studymate.ui.screens.components.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectDetailDestination: NavigationDestination {
     override val route = "SubjectDetail"
     override val titleRes = null
     override val destinationIcon = null
+    const val SUBJECT_ID_ARG = "subjectId"
+    val routeWithArgs = "$route/{$SUBJECT_ID_ARG}"
 }
 
 @Composable
@@ -54,22 +57,31 @@ fun SubjectDetailScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(innerPadding)
         ) {
-            OverallScoreCard(
+            SubjectNameCard(
                 modifier = Modifier.fillMaxWidth(),
-                maxScore = state.maxScore,
-                overallScore = state.overallScore ?: 0f
+                subjectName = state.subject.name
             )
 
             Spacer(Modifier.height(16.dp))
 
-            if (state.limit != null) {
+            OverallScoreCard(
+                modifier = Modifier.fillMaxWidth(),
+                maxScore = state.maxScore,
+                overallScore = state.overallScore ?: 0f,
+                averageColloquium = state.averageColloquium ?: 0f,
+                averageSeminar = state.averageSeminar ?: 0f,
+                independentWork = state.independentWork,
+                attendanceScore = state.attendanceScore
+            )
+
+            if (state.subject.limit != null) {
                 Spacer(Modifier.height(16.dp))
 
                 LimitCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    limit = state.limit,
-                    missed = state.missedLessons ?: 0
+                    limit = state.subject.limit,
+                    missed = state.subject.missedLessons ?: 0
                 )
             }
 
@@ -80,7 +92,7 @@ fun SubjectDetailScreenContent(
                     .fillMaxWidth(),
                 label = "Grades for Seminar",
                 icon = Icons.Outlined.People,
-                gradesList = state.seminarGradesList
+                gradesList = state.subject.seminarGradesList
             )
 
             Spacer(Modifier.height(16.dp))
@@ -90,7 +102,7 @@ fun SubjectDetailScreenContent(
                     .fillMaxWidth(),
                 label = "Grades for Colloquium",
                 icon = Icons.Outlined.School,
-                gradesList = state.colloquiumGradesList
+                gradesList = state.subject.colloquiumGradesList
             )
         }
     }
@@ -102,15 +114,12 @@ fun SubjectDetailScreenPreview() {
     StudyMateTheme {
         Surface {
             SubjectDetailScreenContent(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
-                    id = TestData.getSubjects()[0].id,
-                    name = TestData.getSubjects()[0].name,
-                    seminarGradesList = TestData.getSubjects()[0].seminarGradesList,
-                    colloquiumGradesList = TestData.getSubjects()[0].colloquiumGradesList,
-                    missedLessons = TestData.getSubjects()[0].missedLessons,
-                    limit = TestData.getSubjects()[0].limit,
-                    overallScore = 40f
+                    subject = TestData.getSubjects()[0],
+                    overallScore = 40f,
+                    averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
+                    averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList)
                 )
             )
         }
@@ -123,15 +132,12 @@ fun SubjectDetailScreenDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             SubjectDetailScreenContent(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
-                    id = TestData.getSubjects()[0].id,
-                    name = TestData.getSubjects()[0].name,
-                    seminarGradesList = TestData.getSubjects()[0].seminarGradesList,
-                    colloquiumGradesList = TestData.getSubjects()[0].colloquiumGradesList,
-                    missedLessons = TestData.getSubjects()[0].missedLessons,
-                    limit = TestData.getSubjects()[0].limit,
-                    overallScore = 34.7f
+                    subject = TestData.getSubjects()[0],
+                    overallScore = 34.7f,
+                    averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
+                    averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList)
                 )
             )
         }
