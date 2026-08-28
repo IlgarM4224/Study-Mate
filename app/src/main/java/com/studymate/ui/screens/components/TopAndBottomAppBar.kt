@@ -1,8 +1,12 @@
 package com.studymate.ui.screens.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -25,6 +29,10 @@ import com.studymate.ui.theme.StudyMateTheme
 @Composable
 fun StudyMateTopAppBar(
     modifier: Modifier,
+    onNavigateClick: () -> Unit = {},
+    canNavigateBack: Boolean = false,
+    showMore: Boolean = false,
+    onMoreClick: () -> Unit = {},
     title: String
 ) {
     TopAppBar(
@@ -38,6 +46,31 @@ fun StudyMateTopAppBar(
                 overflow = TextOverflow.Ellipsis,
             )
         } ,
+
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = onNavigateClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        },
+
+        actions = {
+            if (showMore) {
+                IconButton(onClick = onMoreClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        },
+
         modifier = modifier
     )
 }
@@ -77,7 +110,7 @@ fun StudyMateBottomAppBar(
     }
 }
 
-@Preview
+@Preview(group = "Bottom App Bar")
 @Composable
 fun BottomAppBarPreview() {
     StudyMateTheme {
@@ -87,37 +120,41 @@ fun BottomAppBarPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Bottom App Bar")
 @Composable
 fun BottomAppBarDarkPreview() {
-    StudyMateTheme {
+    StudyMateTheme(darkTheme = true) {
         Surface {
             StudyMateBottomAppBar(modifier = Modifier.fillMaxWidth())
         }
     }
 }
 
-@Preview
+@Preview(group = "Top App Bar")
 @Composable
 fun TopAppBarPreview() {
     StudyMateTheme {
         Surface {
             StudyMateTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = "Schedule"
+                title = "Schedule",
+                canNavigateBack = true,
+                showMore = true
             )
         }
     }
 }
 
-@Preview
+@Preview(group = "Top App Bar")
 @Composable
 fun TopAppBarDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             StudyMateTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = "Schedule"
+                title = "Schedule",
+                canNavigateBack = true,
+                showMore = true
             )
         }
     }
