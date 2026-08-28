@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.School
@@ -15,20 +17,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.studymate.R
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.GradesCard
 import com.studymate.ui.screens.components.LimitCard
 import com.studymate.ui.screens.components.OverallScoreCard
+import com.studymate.ui.screens.components.StudyMateTopAppBar
 import com.studymate.ui.screens.components.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectDetailDestination: NavigationDestination {
     override val route = "SubjectDetail"
-    override val titleRes = null
+    override val titleRes = R.string.subject_detail_screen
     override val destinationIcon = null
     const val SUBJECT_ID_ARG = "subjectId"
     val routeWithArgs = "$route/{$SUBJECT_ID_ARG}"
@@ -37,25 +42,51 @@ object SubjectDetailDestination: NavigationDestination {
 @Composable
 fun SubjectDetailScreen(
     modifier: Modifier = Modifier,
+    navigateBack: () -> Unit = {},
     viewModel: SubjectDetailScreenViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     SubjectDetailScreenContent(
         modifier = modifier,
-        state = uiState
+        state = uiState,
+        navigateBack = navigateBack,
+        addColloquiumGrade = { viewModel.addColloquiumGrade() },
+        addSeminarGrade = { viewModel.addSeminarGrade() },
+        onMoreClick = { viewModel.onMoreClick() },
+        onGradeClick = { viewModel.onGradeClick() }
     )
 }
 
 @Composable
 fun SubjectDetailScreenContent(
     modifier: Modifier = Modifier,
+    navigateBack: () -> Unit = {},
+    onMoreClick: () -> Unit = {},
+    addColloquiumGrade: () -> Unit = {},
+    addSeminarGrade: () -> Unit = {},
+    onGradeClick: () -> Unit = {},
     state: SubjectDetailState
 ) {
-    Scaffold(modifier = modifier) { innerPadding ->
+    Scaffold(
+        modifier = modifier,
+
+        topBar = {
+            StudyMateTopAppBar(
+                title = stringResource(SubjectDetailDestination.titleRes),
+                canNavigateBack = true,
+                onNavigateClick = navigateBack,
+                showMore = true,
+                onMoreClick = onMoreClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+    ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
             SubjectNameCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -92,6 +123,8 @@ fun SubjectDetailScreenContent(
                     .fillMaxWidth(),
                 label = "Grades for Seminar",
                 icon = Icons.Outlined.People,
+                onAddClick = addSeminarGrade,
+                onGradeClick = onGradeClick,
                 gradesList = state.subject.seminarGradesList
             )
 
@@ -102,6 +135,7 @@ fun SubjectDetailScreenContent(
                     .fillMaxWidth(),
                 label = "Grades for Colloquium",
                 icon = Icons.Outlined.School,
+                onAddClick = addColloquiumGrade,
                 gradesList = state.subject.colloquiumGradesList
             )
         }

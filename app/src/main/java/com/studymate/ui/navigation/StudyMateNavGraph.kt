@@ -59,6 +59,7 @@ fun StudyMateNavHost(
             })
         ) {
             SubjectDetailScreen(
+                navigateBack = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),

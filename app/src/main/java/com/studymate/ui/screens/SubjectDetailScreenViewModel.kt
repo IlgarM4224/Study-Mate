@@ -6,6 +6,7 @@ import com.studymate.data.Subject
 import com.studymate.data.TestData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -39,11 +40,53 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
     )
 
     val uiState = _uiState.asStateFlow()
+
+    fun onMoreClick() {}
+
+    fun addColloquiumGrade() {
+        val newList = _uiState.value.subject.colloquiumGradesList.toMutableList()
+        newList.add(newList.size, 0)
+
+        _uiState.update {
+            it.copy(
+                subject = it.subject.copy(colloquiumGradesList = newList),
+                averageColloquium = getAverage(newList),
+                overallScore = getOverallScore(
+                    averageSeminar = it.averageSeminar ?: 0f,
+                    averageColloquium =  getAverage(newList),
+                    independentWork = 10,
+                    attendanceScore = 10f
+                )
+            )
+        }
+    }
+
+    fun addSeminarGrade() {
+        val newList = _uiState.value.subject.seminarGradesList.toMutableList()
+        newList.add(newList.size, 10)
+
+        _uiState.update {
+            it.copy(
+                subject = it.subject.copy(seminarGradesList = newList),
+                averageSeminar = getAverage(newList),
+                overallScore = getOverallScore(
+                    averageSeminar = getAverage(newList),
+                    averageColloquium = it.averageColloquium ?: 0f,
+                    independentWork = 10,
+                    attendanceScore = 10f
+                )
+            )
+        }
+    }
+
+    fun onGradeClick() {}
 }
 
 fun Float.toLabel() = (if (this % 1f == 0f) toInt() else this).toString()
 
-// Extension function to round to N places
+/**
+ *  Extension function to round to N places
+ */
 fun Float.roundTo(decimals: Int): Float {
     val factor = 10.0.pow(decimals)
     return ((this * factor).roundToInt() / factor).toFloat()
