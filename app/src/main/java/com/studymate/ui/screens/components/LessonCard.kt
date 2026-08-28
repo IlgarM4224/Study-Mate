@@ -306,7 +306,7 @@ fun LessonsList(
 
 // Preview section
 
-@Preview
+@Preview(group = "Lesson Start End Time")
 @Composable
 fun LessonStartEndTimePreview(){
     StudyMateTheme {
@@ -320,7 +320,7 @@ fun LessonStartEndTimePreview(){
     }
 }
 
-@Preview
+@Preview(group = "Lesson Start End Time")
 @Composable
 fun LessonStartEndTimeDarkPreview(){
     StudyMateTheme(darkTheme = true) {
@@ -334,7 +334,7 @@ fun LessonStartEndTimeDarkPreview(){
     }
 }
 
-@Preview
+@Preview(group = "Lesson Card")
 @Composable
 fun LessonCardPreview() {
     StudyMateTheme(darkTheme = false) {
@@ -356,7 +356,7 @@ fun LessonCardPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Lesson Card")
 @Composable
 fun LessonCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -378,7 +378,7 @@ fun LessonCardDarkPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Lessons List")
 @Composable
 fun LessonsListPreview(){
     StudyMateTheme {
@@ -393,7 +393,7 @@ fun LessonsListPreview(){
     }
 }
 
-@Preview
+@Preview(group = "Lessons List")
 @Composable
 fun LessonsListDarkPreview(){
     StudyMateTheme(darkTheme = true) {
