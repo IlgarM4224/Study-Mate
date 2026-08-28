@@ -4,8 +4,11 @@ package com.studymate.ui.screens.components
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +20,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CalendarToday
@@ -28,12 +33,17 @@ import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.School
+import androidx.compose.material.icons.outlined.Today
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -53,6 +63,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
+import java.nio.file.WatchEvent
 
 
 @Composable
@@ -267,6 +278,8 @@ fun GradesCard(
     modifier: Modifier = Modifier,
     label: String,
     icon: ImageVector,
+    onAddClick: () -> Unit = {},
+    onGradeClick: () -> Unit = {},
     gradesList: List<Int> = emptyList()
 ) {
     ElevatedCard(modifier = modifier) {
@@ -288,9 +301,11 @@ fun GradesCard(
 
             GradesRow(
                 modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
                     .fillMaxWidth(),
                 gradesList = gradesList,
-                onAddClick = {}
+                onAddClick = onAddClick,
+                onGradeClick = onGradeClick
             )
         }
     }
@@ -301,29 +316,28 @@ private fun GradesRow(
     modifier: Modifier = Modifier,
     gradesList: List<Int> = emptyList(),
     onAddClick: () -> Unit = {},
+    onGradeClick: () -> Unit = {}
 ) {
-    LazyRow(
+    Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        items(gradesList.size) {
+        gradesList.forEach{
             Grade(
-                grade = gradesList[it],
-                onGradeClick = onAddClick,
+                grade = it,
+                onGradeClick = onGradeClick,
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
 
-        item {
-            OutlinedButton(
-                onClick = onAddClick,
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
-                )
-            }
+        OutlinedButton(
+            onClick = onAddClick,
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
         }
     }
 }
@@ -361,39 +375,93 @@ fun LimitCard(
     missed: Int
 ) {
     ElevatedCard(modifier = modifier) {
-        Row(
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            RoundedIcon(icon = Icons.Outlined.CalendarToday)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RoundedIcon(icon = Icons.Outlined.CalendarToday)
 
-            Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(8.dp))
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CardLabel(
-                    leftLabel = "Missed Lessons",
-                    rightLabel = "$missed/$limit",
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CardLabel(
+                        leftLabel = "Missed Lessons",
+                        rightLabel = "$missed/$limit",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    LinearProgressIndicator(
+                        progress = {missed.toFloat()/limit},
+                        gapSize = 0.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                LimitButton(
+                    buttonColors = ButtonDefaults.outlinedButtonColors(),
+                    icon = Icons.Default.Remove,
+                    label = "Remove Missed",
+                    labelColor = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.width(8.dp))
 
-                LinearProgressIndicator(
-                    progress = {missed.toFloat()/limit},
-                    gapSize = 0.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
+                LimitButton(
+                    icon = Icons.Default.Add,
+                    label = "Add Missed",
                 )
             }
         }
     }
 }
 
+@Composable
+private fun LimitButton(
+    modifier: Modifier = Modifier,
+    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
+    icon: ImageVector,
+    label: String? = null,
+    labelColor: Color =  Color.Unspecified,
+    tint: Color? = null
+) {
+    Button(
+        onClick = {},
+        shape = RoundedCornerShape(8.dp),
+        colors = buttonColors,
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary
+        ),
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = tint ?: LocalContentColor.current
+        )
+
+        Spacer(Modifier.width(4.dp))
+
+        Text(
+            text = label ?: "",
+            color = labelColor,
+        )
+    }
+}
 @Composable
 private fun RoundedIcon(
     modifier: Modifier = Modifier,
@@ -451,8 +519,7 @@ private fun CardLabel(
 }
 
 
-
-@Preview
+@Preview(group = "Subject Name Card")
 @Composable
 fun SubjectNameCardPreview() {
     StudyMateTheme {
@@ -467,7 +534,7 @@ fun SubjectNameCardPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Subject Name Card")
 @Composable
 fun SubjectNameCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -482,7 +549,7 @@ fun SubjectNameCardDarkPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Overall Score Card")
 @Composable
 fun OverallScoreCardPreview() {
     StudyMateTheme {
@@ -498,7 +565,7 @@ fun OverallScoreCardPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Overall Score Card")
 @Composable
 fun OverallScoreCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -514,7 +581,7 @@ fun OverallScoreCardDarkPreview() {
     }
 }
 
-@Preview(group = "GradesCard")
+@Preview(group = "Grades Card")
 @Composable
 fun GradesCardPreview() {
     StudyMateTheme {
@@ -531,7 +598,7 @@ fun GradesCardPreview() {
     }
 }
 
-@Preview(group = "GradesCard")
+@Preview(group = "Grades Card")
 @Composable
 fun GradesCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -548,7 +615,7 @@ fun GradesCardDarkPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Limit card")
 @Composable
 fun LimitCardPreview() {
     StudyMateTheme {
@@ -564,7 +631,7 @@ fun LimitCardPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Limit card")
 @Composable
 fun LimitCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
