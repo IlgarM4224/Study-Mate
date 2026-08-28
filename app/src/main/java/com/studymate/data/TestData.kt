@@ -202,8 +202,8 @@ object TestData {
             semester = 1,
             limit = 6,
             missedLessons = 0,
-            seminarGradesList = listOf(7,8),
-            colloquiumGradesList = listOf(9,6,7)
+            seminarGradesList = emptyList(),
+            colloquiumGradesList = listOf(9,6)
         ),
     )
 }
