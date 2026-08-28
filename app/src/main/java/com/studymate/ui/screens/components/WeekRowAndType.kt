@@ -71,11 +71,16 @@ private fun WeekType(
     onNextWeekClick: () -> Unit
 ) {
     Column( modifier = modifier ) {
-        Row(Modifier.padding(2.dp)){
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp)
+        ){
             WeekChoiceButton(
                 label = "Current",
                 onClick = onCurrentWeekClick,
                 isCurrentWeek = isCurrentWeek,
+                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
                 modifier = Modifier.weight(1f)
             )
 
@@ -83,6 +88,7 @@ private fun WeekType(
                 label = "Next",
                 onClick = onNextWeekClick,
                 isCurrentWeek = !isCurrentWeek,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -103,6 +109,7 @@ private fun WeekChoiceButton(
     label: String,
     onClick: () -> Unit,
     isCurrentWeek: Boolean,
+    shape: RoundedCornerShape? = null,
     modifier: Modifier
 ) {
     val colorScheme = if (isCurrentWeek) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
@@ -112,6 +119,7 @@ private fun WeekChoiceButton(
             colors = ButtonDefaults.textButtonColors(
                 containerColor = colorScheme,
             ),
+            shape = shape ?: ButtonDefaults.textShape,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = label)
@@ -192,11 +200,11 @@ private fun DayChip(
     }
 }
 
-/*
+/**
  * Week Row + Week Type
  */
 
-@Preview
+@Preview(group = "Week Row And Type")
 @Composable
 fun WeekRowAndTypePreview() {
     StudyMateTheme {
@@ -219,7 +227,7 @@ fun WeekRowAndTypePreview() {
     }
 }
 
-@Preview
+@Preview(group = "Week Row And Type")
 @Composable
 fun WeekRowAndTypeDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -242,11 +250,11 @@ fun WeekRowAndTypeDarkPreview() {
     }
 }
 
-/*
+/**
  * Week Type preview
  */
 
-@Preview(showSystemUi = false)
+@Preview(showSystemUi = false, group = "Week Type")
 @Composable
 fun WeekTypePreview() {
     StudyMateTheme {
@@ -264,7 +272,7 @@ fun WeekTypePreview() {
     }
 }
 
-@Preview(showSystemUi = false)
+@Preview(showSystemUi = false, group = "Week Type")
 @Composable
 fun WeekTypeDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -282,11 +290,11 @@ fun WeekTypeDarkPreview() {
     }
 }
 
-/*
+/**
  * Week Row preview
  */
 
-@Preview(showSystemUi = false)
+@Preview(showSystemUi = false, group = "Week Row")
 @Composable
 fun WeekRowPreview() {
     StudyMateTheme {
@@ -300,7 +308,7 @@ fun WeekRowPreview() {
     }
 }
 
-@Preview(showSystemUi = false)
+@Preview(showSystemUi = false, group = "Week Row")
 @Composable
 fun WeekRowDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -314,11 +322,11 @@ fun WeekRowDarkPreview() {
     }
 }
 
-/*
+/**
  * Day Chip preview
  */
 
-@Preview
+@Preview(group = "Day Chip")
 @Composable
 fun SelectedDayChipPreview() {
     StudyMateTheme {
@@ -334,7 +342,7 @@ fun SelectedDayChipPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Day Chip")
 @Composable
 fun SelectedDayChipDarkPreview() {
     StudyMateTheme(darkTheme = true) {
@@ -350,7 +358,7 @@ fun SelectedDayChipDarkPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Day Chip")
 @Composable
 fun DayChipPreview() {
     StudyMateTheme {
@@ -366,7 +374,7 @@ fun DayChipPreview() {
     }
 }
 
-@Preview
+@Preview(group = "Day Chip")
 @Composable
 fun DayChipDarkPreview() {
     StudyMateTheme(darkTheme = true) {
