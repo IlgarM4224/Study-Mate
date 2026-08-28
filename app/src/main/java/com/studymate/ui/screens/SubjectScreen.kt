@@ -140,13 +140,13 @@ fun SubjectCard(
         modifier = modifier,
         onClick = { onClick(subject.id) }
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             SubjectName(
                 name = subject.name,
                 onEditClick = onEditClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(horizontal = 8.dp)
             )
 
             Row(
