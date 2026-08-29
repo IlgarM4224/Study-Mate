@@ -17,7 +17,8 @@ data class SubjectDetailState(
     val averageColloquium: Float? = null,
     val averageSeminar: Float? = null,
     val independentWork: Int = 10,
-    val attendanceScore: Float = 10f
+    val attendanceScore: Float = 10f,
+    val showMore: Boolean = false
 )
 class SubjectDetailScreenViewModel(
     savedStateHandle: SavedStateHandle,
@@ -79,7 +80,39 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
         }
     }
 
+    fun addMissed() {
+        val newMissed = _uiState.value.subject.missedLessons?.plus(1)
+
+        _uiState.update {
+            it.copy(
+                subject = it.subject.copy(missedLessons = newMissed)
+            )
+        }
+    }
+
+    fun removeMissed() {
+        val newMissed = when(_uiState.value.subject.missedLessons) {
+            null -> null
+            0 -> 0
+            else -> _uiState.value.subject.missedLessons?.minus(1)
+        }
+
+        _uiState.update {
+            it.copy(
+                subject = it.subject.copy(missedLessons = newMissed)
+            )
+        }
+    }
+
     fun onGradeClick() {}
+
+    fun onArrowClick() {
+        _uiState.update {
+            it.copy(
+                showMore = !it.showMore
+            )
+        }
+    }
 }
 
 fun Float.toLabel() = (if (this % 1f == 0f) toInt() else this).toString()

@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -33,7 +33,6 @@ import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.School
-import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -42,6 +41,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -63,12 +64,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
-import java.nio.file.WatchEvent
 
 
 @Composable
 fun SubjectNameCard(
     modifier: Modifier = Modifier,
+    onArrowClick: () -> Unit = {},
+    showMore: Boolean = false,
     subjectName: String,
 ) {
     Card(
@@ -95,6 +97,16 @@ fun SubjectNameCard(
                     leftLabel = subjectName,
                     textStyle = MaterialTheme.typography.headlineSmall
                 )
+
+                Spacer(Modifier.weight(1f))
+
+                IconButton(onClick = onArrowClick) {
+                    Icon(
+                        imageVector = if (showMore) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }
@@ -371,9 +383,23 @@ private fun Grade(
 @Composable
 fun LimitCard(
     modifier: Modifier,
+    addMissed: () -> Unit = {},
+    removeMissed: () -> Unit = {},
     limit: Int,
     missed: Int
 ) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = missed.toFloat()/limit,
+        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+        label = "progress_animation"
+    )
+
+    val progressColor = lerp(
+        start = MaterialTheme.colorScheme.primary,
+        stop = MaterialTheme.colorScheme.error,
+        fraction = animatedProgress
+    )
+
     ElevatedCard(modifier = modifier) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -398,8 +424,9 @@ fun LimitCard(
                     Spacer(Modifier.height(12.dp))
 
                     LinearProgressIndicator(
-                        progress = {missed.toFloat()/limit},
+                        progress = { animatedProgress },
                         gapSize = 0.dp,
+                        color = progressColor,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(8.dp)
@@ -409,20 +436,28 @@ fun LimitCard(
 
             Spacer(Modifier.height(16.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 LimitButton(
                     buttonColors = ButtonDefaults.outlinedButtonColors(),
                     icon = Icons.Default.Remove,
                     label = "Remove Missed",
                     labelColor = MaterialTheme.colorScheme.primary,
                     tint = MaterialTheme.colorScheme.primary,
+                    onClick = removeMissed,
+                    enabled = missed > 0
                 )
 
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.weight(1f))
 
                 LimitButton(
                     icon = Icons.Default.Add,
                     label = "Add Missed",
+                    onClick = addMissed,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    enabled = missed < limit
                 )
             }
         }
@@ -436,29 +471,32 @@ private fun LimitButton(
     icon: ImageVector,
     label: String? = null,
     labelColor: Color =  Color.Unspecified,
-    tint: Color? = null
+    tint: Color = LocalContentColor.current,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
 ) {
     Button(
-        onClick = {},
+        onClick = onClick,
         shape = RoundedCornerShape(8.dp),
         colors = buttonColors,
-        border = BorderStroke(
+        enabled = enabled,
+        border = if(enabled) BorderStroke(
             width = 1.dp,
             color = MaterialTheme.colorScheme.primary
-        ),
+        ) else null,
         modifier = modifier
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = tint ?: LocalContentColor.current
+            tint = if (enabled) tint else LocalContentColor.current
         )
 
         Spacer(Modifier.width(4.dp))
 
         Text(
             text = label ?: "",
-            color = labelColor,
+            color = if (enabled) labelColor else Color.Unspecified,
         )
     }
 }
