@@ -57,25 +57,23 @@ fun LessonCard(
     onCardClick: () -> Unit,
     onEditClick: () -> Unit
 ) {
-    val smallPadding = 8.dp
     Card (
         modifier = modifier,
         onClick = { onCardClick() }
     ) {
-        Column( modifier = Modifier.padding(8.dp) ) {
+        Column( modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp) ) {
             SubjectName(
                 name = name,
                 onEditClick = onEditClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(smallPadding)
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(Modifier.height(8.dp))
 
             Text(
                 text = teacher,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = smallPadding)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(Modifier.height(12.dp))
@@ -84,7 +82,7 @@ fun LessonCard(
                 LessonStartEndTime(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(smallPadding),
+                        .padding(bottom = 16.dp),
                     startTime = startTime,
                     endTime = startTime.plusMinutes(90)
                 )
@@ -95,9 +93,7 @@ fun LessonCard(
                 location = location,
                 startTime = startTime,
                 showTime = !isCardClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(smallPadding)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
