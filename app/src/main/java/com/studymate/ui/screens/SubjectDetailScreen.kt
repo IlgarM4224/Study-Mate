@@ -93,10 +93,14 @@ fun SubjectDetailScreenContent(
                 .padding(innerPadding)
         ) {
             SubjectNameCard(
-                modifier = Modifier.fillMaxWidth(),
                 subjectName = state.subject.name,
+                subjectCredit = state.subject.creditScore,
+                subjectHours = state.subject.hours,
                 showMore = state.showMore,
-                onArrowClick = onArrowClick
+                lecture = state.subject.teacher,
+                seminar = state.subject.teacher,
+                onArrowClick = onArrowClick,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(16.dp))

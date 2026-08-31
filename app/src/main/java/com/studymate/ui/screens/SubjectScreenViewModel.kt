@@ -15,10 +15,6 @@ class SubjectScreenViewModel: ViewModel() {
     )
     val uiState = _uiState.asStateFlow()
 
-    fun onSubjectClick() {
-
-    }
-
     fun onEditClick() {}
 
     fun onFabClick() {}

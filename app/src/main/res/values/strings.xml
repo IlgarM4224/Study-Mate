@@ -3,4 +3,5 @@
     <string name="schedule_screen">Schedule</string>
     <string name="subject_screen">Subjects</string>
     <string name="subject_detail_screen">Info</string>
+    <string name="no_info">No information</string>
 </resources>
