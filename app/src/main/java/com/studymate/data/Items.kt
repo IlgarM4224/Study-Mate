@@ -22,10 +22,10 @@ data class Subject(
     val name: String,
     val creditScore: Int? = null,
     val hours: Int? = null,
-    val teacher: String? = null,
+    val teacherLecture: String? = null,
+    val teacherSeminar: String? = teacherLecture,
     val semester: Int? = null,
-    val limit: Int? = null,
-    val missedLessons: Int? = null,
+    val missedLessons: Int = 0,
     val seminarGradesList: List<Int>,
     val colloquiumGradesList: List<Int>,
 )

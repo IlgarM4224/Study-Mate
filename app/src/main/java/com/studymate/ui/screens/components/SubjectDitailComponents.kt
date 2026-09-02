@@ -1,6 +1,5 @@
 package com.studymate.ui.screens.components
 
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -77,170 +76,6 @@ import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
-fun SubjectTeachersCard(
-    modifier: Modifier = Modifier,
-    cardColors: CardColors = CardDefaults.cardColors(),
-    lecture: String? = null,
-    seminar: String? = null
-) {
-    Card(
-        modifier = modifier,
-        colors = cardColors
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RoundedIcon(
-                    icon = Icons.Outlined.Person,
-                    backgroundColor = Color.Unspecified
-                )
-
-                Spacer(Modifier.width(8.dp))
-
-                CardLabel(leftLabel = "Teachers")
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            SubjectTeacher(
-                modifier = Modifier.fillMaxWidth(),
-                type = "Lectures",
-                name = lecture ?: stringResource(R.string.no_info)
-            )
-
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
-                modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp)
-            )
-
-            SubjectTeacher(
-                modifier = Modifier.fillMaxWidth(),
-                type = "Seminar",
-                name = seminar ?: stringResource(R.string.no_info)
-            )
-        }
-    }
-}
-
-
-@Composable
-fun SubjectTeacher(
-    modifier: Modifier = Modifier,
-    type: String,
-    name: String
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Chip(
-            label = type,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            textColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
-        )
-
-        Text(
-            text = name,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun SubjectInfo(
-    modifier: Modifier = Modifier,
-    hours: Int? = null,
-    credit: Int? = null,
-    cardColors: CardColors = CardDefaults.cardColors()
-) {
-    Card(modifier = modifier, colors = cardColors) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(8.dp)
-        ) {
-            SubjectInfoElement(
-                icon = Icons.Outlined.Timer,
-                label = "Hours",
-                value = hours,
-                modifier = Modifier.weight(1f)
-            )
-
-            VerticalDivider(
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            )
-
-            SubjectInfoElement(
-                icon = Icons.Outlined.CreditCard,
-                label = "Credit",
-                value = credit,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-fun SubjectInfoElement(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    iconSize: Dp = 30.dp,
-    tint: Color = MaterialTheme.colorScheme.primary,
-    label: String,
-    labelStyle: TextStyle = MaterialTheme.typography.bodySmall,
-    labelColor: Color =  Color.Unspecified,
-    value: Int? = null,
-    valueStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    valueColor: Color = MaterialTheme.colorScheme.primary
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            tint = tint,
-            contentDescription = null,
-            modifier = Modifier.size(iconSize)
-        )
-
-        Spacer(Modifier.width(8.dp))
-
-        Column {
-            Text(
-                text = label,
-                style = labelStyle,
-                color = labelColor
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = value?.toString() ?: stringResource(R.string.no_info),
-                style = valueStyle,
-                color = valueColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false)
-            )
-        }
-    }
-}
-
-@Composable
 fun SubjectNameCard(
     modifier: Modifier = Modifier,
     onArrowClick: () -> Unit = {},
@@ -311,6 +146,170 @@ fun SubjectNameCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SubjectInfo(
+    modifier: Modifier = Modifier,
+    hours: Int? = null,
+    credit: Int? = null,
+    cardColors: CardColors = CardDefaults.cardColors()
+) {
+    Card(modifier = modifier, colors = cardColors) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(8.dp)
+        ) {
+            SubjectInfoElement(
+                icon = Icons.Outlined.Timer,
+                label = "Hours",
+                value = hours,
+                modifier = Modifier.weight(1f)
+            )
+
+            VerticalDivider(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+            )
+
+            SubjectInfoElement(
+                icon = Icons.Outlined.CreditCard,
+                label = "Credit",
+                value = credit,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SubjectInfoElement(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    iconSize: Dp = 30.dp,
+    tint: Color = MaterialTheme.colorScheme.primary,
+    label: String,
+    labelStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    labelColor: Color =  Color.Unspecified,
+    value: Int? = null,
+    valueStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+    valueColor: Color = MaterialTheme.colorScheme.primary
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            tint = tint,
+            contentDescription = null,
+            modifier = Modifier.size(iconSize)
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        Column {
+            Text(
+                text = label,
+                style = labelStyle,
+                color = labelColor
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+                text = value?.toString() ?: stringResource(R.string.no_info),
+                style = valueStyle,
+                color = valueColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SubjectTeachersCard(
+    modifier: Modifier = Modifier,
+    cardColors: CardColors = CardDefaults.cardColors(),
+    lecture: String? = null,
+    seminar: String? = null
+) {
+    Card(
+        modifier = modifier,
+        colors = cardColors
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RoundedIcon(
+                    icon = Icons.Outlined.Person,
+                    backgroundColor = Color.Unspecified
+                )
+
+                Spacer(Modifier.width(8.dp))
+
+                CardLabel(leftLabel = "Teachers")
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            SubjectTeacher(
+                modifier = Modifier.fillMaxWidth(),
+                type = "Lectures",
+                name = lecture ?: stringResource(R.string.no_info)
+            )
+
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
+                modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp)
+            )
+
+            SubjectTeacher(
+                modifier = Modifier.fillMaxWidth(),
+                type = "Seminar",
+                name = seminar ?: stringResource(R.string.no_info)
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun SubjectTeacher(
+    modifier: Modifier = Modifier,
+    type: String,
+    name: String
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Chip(
+            label = type,
+            textStyle = MaterialTheme.typography.bodyMedium,
+            textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -595,7 +594,7 @@ fun LimitCard(
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = missed.toFloat()/limit,
-        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
         label = "progress_animation"
     )
 
@@ -670,42 +669,6 @@ fun LimitCard(
 }
 
 @Composable
-private fun LimitButton(
-    modifier: Modifier = Modifier,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    icon: ImageVector,
-    label: String? = null,
-    labelColor: Color =  Color.Unspecified,
-    tint: Color = LocalContentColor.current,
-    onClick: () -> Unit,
-    enabled: Boolean = true,
-) {
-    Button(
-        onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
-        colors = buttonColors,
-        enabled = enabled,
-        border = if(enabled) BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.primary
-        ) else null,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (enabled) tint else LocalContentColor.current
-        )
-
-        Spacer(Modifier.width(4.dp))
-
-        Text(
-            text = label ?: "",
-            color = if (enabled) labelColor else Color.Unspecified,
-        )
-    }
-}
-@Composable
 private fun RoundedIcon(
     modifier: Modifier = Modifier,
     icon: ImageVector,
@@ -765,7 +728,42 @@ private fun CardLabel(
     }
 }
 
+@Composable
+private fun LimitButton(
+    modifier: Modifier = Modifier,
+    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
+    icon: ImageVector,
+    label: String? = null,
+    labelColor: Color =  Color.Unspecified,
+    tint: Color = LocalContentColor.current,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(8.dp),
+        colors = buttonColors,
+        enabled = enabled,
+        border = if(enabled) BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary
+        ) else null,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (enabled) tint else LocalContentColor.current
+        )
 
+        Spacer(Modifier.width(4.dp))
+
+        Text(
+            text = label ?: "",
+            color = if (enabled) labelColor else Color.Unspecified,
+        )
+    }
+}
 
 @Preview(group = "Subject Teacher")
 @Composable

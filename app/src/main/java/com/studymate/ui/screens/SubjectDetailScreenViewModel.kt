@@ -18,7 +18,8 @@ data class SubjectDetailState(
     val averageSeminar: Float? = null,
     val independentWork: Int = 10,
     val attendanceScore: Float = 10f,
-    val showMore: Boolean = false
+    val showMore: Boolean = false,
+    val limit: Int? = null
 )
 class SubjectDetailScreenViewModel(
     savedStateHandle: SavedStateHandle,
@@ -31,6 +32,7 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
             subject = TestData.getSubjects()[subjectId - 1],
             averageSeminar = getAverage(TestData.getSubjects()[subjectId - 1].seminarGradesList),
             averageColloquium = getAverage(TestData.getSubjects()[subjectId - 1].colloquiumGradesList),
+            limit = calculateLimit(TestData.getSubjects()[subjectId - 1].hours),
             overallScore = getOverallScore(
                 averageSeminar = getAverage(TestData.getSubjects()[subjectId - 1].seminarGradesList),
                 averageColloquium = getAverage(TestData.getSubjects()[subjectId - 1].colloquiumGradesList),
@@ -81,7 +83,7 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
     }
 
     fun addMissed() {
-        val newMissed = _uiState.value.subject.missedLessons?.plus(1)
+        val newMissed = _uiState.value.subject.missedLessons + 1
 
         _uiState.update {
             it.copy(
@@ -91,11 +93,8 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
     }
 
     fun removeMissed() {
-        val newMissed = when(_uiState.value.subject.missedLessons) {
-            null -> null
-            0 -> 0
-            else -> _uiState.value.subject.missedLessons?.minus(1)
-        }
+        val newMissed = _uiState.value.subject.missedLessons - 1
+
 
         _uiState.update {
             it.copy(
@@ -113,6 +112,12 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
             )
         }
     }
+}
+
+fun calculateLimit(hours: Int?): Int? {
+    if (hours == null) return null
+
+    return hours/8
 }
 
 fun Float.toLabel() = (if (this % 1f == 0f) toInt() else this).toString()

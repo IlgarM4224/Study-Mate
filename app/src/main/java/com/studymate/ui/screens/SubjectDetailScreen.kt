@@ -97,8 +97,8 @@ fun SubjectDetailScreenContent(
                 subjectCredit = state.subject.creditScore,
                 subjectHours = state.subject.hours,
                 showMore = state.showMore,
-                lecture = state.subject.teacher,
-                seminar = state.subject.teacher,
+                lecture = state.subject.teacherLecture,
+                seminar = state.subject.teacherSeminar,
                 onArrowClick = onArrowClick,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -115,14 +115,14 @@ fun SubjectDetailScreenContent(
                 attendanceScore = state.attendanceScore
             )
 
-            if (state.subject.limit != null) {
+            if (state.limit != null) {
                 Spacer(Modifier.height(16.dp))
 
                 LimitCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    limit = state.subject.limit,
-                    missed = state.subject.missedLessons ?: 0,
+                    limit = state.limit,
+                    missed = state.subject.missedLessons,
                     addMissed = addMissedLesson,
                     removeMissed = removeMissedLesson
                 )
@@ -163,6 +163,8 @@ fun SubjectDetailScreenPreview() {
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
                     subject = TestData.getSubjects()[0],
+                    showMore = false,
+                    limit = 9,
                     overallScore = 40f,
                     averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
                     averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList)
@@ -181,6 +183,8 @@ fun SubjectDetailScreenDarkPreview() {
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
                     subject = TestData.getSubjects()[0],
+                    showMore = false,
+                    limit = 9,
                     overallScore = 34.7f,
                     averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
                     averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList)
