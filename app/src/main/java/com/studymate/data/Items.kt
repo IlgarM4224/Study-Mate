@@ -1,12 +1,13 @@
 package com.studymate.data
 
+import com.studymate.ui.screens.LessonType
 import java.time.DayOfWeek
 import java.time.LocalTime
 
 data class Lesson(
     val name: String,
     val teacher: String,
-    val type: String,
+    val type: LessonType,
     val location: String,
     val startTime: LocalTime
 )

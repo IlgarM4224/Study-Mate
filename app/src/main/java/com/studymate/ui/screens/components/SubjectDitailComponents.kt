@@ -23,6 +23,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -31,8 +35,10 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.CreditCard
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.School
@@ -45,16 +51,21 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -67,14 +78,94 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.studymate.R
+import com.studymate.ui.screens.GradeType
+import com.studymate.ui.screens.LessonType
 import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GradeBottomSheet(
+    modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(),
+    onDismissRequest: () -> Unit,
+    label: String,
+    gradeType: GradeType = GradeType.SEMINAR,
+    addGrade: (GradeType, Int) -> Unit,
+    isError: Boolean = false,
+) {
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+    ) {
+        val state = rememberTextFieldState()
+        val gradeValue = state.text.toString()
+
+        GradeBottomSheetContent(
+            label = label,
+            state = state,
+            onCancel = onDismissRequest,
+            onApply = {
+                if (gradeValue.isDigitsOnly()) {
+                    addGrade(gradeType, gradeValue.toInt())
+                }
+            },
+            isError = isError
+        )
+    }
+}
+
+@Composable
+fun GradeBottomSheetContent(
+    modifier: Modifier = Modifier,
+    state: TextFieldState = rememberTextFieldState(),
+    label: String,
+    onCancel: () -> Unit,
+    onApply: () -> Unit,
+    isError: Boolean = false,
+) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(label) },
+            shape = RoundedCornerShape(8.dp),
+            lineLimits = TextFieldLineLimits.SingleLine,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+            ),
+            state = state,
+            isError = isError,
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        TwoButtons(
+            leftLabel = "Cancel",
+            leftIcon = Icons.Outlined.Cancel,
+            leftOnClick = onCancel,
+            rightLabel = "Apply",
+            rightOnClick = onApply,
+            rightIcon = Icons.Outlined.Done,
+            spacer = 1f,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
 @Composable
 fun SubjectNameCard(
     modifier: Modifier = Modifier,
@@ -266,7 +357,7 @@ private fun SubjectTeachersCard(
 
             SubjectTeacher(
                 modifier = Modifier.fillMaxWidth(),
-                type = "Lectures",
+                type = LessonType.LECTURES,
                 name = lecture ?: stringResource(R.string.no_info)
             )
 
@@ -278,7 +369,7 @@ private fun SubjectTeachersCard(
 
             SubjectTeacher(
                 modifier = Modifier.fillMaxWidth(),
-                type = "Seminar",
+                type = LessonType.SEMINAR,
                 name = seminar ?: stringResource(R.string.no_info)
             )
         }
@@ -289,7 +380,7 @@ private fun SubjectTeachersCard(
 @Composable
 private fun SubjectTeacher(
     modifier: Modifier = Modifier,
-    type: String,
+    type: LessonType,
     name: String
 ) {
     Row(
@@ -297,11 +388,9 @@ private fun SubjectTeacher(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Chip(
-            label = type,
+        LessonTypeChip(
+            type = type,
             textStyle = MaterialTheme.typography.bodyMedium,
-            textColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
         )
 
         Text(
@@ -494,7 +583,8 @@ fun GradesCard(
     modifier: Modifier = Modifier,
     label: String,
     icon: ImageVector,
-    onAddClick: () -> Unit = {},
+    gradeType: GradeType,
+    onAddClick: (GradeType) -> Unit = {},
     onGradeClick: () -> Unit = {},
     gradesList: List<Int> = emptyList()
 ) {
@@ -520,6 +610,7 @@ fun GradesCard(
                     .horizontalScroll(rememberScrollState())
                     .fillMaxWidth(),
                 gradesList = gradesList,
+                gradeType = gradeType,
                 onAddClick = onAddClick,
                 onGradeClick = onGradeClick
             )
@@ -531,7 +622,8 @@ fun GradesCard(
 private fun GradesRow(
     modifier: Modifier = Modifier,
     gradesList: List<Int> = emptyList(),
-    onAddClick: () -> Unit = {},
+    gradeType: GradeType,
+    onAddClick: (GradeType) -> Unit = {},
     onGradeClick: () -> Unit = {}
 ) {
     Row(
@@ -547,7 +639,7 @@ private fun GradesRow(
         }
 
         OutlinedButton(
-            onClick = onAddClick,
+            onClick = { onAddClick(gradeType) },
             shape = RoundedCornerShape(8.dp)
         ) {
             Icon(
@@ -640,30 +732,18 @@ fun LimitCard(
 
             Spacer(Modifier.height(16.dp))
 
-            Row(
+            TwoButtons(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                LimitButton(
-                    buttonColors = ButtonDefaults.outlinedButtonColors(),
-                    icon = Icons.Default.Remove,
-                    label = "Remove Missed",
-                    labelColor = MaterialTheme.colorScheme.primary,
-                    tint = MaterialTheme.colorScheme.primary,
-                    onClick = removeMissed,
-                    enabled = missed > 0
-                )
-
-                Spacer(Modifier.weight(1f))
-
-                LimitButton(
-                    icon = Icons.Default.Add,
-                    label = "Add Missed",
-                    onClick = addMissed,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    enabled = missed < limit
-                )
-            }
+                leftLabel = "Remove Missed",
+                leftEnabled = missed > 0,
+                leftIcon = Icons.Default.Remove,
+                leftOnClick = removeMissed,
+                rightLabel = "Add Missed",
+                rightOnClick = addMissed,
+                rightIcon = Icons.Default.Add,
+                rightEnabled = missed < limit,
+                spacer = 1f,
+            )
         }
     }
 }
@@ -729,10 +809,59 @@ private fun CardLabel(
 }
 
 @Composable
+private fun TwoButtons(
+    modifier: Modifier = Modifier,
+    leftLabel: String,
+    leftLabelColor: Color = MaterialTheme.colorScheme.primary,
+    leftColors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
+    leftIcon: ImageVector? = null,
+    leftIconTint: Color = MaterialTheme.colorScheme.primary,
+    leftOnClick: () -> Unit,
+    leftEnabled: Boolean = true,
+    rightLabel: String,
+    rightLabelColor: Color = Color.Unspecified,
+    rightColors: ButtonColors =  ButtonDefaults.buttonColors(),
+    rightIcon: ImageVector? = null,
+    rightIconTint: Color = MaterialTheme.colorScheme.onPrimary,
+    rightOnClick: () -> Unit,
+    rightEnabled: Boolean = true,
+    spacer: Float? = null,
+    spacerDp: Dp? = null,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LimitButton(
+            buttonColors = leftColors,
+            icon = leftIcon,
+            label = leftLabel,
+            labelColor = leftLabelColor,
+            tint = leftIconTint,
+            onClick = leftOnClick,
+            enabled = leftEnabled
+        )
+
+        if (spacer != null) Spacer(Modifier.weight(spacer))
+        else if (spacerDp != null) Spacer(Modifier.width(spacerDp))
+
+        LimitButton(
+            buttonColors = rightColors,
+            icon = rightIcon,
+            label = rightLabel,
+            labelColor = rightLabelColor,
+            tint = rightIconTint,
+            onClick = rightOnClick,
+            enabled = rightEnabled,
+        )
+    }
+}
+
+@Composable
 private fun LimitButton(
     modifier: Modifier = Modifier,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    icon: ImageVector,
+    icon: ImageVector?,
     label: String? = null,
     labelColor: Color =  Color.Unspecified,
     tint: Color = LocalContentColor.current,
@@ -750,18 +879,56 @@ private fun LimitButton(
         ) else null,
         modifier = modifier
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (enabled) tint else LocalContentColor.current
-        )
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = if (enabled) tint else LocalContentColor.current
+            )
 
-        Spacer(Modifier.width(4.dp))
+            Spacer(Modifier.width(4.dp))
+        }
 
         Text(
             text = label ?: "",
             color = if (enabled) labelColor else Color.Unspecified,
         )
+    }
+}
+
+@Preview(group = "Grade Bottom Sheet")
+@Composable
+fun GradeBottomSheetPreview() {
+    StudyMateTheme {
+        Surface {
+            GradeBottomSheetContent(
+                onApply = {},
+                onCancel = {},
+                label = "Seminar grade",
+                isError = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            )
+        }
+    }
+}
+
+@Preview(group = "Grade Bottom Sheet")
+@Composable
+fun GradeBottomSheetDarkPreview() {
+    StudyMateTheme(darkTheme = true) {
+        Surface {
+            GradeBottomSheetContent(
+                onCancel = {},
+                onApply = {},
+                label = "Seminar grade",
+                isError = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            )
+        }
     }
 }
 
@@ -806,7 +973,7 @@ fun SubjectTeacherPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                type = "Lecture",
+                type = LessonType.LECTURES,
                 name = "Hicran"
             )
         }
@@ -822,7 +989,7 @@ fun SubjectTeacherDarkPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                type = "Lecture",
+                type = LessonType.LECTURES,
                 name = "Hicran"
             )
         }
@@ -936,6 +1103,7 @@ fun GradesCardPreview() {
                     .fillMaxWidth()
                     .padding(16.dp),
                 label = "Grades for Seminar",
+                gradeType = GradeType.SEMINAR,
                 icon = Icons.Outlined.People,
                 gradesList = listOf(7,8,8)
             )
@@ -953,6 +1121,7 @@ fun GradesCardDarkPreview() {
                     .fillMaxWidth()
                     .padding(16.dp),
                 label = "Grades for Colloquium",
+                gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
                 gradesList = listOf(7,8,8)
             )

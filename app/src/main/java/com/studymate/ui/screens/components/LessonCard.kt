@@ -19,7 +19,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CoPresent
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -33,13 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.studymate.R
 import com.studymate.data.TestData
 import com.studymate.ui.screens.LessonCardUIState
+import com.studymate.ui.screens.LessonType
 import com.studymate.ui.theme.StudyMateTheme
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -50,7 +56,7 @@ fun LessonCard(
     modifier: Modifier = Modifier,
     name: String,
     teacher: String,
-    type: String,
+    type: LessonType,
     location: String,
     startTime: LocalTime,
     isCardClicked: Boolean = false,
@@ -177,7 +183,7 @@ fun SubjectName(
 @Composable
 private fun LessonTypeLocationTime(
     modifier: Modifier = Modifier,
-    type: String,
+    type: LessonType,
     location: String,
     startTime: LocalTime?,
     showTime: Boolean
@@ -190,7 +196,10 @@ private fun LessonTypeLocationTime(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Chip(label = type, textStyle = MaterialTheme.typography.labelSmall)
+            LessonTypeChip(
+                type = type,
+                textStyle = MaterialTheme.typography.labelMedium,
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -205,7 +214,7 @@ private fun LessonTypeLocationTime(
 
             Text(
                 text = location,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -224,11 +233,40 @@ private fun LessonTypeLocationTime(
 }
 
 @Composable
+fun LessonTypeChip(
+    modifier: Modifier = Modifier,
+    type: LessonType,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+) {
+    val (label,icon) = when(type) {
+        LessonType.SEMINAR -> stringResource(R.string.seminar) to Icons.Outlined.Groups
+        LessonType.LECTURES -> stringResource(R.string.lectures) to Icons.Outlined.CoPresent
+    }
+
+    val (backgroundColor, textColor) = when(type) {
+        LessonType.SEMINAR -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
+        LessonType.LECTURES -> MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
+    }
+
+    Chip(
+        modifier = modifier,
+        label = label,
+        icon = icon,
+        textStyle = textStyle,
+        textColor = textColor,
+        tint = textColor,
+        backgroundColor = backgroundColor
+    )
+}
+
+@Composable
 fun Chip(
     modifier: Modifier = Modifier,
     label: String,
+    icon: ImageVector? = null,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     textColor: Color =  MaterialTheme.colorScheme.onPrimaryContainer,
+    tint: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
     Box(
@@ -237,12 +275,28 @@ fun Chip(
             .background(backgroundColor)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Text(
-            text = label,
-            style = textStyle,
-            color = textColor,
-            fontWeight = FontWeight.Medium
-        )
+        Row(
+            modifier = Modifier.padding(4.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = tint
+                )
+            }
+
+            Spacer(Modifier.width(8.dp))
+
+            Text(
+                text = label,
+                style = textStyle,
+                color = textColor,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
 }
 
@@ -338,7 +392,7 @@ fun LessonCardPreview() {
             LessonCard(
                 name = "Programming",
                 teacher = "Abbas",
-                type = "Lecture",
+                type = LessonType.SEMINAR,
                 location = "301",
                 startTime = LocalTime.of(8,30),
                 isCardClicked = true,
@@ -360,10 +414,10 @@ fun LessonCardDarkPreview() {
             LessonCard(
                 name = "Programming",
                 teacher = "Abbas",
-                type = "Lecture",
+                type = LessonType.LECTURES,
                 location = "301",
                 startTime = LocalTime.of(8,30),
-                isCardClicked = true,
+                isCardClicked = false,
                 onCardClick = {},
                 onEditClick = {},
                 modifier = Modifier
