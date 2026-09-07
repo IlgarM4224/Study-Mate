@@ -1,5 +1,6 @@
 package com.studymate.data
 
+import com.studymate.ui.screens.LessonType
 import java.time.DayOfWeek
 import java.time.LocalTime
 
@@ -17,7 +18,7 @@ object TestData {
         Lesson(
             name = "Programming basics",
             teacher = "Hicran",
-            type = "Lecture",
+            type = LessonType.LECTURES,
             location = "409",
             startTime = LocalTime.of(8,30),
         ),
@@ -25,7 +26,7 @@ object TestData {
         Lesson(
             name = "Web technologies",
             teacher = "Alla",
-            type = "Seminar",
+            type = LessonType.SEMINAR,
             location = "401",
             startTime = LocalTime.of(10,15),
         ),
@@ -33,7 +34,7 @@ object TestData {
         Lesson(
             name = "Mathematical analysis",
             teacher = "Abbas",
-            type = "Lecture",
+            type = LessonType.LECTURES,
             location = "202",
             startTime = LocalTime.of(12,0),
         ),
@@ -41,7 +42,7 @@ object TestData {
         Lesson(
             name = "Analytical geometry",
             teacher = "Adil",
-            type = "Seminar",
+            type = LessonType.SEMINAR,
             location = "311",
             startTime = LocalTime.of(13,50),
         ),
@@ -49,7 +50,7 @@ object TestData {
         Lesson(
             name = "Physics",
             teacher = "Murad",
-            type = "Lecture",
+            type = LessonType.LECTURES,
             location = "200",
             startTime = LocalTime.of(15,35),
         ),
@@ -57,7 +58,7 @@ object TestData {
         Lesson(
             name = "Databases",
             teacher = "Anton",
-            type = "Seminar",
+            type = LessonType.SEMINAR,
             location = "405",
             startTime = LocalTime.of(17,20),
         )
@@ -85,8 +86,8 @@ object TestData {
             teacherSeminar = "Ramzi",
             semester = 1,
             missedLessons = 4,
-            seminarGradesList = listOf(9,8,10),
-            colloquiumGradesList = listOf(9,9,10)
+            seminarGradesList = emptyList(),
+            colloquiumGradesList = emptyList()
         ),
 
         Subject(
