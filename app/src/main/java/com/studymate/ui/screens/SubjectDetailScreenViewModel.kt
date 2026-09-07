@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.update
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+enum class GradeType { SEMINAR, COLLOQUIUM, NONE }
+
+enum class LessonType { SEMINAR, LECTURES }
+
 data class SubjectDetailState(
     val subject: Subject,
     val maxScore: Int = 50,
@@ -19,7 +23,9 @@ data class SubjectDetailState(
     val independentWork: Int = 10,
     val attendanceScore: Float = 10f,
     val showMore: Boolean = false,
-    val limit: Int? = null
+    val limit: Int? = null,
+    val activeGradeType: GradeType = GradeType.NONE,
+    val isIncorrectInput: Boolean = false
 )
 class SubjectDetailScreenViewModel(
     savedStateHandle: SavedStateHandle,
@@ -46,9 +52,35 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
 
     fun onMoreClick() {}
 
-    fun addColloquiumGrade() {
+    fun onAddClick(type: GradeType) {
+        _uiState.update {
+            it.copy(activeGradeType = type)
+        }
+    }
+
+    fun onDismissRequest() {
+        _uiState.update {
+            it.copy(activeGradeType = GradeType.NONE)
+        }
+    }
+
+    fun addGrade(type: GradeType, grade: Int) {
+        when(type) {
+            GradeType.SEMINAR -> {
+                addSeminarGrade(grade)
+                onDismissRequest()
+            }
+            GradeType.COLLOQUIUM -> {
+                addColloquiumGrade(grade)
+                onDismissRequest()
+            }
+            else -> onDismissRequest()
+        }
+    }
+
+    fun addColloquiumGrade(grade: Int) {
         val newList = _uiState.value.subject.colloquiumGradesList.toMutableList()
-        newList.add(newList.size, 0)
+        newList.add(grade)
 
         _uiState.update {
             it.copy(
@@ -64,9 +96,9 @@ private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestinat
         }
     }
 
-    fun addSeminarGrade() {
+    fun addSeminarGrade(grade: Int) {
         val newList = _uiState.value.subject.seminarGradesList.toMutableList()
-        newList.add(newList.size, 10)
+        newList.add(grade)
 
         _uiState.update {
             it.copy(
