@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -119,7 +120,7 @@ fun SubjectDetailScreenContent(
                 overallScore = state.overallScore ?: 0f,
                 averageColloquium = state.averageColloquium ?: 0f,
                 averageSeminar = state.averageSeminar ?: 0f,
-                independentWork = state.independentWork,
+                independentWork = state.independentWorkSum,
                 attendanceScore = state.attendanceScore
             )
 
@@ -161,12 +162,29 @@ fun SubjectDetailScreenContent(
                 gradesList = state.subject.colloquiumGradesList
             )
 
+            Spacer(Modifier.height(16.dp))
+
+            GradesCard(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                label = "Grades for Independent work",
+                gradeType = GradeType.INDEPENDENT_WORK,
+                icon = Icons.Outlined.ContactPage,
+                onAddClick = onAddClick,
+                gradesList = state.subject.independentWorkGradesList
+            )
+
             AnimatedVisibility(visible = state.activeGradeType != GradeType.NONE) {
                 GradeBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     onDismissRequest = onDismissRequest,
                     gradeType = state.activeGradeType,
-                    label = if (state.activeGradeType == GradeType.SEMINAR) "Seminar Grade" else "Colloquium grade",
+                    label = when(state.activeGradeType) {
+                        GradeType.INDEPENDENT_WORK -> "Independent Work grade"
+                        GradeType.COLLOQUIUM -> "Colloquium grade"
+                        GradeType.SEMINAR -> "Seminar grade"
+                        else -> ""
+                    },
                     addGrade = addGrade,
                     isError = state.isIncorrectInput
                 )
@@ -180,6 +198,7 @@ fun SubjectDetailScreenContent(
 fun SubjectDetailScreenPreview() {
     StudyMateTheme {
         Surface {
+            val test = TestData.getSubjects()[0]
             SubjectDetailScreenContent(
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
@@ -187,8 +206,8 @@ fun SubjectDetailScreenPreview() {
                     showMore = false,
                     limit = 9,
                     overallScore = 40f,
-                    averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
-                    averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList),
+                    averageColloquium = test.colloquiumGradesList.averageForLabel(),
+                    averageSeminar = test.seminarGradesList.averageForLabel(),
                 ),
                 addGrade = { _, _ -> }
             )
@@ -201,15 +220,16 @@ fun SubjectDetailScreenPreview() {
 fun SubjectDetailScreenDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
+            val test = TestData.getSubjects()[0]
             SubjectDetailScreenContent(
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
                     subject = TestData.getSubjects()[0],
                     showMore = false,
                     limit = 9,
-                    overallScore = 34.7f,
-                    averageColloquium = getAverage(TestData.getSubjects()[0].colloquiumGradesList),
-                    averageSeminar = getAverage(TestData.getSubjects()[0].seminarGradesList)
+                    overallScore = 40f,
+                    averageColloquium = test.colloquiumGradesList.averageForLabel(),
+                    averageSeminar = test.seminarGradesList.averageForLabel(),
                 ),
                 addGrade = { _, _ -> }
             )

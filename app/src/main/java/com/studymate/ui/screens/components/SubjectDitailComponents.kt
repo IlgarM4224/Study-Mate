@@ -88,7 +88,6 @@ import androidx.core.text.isDigitsOnly
 import com.studymate.R
 import com.studymate.ui.screens.GradeType
 import com.studymate.ui.screens.LessonType
-import com.studymate.ui.screens.toLabel
 import com.studymate.ui.theme.StudyMateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -520,7 +519,7 @@ private fun OverallScoreElement(
                 )
 
                 Text(
-                    text = "${score.toLabel()} / $maxScore",
+                    text = "$score / $maxScore",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 4.dp)
                 )
@@ -560,7 +559,7 @@ private fun OverallScoreDiagram(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = overallScore.toLabel(),
+                text = overallScore.toString(),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
@@ -802,7 +801,9 @@ private fun CardLabel(
         if(rightLabel != null) {
             Chip(
                 label = rightLabel,
-                textColor = rightLabelColor
+                textStyle = MaterialTheme.typography.bodyMedium,
+                textColor = rightLabelColor,
+                shape = RoundedCornerShape(16.dp)
             )
         }
     }

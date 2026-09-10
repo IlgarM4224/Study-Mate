@@ -35,12 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
 import com.studymate.data.TestData
@@ -150,6 +152,8 @@ private fun LessonStartEndTime(
 fun SubjectName(
     modifier: Modifier = Modifier,
     name: String,
+    maxLines: Int = 1,
+    style: TextStyle = MaterialTheme.typography.titleLarge,
     onEditClick: () -> Unit,
 ){
     Row(
@@ -159,9 +163,9 @@ fun SubjectName(
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.titleLarge,
+            style = style,
             fontWeight = FontWeight.Bold,
-            maxLines = 1,
+            maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
@@ -198,6 +202,7 @@ private fun LessonTypeLocationTime(
         Row(verticalAlignment = Alignment.CenterVertically) {
             LessonTypeChip(
                 type = type,
+                iconSize = 16.dp,
                 textStyle = MaterialTheme.typography.labelMedium,
             )
 
@@ -210,7 +215,7 @@ private fun LessonTypeLocationTime(
                 modifier = Modifier.size(16.dp)
             )
 
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(2.dp))
 
             Text(
                 text = location,
@@ -236,7 +241,10 @@ private fun LessonTypeLocationTime(
 fun LessonTypeChip(
     modifier: Modifier = Modifier,
     type: LessonType,
+    iconSize: Dp? = null,
+    text: String? = null,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    shape: Shape = RoundedCornerShape(8.dp),
 ) {
     val (label,icon) = when(type) {
         LessonType.SEMINAR -> stringResource(R.string.seminar) to Icons.Outlined.Groups
@@ -250,12 +258,14 @@ fun LessonTypeChip(
 
     Chip(
         modifier = modifier,
-        label = label,
+        label = text ?: label,
         icon = icon,
+        iconSize = iconSize,
         textStyle = textStyle,
         textColor = textColor,
         tint = textColor,
-        backgroundColor = backgroundColor
+        backgroundColor = backgroundColor,
+        shape = shape
     )
 }
 
@@ -264,14 +274,17 @@ fun Chip(
     modifier: Modifier = Modifier,
     label: String,
     icon: ImageVector? = null,
+    iconSize: Dp? = null,
+    shape: Shape = RoundedCornerShape(8.dp),
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     textColor: Color =  MaterialTheme.colorScheme.onPrimaryContainer,
     tint: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(shape)
             .background(backgroundColor)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
@@ -284,11 +297,12 @@ fun Chip(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = tint
+                    tint = tint,
+                    modifier = if(iconSize == null) Modifier else Modifier.size(16.dp)
                 )
-            }
 
-            Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(8.dp))
+            }
 
             Text(
                 text = label,

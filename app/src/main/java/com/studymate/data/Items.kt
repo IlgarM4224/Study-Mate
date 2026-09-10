@@ -29,4 +29,5 @@ data class Subject(
     val missedLessons: Int = 0,
     val seminarGradesList: List<Int>,
     val colloquiumGradesList: List<Int>,
+    val independentWorkGradesList: List<Int> = emptyList()
 )
