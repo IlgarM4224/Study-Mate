@@ -65,7 +65,7 @@ fun SubjectScreen(
         state = state,
         onSubjectClick = navigateToDetailScreen,
         onEditClick = viewModel::onEditClick,
-        onFabClick = { viewModel.onFabClick() },
+        onFabClick = { viewModel.addNewSubject() },
         navigateScheduleScreen = navigateScheduleScreen,
         modifier = modifier
     )

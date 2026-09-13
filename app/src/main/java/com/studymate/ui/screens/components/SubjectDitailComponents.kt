@@ -99,7 +99,7 @@ fun GradeBottomSheet(
     label: String,
     gradeType: GradeType = GradeType.SEMINAR,
     addGrade: (GradeType, Int) -> Unit,
-    isError: Boolean = false,
+    isEntryValid: Boolean = false,
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -118,7 +118,7 @@ fun GradeBottomSheet(
                     addGrade(gradeType, gradeValue.toInt())
                 }
             },
-            isError = isError
+            isEntryValid = isEntryValid
         )
     }
 }
@@ -130,7 +130,7 @@ fun GradeBottomSheetContent(
     label: String,
     onCancel: () -> Unit,
     onApply: () -> Unit,
-    isError: Boolean = false,
+    isEntryValid: Boolean = false,
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -148,7 +148,7 @@ fun GradeBottomSheetContent(
                 imeAction = ImeAction.Done,
             ),
             state = state,
-            isError = isError,
+            isError = !isEntryValid,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -160,6 +160,7 @@ fun GradeBottomSheetContent(
             rightLabel = "Apply",
             rightOnClick = onApply,
             rightIcon = Icons.Outlined.Done,
+            rightEnabled = isEntryValid,
             spacer = 1f,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -906,7 +907,7 @@ fun GradeBottomSheetPreview() {
                 onApply = {},
                 onCancel = {},
                 label = "Seminar grade",
-                isError = false,
+                isEntryValid = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -924,7 +925,7 @@ fun GradeBottomSheetDarkPreview() {
                 onCancel = {},
                 onApply = {},
                 label = "Seminar grade",
-                isError = false,
+                isEntryValid = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

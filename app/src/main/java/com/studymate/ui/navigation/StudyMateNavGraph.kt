@@ -17,6 +17,16 @@ import com.studymate.ui.screens.SubjectDetailDestination
 import com.studymate.ui.screens.SubjectDetailScreen
 import com.studymate.ui.screens.SubjectScreen
 
+
+/**
+ * Top-level Navigation Host for the StudyMate application.
+ *
+ * Configures the app's navigation graph, defines screen routes, passes navigation arguments,
+ * and handles backstack transitions between screens.
+ *
+ * @param navController Controller responsible for performing navigation actions and managing the back stack.
+ * @param modifier Optional [Modifier] applied to the root [NavHost] container.
+ */
 @Composable
 fun StudyMateNavHost(
     navController: NavHostController,
@@ -27,6 +37,7 @@ fun StudyMateNavHost(
         startDestination = ScheduleDestination.route,
         modifier = modifier
     ) {
+        // Schedule Screen Route
         composable(route = ScheduleDestination.route) {
             ScheduleScreen(
                 navigateSubjectScreen = {
@@ -38,6 +49,7 @@ fun StudyMateNavHost(
             )
         }
 
+        // Subjects Overview Screen Route
         composable(route = SubjectDestination.route) {
             SubjectScreen(
                 navigateScheduleScreen = {
@@ -52,8 +64,11 @@ fun StudyMateNavHost(
             )
         }
 
+        // Subject Detail Screen Route
         composable(
             route = SubjectDetailDestination.routeWithArgs,
+
+            // Defines expected route arguments (requires an Integer subject ID)
             arguments = listOf(navArgument(SubjectDetailDestination.SUBJECT_ID_ARG) {
                 type = NavType.IntType
             })

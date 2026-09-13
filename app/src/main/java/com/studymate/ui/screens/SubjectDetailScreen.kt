@@ -179,14 +179,9 @@ fun SubjectDetailScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     onDismissRequest = onDismissRequest,
                     gradeType = state.activeGradeType,
-                    label = when(state.activeGradeType) {
-                        GradeType.INDEPENDENT_WORK -> "Independent Work grade"
-                        GradeType.COLLOQUIUM -> "Colloquium grade"
-                        GradeType.SEMINAR -> "Seminar grade"
-                        else -> ""
-                    },
+                    label = state.sheetState.getLabel(),
                     addGrade = addGrade,
-                    isError = state.isIncorrectInput
+                    isEntryValid = state.sheetState.isEntryValid
                 )
             }
         }
@@ -203,6 +198,7 @@ fun SubjectDetailScreenPreview() {
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
                     subject = TestData.getSubjects()[0],
+                    sheetState = BottomSheetState(),
                     showMore = false,
                     limit = 9,
                     overallScore = 40f,
@@ -225,6 +221,7 @@ fun SubjectDetailScreenDarkPreview() {
                 modifier = Modifier.padding(16.dp),
                 state = SubjectDetailState(
                     subject = TestData.getSubjects()[0],
+                    sheetState = BottomSheetState(),
                     showMore = false,
                     limit = 9,
                     overallScore = 40f,
