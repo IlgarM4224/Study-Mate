@@ -114,8 +114,25 @@ class SubjectDetailScreenViewModel(
     fun onAddClick(type: GradeType) {
         _uiState.update {
             it.copy(
-                sheetState = it.sheetState.copy(type = type),
+                sheetState = it.sheetState.copy(
+                    type = type,
+                    grade = "",
+                    isEntryValid = false
+                ),
                 activeGradeType = type,
+            )
+        }
+    }
+
+    fun onGradeChange(newGrade: String) {
+        val isValid = isValidGrade(newGrade) && newGrade.isNotEmpty()
+
+        _uiState.update {
+            it.copy(
+                sheetState = it.sheetState.copy(
+                    grade = newGrade,
+                    isEntryValid = isValid
+                )
             )
         }
     }
@@ -239,9 +256,11 @@ class SubjectDetailScreenViewModel(
     }
 }
 
-//fun isValidGrade(grade: String): Boolean {
-//    return grade.isNotBlank() && grade.isNotEmpty() && grade.isDigitsOnly()
-//}
+fun isValidGrade(grade: String): Boolean {
+    val numericGrade = grade.toIntOrNull() ?: return false
+
+    return numericGrade in 0..10
+}
 
 
 /**

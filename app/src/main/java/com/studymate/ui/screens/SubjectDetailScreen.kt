@@ -58,6 +58,7 @@ fun SubjectDetailScreen(
         addGrade = { type, grade ->
             viewModel.addGrade(type, grade)
         },
+        onGradeChange = { viewModel.onGradeChange(it)},
         onMoreClick = { viewModel.onMoreClick() },
         onGradeClick = { viewModel.onGradeClick() },
         addMissedLesson = { viewModel.addMissed() },
@@ -76,6 +77,7 @@ fun SubjectDetailScreenContent(
     onDismissRequest: () -> Unit = {},
     addGrade: (GradeType, Int) -> Unit,
     onGradeClick: () -> Unit = {},
+    onGradeChange: (String) -> Unit = {},
     addMissedLesson: () -> Unit = {},
     removeMissedLesson: () -> Unit = {},
     onArrowClick: () -> Unit = {},
@@ -177,11 +179,10 @@ fun SubjectDetailScreenContent(
             AnimatedVisibility(visible = state.activeGradeType != GradeType.NONE) {
                 GradeBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
+                    sheetState = state.sheetState,
                     onDismissRequest = onDismissRequest,
-                    gradeType = state.activeGradeType,
-                    label = state.sheetState.getLabel(),
+                    onGradeChange = onGradeChange,
                     addGrade = addGrade,
-                    isEntryValid = state.sheetState.isEntryValid
                 )
             }
         }

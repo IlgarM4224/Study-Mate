@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Done
@@ -27,7 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
+import com.studymate.ui.screens.BottomSheetState
 import com.studymate.ui.screens.GradeType
 import com.studymate.ui.screens.components.general.TwoButtons
 import com.studymate.ui.theme.StudyMateTheme
@@ -35,44 +32,42 @@ import com.studymate.ui.theme.StudyMateTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradeBottomSheet(
-    modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(),
+    sheetState: BottomSheetState,
+    onGradeChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
-    label: String,
-    gradeType: GradeType = GradeType.SEMINAR,
     addGrade: (GradeType, Int) -> Unit,
-    isEntryValid: Boolean = false,
+    modifier: Modifier = Modifier,
+    modalSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
     ModalBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
+        sheetState = modalSheetState,
     ) {
-        val state = rememberTextFieldState()
-        val gradeValue = state.text.toString()
-
         GradeBottomSheetContent(
-            label = label,
-            state = state,
+            label = sheetState.getLabel(),
+            gradeValue = sheetState.grade,
+            isEntryValid = sheetState.isEntryValid,
+            onGradeChange = onGradeChange,
             onCancel = onDismissRequest,
             onApply = {
-                if (gradeValue.isDigitsOnly()) {
-                    addGrade(gradeType, gradeValue.toInt())
+                if (sheetState.isEntryValid) {
+                    addGrade(sheetState.type, sheetState.grade.toInt())
                 }
-            },
-            isEntryValid = isEntryValid
+            }
         )
     }
 }
 
 @Composable
 fun GradeBottomSheetContent(
-    modifier: Modifier = Modifier,
-    state: TextFieldState = rememberTextFieldState(),
     label: String,
+    gradeValue: String,
+    isEntryValid: Boolean,
+    onGradeChange: (String) -> Unit,
     onCancel: () -> Unit,
     onApply: () -> Unit,
-    isEntryValid: Boolean = false,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -81,16 +76,17 @@ fun GradeBottomSheetContent(
         Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
+            value = gradeValue,
+            onValueChange = onGradeChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(label) },
             shape = RoundedCornerShape(8.dp),
-            lineLimits = TextFieldLineLimits.SingleLine,
+            singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done,
             ),
-            state = state,
-            isError = !isEntryValid,
+            isError = gradeValue.isNotEmpty() && !isEntryValid,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -117,6 +113,8 @@ fun GradeBottomSheetPreview() {
             GradeBottomSheetContent(
                 onApply = {},
                 onCancel = {},
+                gradeValue = "4",
+                onGradeChange = {},
                 label = "Seminar grade",
                 isEntryValid = true,
                 modifier = Modifier
@@ -135,6 +133,8 @@ fun GradeBottomSheetDarkPreview() {
             GradeBottomSheetContent(
                 onCancel = {},
                 onApply = {},
+                gradeValue = "4",
+                onGradeChange = {},
                 label = "Seminar grade",
                 isEntryValid = true,
                 modifier = Modifier
