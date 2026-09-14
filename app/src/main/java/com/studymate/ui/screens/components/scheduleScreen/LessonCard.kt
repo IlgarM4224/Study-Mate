@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components
+package com.studymate.ui.screens.components.scheduleScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -7,16 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CoPresent
@@ -45,8 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
-import com.studymate.data.TestData
-import com.studymate.ui.screens.LessonCardUIState
 import com.studymate.ui.screens.LessonType
 import com.studymate.ui.theme.StudyMateTheme
 import java.time.LocalTime
@@ -314,89 +307,7 @@ fun Chip(
     }
 }
 
-@Composable
-fun LessonsList(
-    modifier: Modifier = Modifier,
-    state: LazyListState = rememberLazyListState(),
-    lessonsState: LessonCardUIState,
-    onCardClick: (Int) -> Unit,
-    onEditClick: () -> Unit,
-    weekRowAndType: @Composable () -> Unit = {}
-) {
-    LazyColumn(
-        modifier = modifier,
-        state = state,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        item {
-            weekRowAndType()
-        }
-
-        if(lessonsState.lessons?.isEmpty() ?: true) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 32.dp, horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No lessons",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            items(lessonsState.lessons.size) { id ->
-                val les = lessonsState.lessons
-                LessonCard(
-                    name = les[id].name,
-                    teacher = les[id].teacher,
-                    type = les[id].type,
-                    location = les[id].location,
-                    startTime = les[id].startTime,
-                    isCardClicked = id == lessonsState.clickedCardId,
-                    onCardClick = { onCardClick(id) },
-                    onEditClick = onEditClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-        }
-    }
-}
-
 // Preview section
-
-@Preview(group = "Lesson Start End Time")
-@Composable
-fun LessonStartEndTimePreview(){
-    StudyMateTheme {
-        Surface {
-            LessonStartEndTime(
-                startTime = LocalTime.of(8,30),
-                endTime = LocalTime.of(8,30).plusMinutes(90),
-                modifier = Modifier.padding(16.dp).fillMaxWidth()
-            )
-        }
-    }
-}
-
-@Preview(group = "Lesson Start End Time")
-@Composable
-fun LessonStartEndTimeDarkPreview(){
-    StudyMateTheme(darkTheme = true) {
-        Surface {
-            LessonStartEndTime(
-                startTime = LocalTime.of(8,30),
-                endTime = LocalTime.of(8,30).plusMinutes(90),
-                modifier = Modifier.padding(16.dp).fillMaxWidth()
-            )
-        }
-    }
-}
 
 @Preview(group = "Lesson Card")
 @Composable
@@ -442,31 +353,29 @@ fun LessonCardDarkPreview() {
     }
 }
 
-@Preview(group = "Lessons List")
+@Preview(group = "Lesson Start End Time")
 @Composable
-fun LessonsListPreview(){
+fun LessonStartEndTimePreview(){
     StudyMateTheme {
         Surface {
-            LessonsList(
-                modifier = Modifier.fillMaxSize(),
-                lessonsState = LessonCardUIState(lessons = TestData.getLessons()),
-                onEditClick = {},
-                onCardClick = {}
+            LessonStartEndTime(
+                startTime = LocalTime.of(8,30),
+                endTime = LocalTime.of(8,30).plusMinutes(90),
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
             )
         }
     }
 }
 
-@Preview(group = "Lessons List")
+@Preview(group = "Lesson Start End Time")
 @Composable
-fun LessonsListDarkPreview(){
+fun LessonStartEndTimeDarkPreview(){
     StudyMateTheme(darkTheme = true) {
         Surface {
-            LessonsList(
-                modifier = Modifier.fillMaxSize().statusBarsPadding(),
-                lessonsState = LessonCardUIState(lessons = TestData.getLessons()),
-                onEditClick = {},
-                onCardClick = {}
+            LessonStartEndTime(
+                startTime = LocalTime.of(8,30),
+                endTime = LocalTime.of(8,30).plusMinutes(90),
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
             )
         }
     }

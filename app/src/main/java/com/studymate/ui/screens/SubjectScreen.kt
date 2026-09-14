@@ -40,10 +40,10 @@ import com.studymate.R
 import com.studymate.data.Subject
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.components.LessonTypeChip
-import com.studymate.ui.screens.components.StudyMateBottomAppBar
-import com.studymate.ui.screens.components.StudyMateTopAppBar
-import com.studymate.ui.screens.components.SubjectName
+import com.studymate.ui.screens.components.scheduleScreen.LessonTypeChip
+import com.studymate.ui.screens.components.others.StudyMateBottomAppBar
+import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.scheduleScreen.SubjectName
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectDestination: NavigationDestination {

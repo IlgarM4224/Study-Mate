@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components
+package com.studymate.ui.screens.components.scheduleScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

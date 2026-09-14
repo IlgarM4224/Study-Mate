@@ -22,10 +22,10 @@ import com.studymate.R
 import com.studymate.data.Day
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.components.LessonsList
-import com.studymate.ui.screens.components.StudyMateBottomAppBar
-import com.studymate.ui.screens.components.StudyMateTopAppBar
-import com.studymate.ui.screens.components.WeekRowAndType
+import com.studymate.ui.screens.components.scheduleScreen.LessonsList
+import com.studymate.ui.screens.components.others.StudyMateBottomAppBar
+import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.scheduleScreen.WeekRowAndType
 import com.studymate.ui.theme.StudyMateTheme
 
 object ScheduleDestination: NavigationDestination {

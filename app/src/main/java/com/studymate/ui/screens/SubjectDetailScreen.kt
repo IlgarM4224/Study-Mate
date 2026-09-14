@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.components.GradeBottomSheet
-import com.studymate.ui.screens.components.GradesCard
-import com.studymate.ui.screens.components.LimitCard
-import com.studymate.ui.screens.components.OverallScoreCard
-import com.studymate.ui.screens.components.StudyMateTopAppBar
-import com.studymate.ui.screens.components.SubjectNameCard
+import com.studymate.ui.screens.components.subjectScreen.GradeBottomSheet
+import com.studymate.ui.screens.components.subjectScreen.GradesCard
+import com.studymate.ui.screens.components.subjectScreen.LimitCard
+import com.studymate.ui.screens.components.subjectScreen.OverallScoreCard
+import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.subjectScreen.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectDetailDestination: NavigationDestination {

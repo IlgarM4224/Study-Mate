@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components
+package com.studymate.ui.screens.components.others
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
