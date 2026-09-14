@@ -23,8 +23,8 @@ import com.studymate.data.Day
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.scheduleScreen.LessonsList
-import com.studymate.ui.screens.components.others.StudyMateBottomAppBar
-import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.general.StudyMateBottomAppBar
+import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.scheduleScreen.WeekRowAndType
 import com.studymate.ui.theme.StudyMateTheme
 

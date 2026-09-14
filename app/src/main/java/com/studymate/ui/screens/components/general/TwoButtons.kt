@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components.others
+package com.studymate.ui.screens.components.general
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

@@ -29,7 +29,7 @@ import com.studymate.ui.screens.components.subjectScreen.GradeBottomSheet
 import com.studymate.ui.screens.components.subjectScreen.GradesCard
 import com.studymate.ui.screens.components.subjectScreen.LimitCard
 import com.studymate.ui.screens.components.subjectScreen.OverallScoreCard
-import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.subjectScreen.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 

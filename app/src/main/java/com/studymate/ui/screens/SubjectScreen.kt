@@ -41,8 +41,8 @@ import com.studymate.data.Subject
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.scheduleScreen.LessonTypeChip
-import com.studymate.ui.screens.components.others.StudyMateBottomAppBar
-import com.studymate.ui.screens.components.others.StudyMateTopAppBar
+import com.studymate.ui.screens.components.general.StudyMateBottomAppBar
+import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.scheduleScreen.SubjectName
 import com.studymate.ui.theme.StudyMateTheme
 

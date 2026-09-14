@@ -35,9 +35,9 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.components.others.CardLabel
-import com.studymate.ui.screens.components.others.RoundedIcon
-import com.studymate.ui.screens.components.others.TwoButtons
+import com.studymate.ui.screens.components.general.CardLabel
+import com.studymate.ui.screens.components.general.RoundedIcon
+import com.studymate.ui.screens.components.general.TwoButtons
 import com.studymate.ui.theme.StudyMateTheme
 
 

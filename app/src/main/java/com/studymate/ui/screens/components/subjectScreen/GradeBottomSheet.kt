@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.studymate.ui.screens.GradeType
-import com.studymate.ui.screens.components.others.TwoButtons
+import com.studymate.ui.screens.components.general.TwoButtons
 import com.studymate.ui.theme.StudyMateTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

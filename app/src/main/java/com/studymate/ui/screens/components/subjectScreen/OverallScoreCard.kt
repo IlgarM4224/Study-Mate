@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.components.others.CardLabel
+import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
