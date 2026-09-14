@@ -16,9 +16,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.components.scheduleScreen.Chip
 import com.studymate.ui.theme.StudyMateTheme
 
+
+
+/**
+ * A composable that displays a horizontal label row typically used inside cards.
+ *
+ * Shows a primary left label and an optional right-side chip/badge.
+ * The left label takes available space and truncates with ellipsis if needed,
+ * while the right chip stays visible on the trailing edge.
+ *
+ * @param modifier Modifier applied to the root [Row]
+ * @param leftLabel Primary text displayed on the left side
+ * @param rightLabel Optional text for the right-side chip/badge. If null, the chip is not shown
+ * @param textStyle Text style applied to the left label. Defaults to bodyLarge from the current theme
+ * @param leftLabelColor Color of the left label. Defaults to onSurface from the current theme
+ * @param rightLabelColor Color of the text inside the right chip. Defaults to primary from the current theme
+ * @param leftMaxLine Maximum number of lines for the left label before truncation. Defaults to 1
+ */
 @Composable
 fun CardLabel(
     modifier: Modifier = Modifier,
@@ -34,6 +50,7 @@ fun CardLabel(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Main left label; weight(1f, fill = false) allows it to take remaining space without pushing the chip out
         Text(
             text = leftLabel,
             style = textStyle,
@@ -43,6 +60,7 @@ fun CardLabel(
             modifier = Modifier.weight(1f, fill = false)
         )
 
+        // Renders an optional badge chip on the right side when a label string is provided
         if(rightLabel != null) {
             Chip(
                 label = rightLabel,

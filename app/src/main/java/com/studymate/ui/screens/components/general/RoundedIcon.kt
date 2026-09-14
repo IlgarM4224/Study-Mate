@@ -21,6 +21,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.ui.theme.StudyMateTheme
 
+/**
+ * A composable that displays an icon with a rounded background.
+ *
+ * The icon is centered inside a container, clipped to the specified shape,
+ * and has a colored background. Useful for buttons, status indicators,
+ * and other UI elements where an icon needs to appear inside a "badge".
+ *
+ * @param modifier Modifier applied to the root [Box]
+ * @param icon The vector icon ([ImageVector]) to display
+ * @param iconSize Size of the icon (including background). Defaults to 36.dp
+ * @param iconPadding Inner padding between the background edge and the icon. Defaults to 4.dp
+ * @param shape Background shape (corner radius). Defaults to [RoundedCornerShape] with 8.dp radius
+ * @param tint Color of the icon. Defaults to primary from the current theme
+ * @param backgroundColor Background color under the icon. Defaults to primaryContainer from the current theme
+ */
 @Composable
 fun RoundedIcon(
     modifier: Modifier = Modifier,

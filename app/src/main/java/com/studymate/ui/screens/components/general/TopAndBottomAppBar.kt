@@ -25,6 +25,19 @@ import com.studymate.ui.screens.SubjectDestination
 import com.studymate.ui.theme.StudyMateTheme
 
 
+/**
+ * Custom top app bar for the StudyMate application.
+ *
+ * Displays an optional title, a back navigation button (when enabled),
+ * and an optional "more" action button. Built on top of Material 3 [TopAppBar].
+ *
+ * @param modifier Modifier applied to the [TopAppBar]
+ * @param onNavigateClick Callback invoked when the back button is pressed
+ * @param canNavigateBack Whether the back navigation icon should be shown. Defaults to false
+ * @param showMore Whether the "more" (overflow) action icon should be shown. Defaults to false
+ * @param onMoreClick Callback invoked when the "more" button is pressed
+ * @param title Optional title text displayed in the center of the app bar. If null, no title is shown
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyMateTopAppBar(
@@ -37,6 +50,7 @@ fun StudyMateTopAppBar(
 ) {
     TopAppBar(
         title = {
+            // Center title only rendered when a non-null title is provided
             if (title != null) {
                 Text(
                     text = title,
@@ -50,6 +64,7 @@ fun StudyMateTopAppBar(
         } ,
 
         navigationIcon = {
+            // Back button shown only when navigation back is allowed
             if (canNavigateBack) {
                 IconButton(onClick = onNavigateClick) {
                     Icon(
@@ -62,6 +77,7 @@ fun StudyMateTopAppBar(
         },
 
         actions = {
+            // Overflow / "more" action shown only when requested
             if (showMore) {
                 IconButton(onClick = onMoreClick) {
                     Icon(

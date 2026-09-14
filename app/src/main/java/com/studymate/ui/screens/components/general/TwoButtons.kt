@@ -14,6 +14,31 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import com.studymate.ui.screens.components.subjectScreen.LimitButton
 
+/**
+ * A horizontal row containing two buttons side by side.
+ *
+ * Commonly used for paired actions (e.g. Cancel / Confirm).
+ * Supports optional icons, custom colors, enabled/disabled states,
+ * and flexible spacing between the buttons.
+ *
+ * @param modifier Modifier applied to the root [Row]
+ * @param leftLabel Text label for the left button
+ * @param leftLabelColor Color of the left button's text. Defaults to primary
+ * @param leftColors Button colors for the left button. Defaults to outlined style
+ * @param leftIcon Optional icon displayed on the left button
+ * @param leftIconTint Tint color applied to the left button's icon. Defaults to primary
+ * @param leftOnClick Callback invoked when the left button is clicked
+ * @param leftEnabled Whether the left button is enabled. Defaults to true
+ * @param rightLabel Text label for the right button
+ * @param rightLabelColor Color of the right button's text. Defaults to Unspecified (uses button theme)
+ * @param rightColors Button colors for the right button. Defaults to filled style
+ * @param rightIcon Optional icon displayed on the right button
+ * @param rightIconTint Tint color applied to the right button's icon. Defaults to onPrimary
+ * @param rightOnClick Callback invoked when the right button is clicked
+ * @param rightEnabled Whether the right button is enabled. Defaults to true
+ * @param spacer Optional weight-based flexible space between the buttons
+ * @param spacerDp Optional fixed-width space between the buttons (used if [spacer] is null)
+ */
 @Composable
 fun TwoButtons(
     modifier: Modifier = Modifier,

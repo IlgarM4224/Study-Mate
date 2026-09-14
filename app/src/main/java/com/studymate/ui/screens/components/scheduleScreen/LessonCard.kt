@@ -1,9 +1,7 @@
 package com.studymate.ui.screens.components.scheduleScreen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,10 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
 import com.studymate.ui.screens.LessonType
+import com.studymate.ui.screens.components.general.Chip
 import com.studymate.ui.theme.StudyMateTheme
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -260,51 +256,6 @@ fun LessonTypeChip(
         backgroundColor = backgroundColor,
         shape = shape
     )
-}
-
-@Composable
-fun Chip(
-    modifier: Modifier = Modifier,
-    label: String,
-    icon: ImageVector? = null,
-    iconSize: Dp? = null,
-    shape: Shape = RoundedCornerShape(8.dp),
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    textColor: Color =  MaterialTheme.colorScheme.onPrimaryContainer,
-    tint: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .clip(shape)
-            .background(backgroundColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(4.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = tint,
-                    modifier = if(iconSize == null) Modifier else Modifier.size(16.dp)
-                )
-
-                Spacer(Modifier.width(8.dp))
-            }
-
-            Text(
-                text = label,
-                style = textStyle,
-                color = textColor,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
 }
 
 // Preview section
