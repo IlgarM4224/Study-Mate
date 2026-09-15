@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.studymate.data.GradeType
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.subjectScreen.GradeBottomSheet
@@ -32,6 +33,7 @@ import com.studymate.ui.screens.components.subjectScreen.OverallScoreCard
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.subjectScreen.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
+import com.studymate.util.averageForLabel
 
 object SubjectDetailDestination: NavigationDestination {
     override val route = "SubjectDetail"

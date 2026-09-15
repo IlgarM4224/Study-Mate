@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
-import com.studymate.ui.screens.LessonType
+import com.studymate.data.LessonType
 import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.screens.components.general.RoundedIcon
 import com.studymate.ui.screens.components.scheduleScreen.LessonTypeChip

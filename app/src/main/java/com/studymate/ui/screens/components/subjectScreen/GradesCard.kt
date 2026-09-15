@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.GradeType
+import com.studymate.data.GradeType
 import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.screens.components.general.RoundedIcon
 import com.studymate.ui.theme.StudyMateTheme

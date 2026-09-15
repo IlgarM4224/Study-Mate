@@ -1,6 +1,5 @@
 package com.studymate.data
 
-import com.studymate.ui.screens.LessonType
 import java.time.DayOfWeek
 import java.time.LocalTime
 
@@ -63,3 +62,15 @@ data class Subject(
     val colloquiumGradesList: List<Int>,
     val independentWorkGradesList: List<Int> = emptyList()
 )
+
+/**
+ * Types of graded work: seminar, colloquium, independent work.
+ * NONE is used as the default state (when nothing is selected).
+ */
+enum class GradeType { SEMINAR, COLLOQUIUM, INDEPENDENT_WORK, NONE }
+
+
+/**
+ * Types of conducted classes.
+ */
+enum class LessonType { SEMINAR, LECTURES }

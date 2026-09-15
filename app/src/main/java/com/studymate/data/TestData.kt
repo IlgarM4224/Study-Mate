@@ -1,6 +1,5 @@
 package com.studymate.data
 
-import com.studymate.ui.screens.LessonType
 import java.time.DayOfWeek
 import java.time.LocalTime
 

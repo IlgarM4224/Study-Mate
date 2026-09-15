@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
-import com.studymate.ui.screens.LessonType
+import com.studymate.data.LessonType
 import com.studymate.ui.screens.components.general.Chip
 import com.studymate.ui.theme.StudyMateTheme
 import java.time.LocalTime

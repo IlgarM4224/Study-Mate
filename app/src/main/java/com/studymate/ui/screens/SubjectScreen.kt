@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
+import com.studymate.data.LessonType
 import com.studymate.data.Subject
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
