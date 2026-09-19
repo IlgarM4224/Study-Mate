@@ -36,6 +36,7 @@ fun GradeBottomSheet(
     onGradeChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
     addGrade: (GradeType, Int) -> Unit,
+    changeGrade: (GradeType, Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     modalSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
@@ -52,7 +53,8 @@ fun GradeBottomSheet(
             onCancel = onDismissRequest,
             onApply = {
                 if (sheetState.isEntryValid) {
-                    addGrade(sheetState.type, sheetState.grade.toInt())
+                    if (sheetState.selectedGradeIndex == null) addGrade(sheetState.type, sheetState.grade.toInt())
+                    else changeGrade(sheetState.type, sheetState.grade.toInt(), sheetState.selectedGradeIndex)
                 }
             }
         )

@@ -45,7 +45,7 @@ fun GradesCard(
     icon: ImageVector,
     gradeType: GradeType,
     onAddClick: (GradeType) -> Unit = {},
-    onGradeClick: () -> Unit = {},
+    onGradeClick: (GradeType, Int) -> Unit,
     gradesList: List<Int> = emptyList()
 ) {
     ElevatedCard(modifier = modifier) {
@@ -84,15 +84,17 @@ private fun GradesRow(
     gradesList: List<Int> = emptyList(),
     gradeType: GradeType,
     onAddClick: (GradeType) -> Unit = {},
-    onGradeClick: () -> Unit = {}
+    onGradeClick: (GradeType, Int) -> Unit
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        gradesList.forEach{
+        gradesList.forEachIndexed { id, grade ->
             Grade(
-                grade = it,
+                grade = grade,
+                gradeId = id,
+                type = gradeType,
                 onGradeClick = onGradeClick,
                 modifier = Modifier.padding(end = 8.dp)
             )
@@ -114,14 +116,16 @@ private fun GradesRow(
 private fun Grade(
     modifier: Modifier = Modifier,
     grade: Int,
+    gradeId: Int,
+    type: GradeType,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-    onGradeClick: () -> Unit = {}
+    onGradeClick: (GradeType, Int) -> Unit
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(backgroundColor)
-            .clickable(onClick = onGradeClick),
+            .clickable(onClick = { onGradeClick(type, gradeId) }),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -150,7 +154,8 @@ fun GradesCardPreview() {
                 label = "Grades for Seminar",
                 gradeType = GradeType.SEMINAR,
                 icon = Icons.Outlined.People,
-                gradesList = listOf(7,8,8)
+                gradesList = listOf(7,8,8),
+                onGradeClick = {_, _ -> }
             )
         }
     }
@@ -168,7 +173,8 @@ fun GradesCardDarkPreview() {
                 label = "Grades for Colloquium",
                 gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
-                gradesList = listOf(7,8,8)
+                gradesList = listOf(7,8,8),
+                onGradeClick = {_, _ -> }
             )
         }
     }

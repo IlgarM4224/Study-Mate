@@ -10,13 +10,12 @@ import com.studymate.util.calculateAttendanceScore
 import com.studymate.util.calculateLimit
 import com.studymate.util.getOverallScore
 import com.studymate.util.isValidGrade
+import com.studymate.util.replaceAt
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-/**
- * ViewModel for managing the logic and state of the subject detail screen.
- */
+
 class SubjectDetailScreenViewModel(
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
@@ -74,7 +73,37 @@ class SubjectDetailScreenViewModel(
         onDismissRequest()
     }
 
-    fun onGradeClick() {} // TODO: Implement logic for clicking a grade
+    fun changeGrade(index: Int, grade: Int, type: GradeType) {
+        when (type) {
+            GradeType.SEMINAR -> addGradeToList { it.copy(seminarGradesList = it.seminarGradesList.replaceAt(index, grade)) }
+            GradeType.COLLOQUIUM -> addGradeToList { it.copy(colloquiumGradesList = it.colloquiumGradesList.replaceAt(index, grade)) }
+            GradeType.INDEPENDENT_WORK -> addGradeToList { it.copy(independentWorkGradesList = it.independentWorkGradesList.replaceAt(index, grade)) }
+            else -> Unit
+        }
+        onDismissRequest()
+    }
+
+    fun onGradeClick(type: GradeType, id: Int) {
+        val subject = _uiState.value.subject
+        val gradeForChange = when(type) {
+            GradeType.SEMINAR -> subject.seminarGradesList
+            GradeType.COLLOQUIUM -> subject.colloquiumGradesList
+            GradeType.INDEPENDENT_WORK -> subject.independentWorkGradesList
+            else -> emptyList()
+        }
+
+        _uiState.update { state ->
+            state.copy(
+                sheetState = BottomSheetState(
+                    type = type,
+                    grade = "${gradeForChange[id]}",
+                    selectedGradeIndex = id,
+                    isEntryValid = true
+                ),
+                activeGradeType = type
+            )
+        }
+    }
 
     /**
      * Toggles the flag for showing additional information (expandable list).
@@ -96,16 +125,7 @@ class SubjectDetailScreenViewModel(
     )
 
     private fun addGradeToList(transform: (Subject) -> Subject) {
-        _uiState.update { state ->
-            val newSubject = transform(state.subject)
-            state.copy(
-                subject = newSubject,
-                averageSeminar = newSubject.seminarGradesList.averageForLabel(),
-                averageColloquium = newSubject.colloquiumGradesList.averageForLabel(),
-                independentWorkSum = newSubject.independentWorkGradesList.sum(),
-                overallScore = newSubject.getOverallScore()
-            )
-        }
+        _uiState.update { createInitialState(transform(it.subject)) }
     }
 
     private fun updateMissed(delta: Int) {

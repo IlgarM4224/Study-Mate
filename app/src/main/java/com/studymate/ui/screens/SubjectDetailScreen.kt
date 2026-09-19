@@ -60,9 +60,14 @@ fun SubjectDetailScreen(
         addGrade = { type, grade ->
             viewModel.addGrade(type, grade)
         },
+        changeGrade = { type,grade, index->
+            viewModel.changeGrade(index,grade, type)
+        },
         onGradeChange = { viewModel.onGradeChange(it)},
         onMoreClick = { viewModel.onMoreClick() },
-        onGradeClick = { viewModel.onGradeClick() },
+        onGradeClick = { type, gradeId ->
+            viewModel.onGradeClick(type, gradeId)
+        },
         addMissedLesson = { viewModel.addMissed() },
         onArrowClick = { viewModel.onArrowClick() },
         removeMissedLesson = { viewModel.removeMissed() }
@@ -78,7 +83,8 @@ fun SubjectDetailScreenContent(
     onAddClick: (GradeType) -> Unit = {},
     onDismissRequest: () -> Unit = {},
     addGrade: (GradeType, Int) -> Unit,
-    onGradeClick: () -> Unit = {},
+    changeGrade: (GradeType, Int, Int) -> Unit,
+    onGradeClick: (GradeType, Int) -> Unit,
     onGradeChange: (String) -> Unit = {},
     addMissedLesson: () -> Unit = {},
     removeMissedLesson: () -> Unit = {},
@@ -163,7 +169,8 @@ fun SubjectDetailScreenContent(
                 gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
                 onAddClick = onAddClick,
-                gradesList = state.subject.colloquiumGradesList
+                gradesList = state.subject.colloquiumGradesList,
+                onGradeClick = onGradeClick
             )
 
             Spacer(Modifier.height(16.dp))
@@ -175,7 +182,8 @@ fun SubjectDetailScreenContent(
                 gradeType = GradeType.INDEPENDENT_WORK,
                 icon = Icons.Outlined.ContactPage,
                 onAddClick = onAddClick,
-                gradesList = state.subject.independentWorkGradesList
+                gradesList = state.subject.independentWorkGradesList,
+                onGradeClick = onGradeClick,
             )
 
             AnimatedVisibility(visible = state.activeGradeType != GradeType.NONE) {
@@ -185,6 +193,7 @@ fun SubjectDetailScreenContent(
                     onDismissRequest = onDismissRequest,
                     onGradeChange = onGradeChange,
                     addGrade = addGrade,
+                    changeGrade = changeGrade
                 )
             }
         }
@@ -208,7 +217,9 @@ fun SubjectDetailScreenPreview() {
                     averageColloquium = test.colloquiumGradesList.averageForLabel(),
                     averageSeminar = test.seminarGradesList.averageForLabel(),
                 ),
-                addGrade = { _, _ -> }
+                addGrade = { _, _ -> },
+                onGradeClick = { _, _ -> },
+                changeGrade = { _, _, _ -> }
             )
         }
     }
@@ -231,7 +242,9 @@ fun SubjectDetailScreenDarkPreview() {
                     averageColloquium = test.colloquiumGradesList.averageForLabel(),
                     averageSeminar = test.seminarGradesList.averageForLabel(),
                 ),
-                addGrade = { _, _ -> }
+                addGrade = { _, _ -> },
+                onGradeClick = { _, _ -> },
+                changeGrade = { _, _, _ -> }
             )
         }
     }

@@ -63,3 +63,8 @@ fun Subject.getOverallScore(): Float {
 
     return result.roundTo(2)
 }
+
+fun <T> List<T>.replaceAt(index: Int, newItem: T): List<T> {
+    if (index !in indices) return this
+    return mapIndexed { i, item -> if (i == index) newItem else item }
+}
