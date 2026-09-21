@@ -43,7 +43,7 @@ data class BottomSheetState(
     val type: GradeType = GradeType.NONE,
     val isEntryValid: Boolean = false,
     val activeGradeType: GradeType = GradeType.NONE,
-    val selectedGradeIndex: Int? = null
+    val selectedGradeIndex: Int? = null,
 ) {
     /**
      * Returns the UI label depending on the selected grade type.

@@ -33,9 +33,7 @@ class SubjectDetailScreenViewModel(
     fun addMissed() = updateMissed(1) // Increments the missed classes counter by 1
     fun removeMissed() = updateMissed(-1) // Decrements the missed classes counter by 1
 
-    /**
-     * Opens the BottomSheet to add a grade of a specific type.
-     */
+    /** Opens the BottomSheet to add a grade of a specific type */
     fun onAddClick(type: GradeType) {
         _uiState.update {
             it.copy(
@@ -45,8 +43,15 @@ class SubjectDetailScreenViewModel(
         }
     }
 
-    fun onGradeChange(newGrade: String) {
-        val isValid = isValidGrade(newGrade) && newGrade.isNotEmpty()
+
+    fun onValueChange(newGrade: String) {
+        val state = _uiState.value
+        val maxScore = when(state.activeGradeType) {
+            GradeType.INDEPENDENT_WORK -> if (state.sheetState.selectedGradeIndex == null) 10 - state.independentWorkSum else 10
+            else -> 10
+        }
+
+        val isValid = isValidGrade(newGrade, maxScore = maxScore) && newGrade.isNotEmpty()
 
         _uiState.update {
             it.copy(sheetState = it.sheetState.copy(grade = newGrade, isEntryValid = isValid))
@@ -60,14 +65,12 @@ class SubjectDetailScreenViewModel(
         _uiState.update { it.copy(activeGradeType = GradeType.NONE) }
     }
 
-    /**
-     * Routes the grade addition to the appropriate function based on the type.
-     */
+    /** Routes the grade addition to the appropriate function based on the type */
     fun addGrade(type: GradeType, grade: Int) {
         when (type) {
-            GradeType.SEMINAR -> addGradeToList { it.copy(seminarGradesList = it.seminarGradesList + grade) }
-            GradeType.COLLOQUIUM -> addGradeToList { it.copy(colloquiumGradesList = it.colloquiumGradesList + grade) }
-            GradeType.INDEPENDENT_WORK -> addGradeToList { it.copy(independentWorkGradesList = it.independentWorkGradesList + grade) }
+            GradeType.SEMINAR -> updateGradesList { it.copy(seminarGradesList = it.seminarGradesList + grade) }
+            GradeType.COLLOQUIUM -> updateGradesList { it.copy(colloquiumGradesList = it.colloquiumGradesList + grade) }
+            GradeType.INDEPENDENT_WORK -> updateGradesList { it.copy(independentWorkGradesList = it.independentWorkGradesList + grade) }
             else -> Unit
         }
         onDismissRequest()
@@ -75,15 +78,31 @@ class SubjectDetailScreenViewModel(
 
     fun changeGrade(index: Int, grade: Int, type: GradeType) {
         when (type) {
-            GradeType.SEMINAR -> addGradeToList { it.copy(seminarGradesList = it.seminarGradesList.replaceAt(index, grade)) }
-            GradeType.COLLOQUIUM -> addGradeToList { it.copy(colloquiumGradesList = it.colloquiumGradesList.replaceAt(index, grade)) }
-            GradeType.INDEPENDENT_WORK -> addGradeToList { it.copy(independentWorkGradesList = it.independentWorkGradesList.replaceAt(index, grade)) }
+            GradeType.SEMINAR -> updateGradesList { it.copy(seminarGradesList = it.seminarGradesList.replaceAt(index, grade)) }
+            GradeType.COLLOQUIUM -> updateGradesList { it.copy(colloquiumGradesList = it.colloquiumGradesList.replaceAt(index, grade)) }
+            GradeType.INDEPENDENT_WORK -> updateGradesList { it.copy(independentWorkGradesList = it.independentWorkGradesList.replaceAt(index, grade)) }
             else -> Unit
         }
         onDismissRequest()
     }
 
     fun onGradeClick(type: GradeType, id: Int) {
+        _uiState.update { state ->
+            state.copy(
+                sheetState = state.sheetState.copy(selectedGradeIndex = id, type = type),
+            )
+        }
+    }
+
+    fun onGradeDismissRequest() {
+        _uiState.update {
+            state -> state.copy(
+                sheetState =  BottomSheetState(),
+            )
+        }
+    }
+
+    fun onGradeEditClick(type: GradeType, id: Int) {
         val subject = _uiState.value.subject
         val gradeForChange = when(type) {
             GradeType.SEMINAR -> subject.seminarGradesList
@@ -105,9 +124,27 @@ class SubjectDetailScreenViewModel(
         }
     }
 
-    /**
-     * Toggles the flag for showing additional information (expandable list).
-     */
+    fun onGradeDeleteClick(type: GradeType, index: Int) {
+        val state = _uiState.value.subject
+
+        when (type) {
+            GradeType.SEMINAR -> {
+                val newList = state.seminarGradesList.toMutableList().apply { removeAt(index) }
+                updateGradesList { it.copy(seminarGradesList = newList) }
+            }
+            GradeType.COLLOQUIUM -> {
+                val newList = state.colloquiumGradesList.toMutableList().apply { removeAt(index) }
+                updateGradesList { it.copy(colloquiumGradesList = newList) }
+            }
+            GradeType.INDEPENDENT_WORK -> {
+                val newList = state.independentWorkGradesList.toMutableList().apply { removeAt(index) }
+                updateGradesList { it.copy(independentWorkGradesList = newList) }
+            }
+            else -> Unit
+        }
+    }
+
+    /** Toggles the flag for showing additional information (expandable list) */
     fun onArrowClick() {
         _uiState.update { it.copy( showMore = !it.showMore ) }
     }
@@ -124,7 +161,7 @@ class SubjectDetailScreenViewModel(
         overallScore = subject.getOverallScore()
     )
 
-    private fun addGradeToList(transform: (Subject) -> Subject) {
+    private fun updateGradesList(transform: (Subject) -> Subject) {
         _uiState.update { createInitialState(transform(it.subject)) }
     }
 

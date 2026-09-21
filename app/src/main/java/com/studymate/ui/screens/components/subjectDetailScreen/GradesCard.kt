@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components.subjectScreen
+package com.studymate.ui.screens.components.subjectDetailScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,8 +44,14 @@ fun GradesCard(
     label: String,
     icon: ImageVector,
     gradeType: GradeType,
+    selectedGradeIndex: Int?,
+    selectedGradeType: GradeType,
+    showAddButton: Boolean,
     onAddClick: (GradeType) -> Unit = {},
     onGradeClick: (GradeType, Int) -> Unit,
+    onDismissRequest: () -> Unit,
+    onEditClick: (GradeType, Int) -> Unit,
+    onDeleteClick: (GradeType, Int) -> Unit,
     gradesList: List<Int> = emptyList()
 ) {
     ElevatedCard(modifier = modifier) {
@@ -71,8 +77,14 @@ fun GradesCard(
                     .fillMaxWidth(),
                 gradesList = gradesList,
                 gradeType = gradeType,
+                selectedGradeType = selectedGradeType,
+                showAddButton = showAddButton,
+                selectedGradeIndex = selectedGradeIndex,
                 onAddClick = onAddClick,
-                onGradeClick = onGradeClick
+                onDismissRequest = onDismissRequest,
+                onGradeClick = onGradeClick,
+                onDeleteClick = onDeleteClick,
+                onEditClick = onEditClick
             )
         }
     }
@@ -83,8 +95,14 @@ private fun GradesRow(
     modifier: Modifier = Modifier,
     gradesList: List<Int> = emptyList(),
     gradeType: GradeType,
+    selectedGradeIndex: Int?,
+    selectedGradeType: GradeType,
+    showAddButton: Boolean,
     onAddClick: (GradeType) -> Unit = {},
-    onGradeClick: (GradeType, Int) -> Unit
+    onGradeClick: (GradeType, Int) -> Unit,
+    onDismissRequest: () -> Unit,
+    onEditClick: (GradeType, Int) -> Unit,
+    onDeleteClick: (GradeType, Int) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -95,19 +113,25 @@ private fun GradesRow(
                 grade = grade,
                 gradeId = id,
                 type = gradeType,
+                expandDropdownMenu =  gradeType == selectedGradeType && selectedGradeIndex == id,
                 onGradeClick = onGradeClick,
+                onDismissRequest = onDismissRequest,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
 
-        OutlinedButton(
-            onClick = { onAddClick(gradeType) },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add"
-            )
+        if (showAddButton) {
+            OutlinedButton(
+                onClick = { onAddClick(gradeType) },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
         }
     }
 }
@@ -118,24 +142,41 @@ private fun Grade(
     grade: Int,
     gradeId: Int,
     type: GradeType,
+    expandDropdownMenu: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-    onGradeClick: (GradeType, Int) -> Unit
+    onGradeClick: (GradeType, Int) -> Unit,
+    onDismissRequest: () -> Unit,
+    onEditClick: (GradeType, Int) -> Unit,
+    onDeleteClick: (GradeType, Int) -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(backgroundColor)
-            .clickable(onClick = { onGradeClick(type, gradeId) }),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = grade.toString(),
-            style = MaterialTheme.typography.titleMedium,
+    Column(modifier) {
+        Box(
             modifier = Modifier
-                .padding(
-                    horizontal = 32.dp,
-                    vertical = 8.dp
-                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(backgroundColor)
+                .clickable(onClick = { onGradeClick(type, gradeId) }),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = grade.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 32.dp,
+                        vertical = 8.dp
+                    )
+            )
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        GradeDropdownMenu(
+            expanded = expandDropdownMenu,
+            onDismissRequest = onDismissRequest,
+            gradeId = gradeId,
+            gradeType = type,
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick
         )
     }
 }
@@ -155,7 +196,13 @@ fun GradesCardPreview() {
                 gradeType = GradeType.SEMINAR,
                 icon = Icons.Outlined.People,
                 gradesList = listOf(7,8,8),
-                onGradeClick = {_, _ -> }
+                showAddButton = true,
+                selectedGradeType = GradeType.SEMINAR,
+                selectedGradeIndex = 0,
+                onGradeClick = {_, _ -> },
+                onDismissRequest = {},
+                onEditClick = {_, _ ->},
+                onDeleteClick = {_, _ ->}
             )
         }
     }
@@ -173,8 +220,14 @@ fun GradesCardDarkPreview() {
                 label = "Grades for Colloquium",
                 gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
+                showAddButton = true,
+                selectedGradeType = GradeType.SEMINAR,
+                selectedGradeIndex = 0,
                 gradesList = listOf(7,8,8),
-                onGradeClick = {_, _ -> }
+                onGradeClick = {_, _ -> },
+                onDismissRequest = {},
+                onEditClick = {_, _ ->},
+                onDeleteClick = {_, _ ->}
             )
         }
     }

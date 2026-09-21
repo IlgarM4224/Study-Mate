@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components.subjectScreen
+package com.studymate.ui.screens.components.subjectDetailScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +33,7 @@ import com.studymate.ui.theme.StudyMateTheme
 @Composable
 fun GradeBottomSheet(
     sheetState: BottomSheetState,
-    onGradeChange: (String) -> Unit,
+    onValueChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
     addGrade: (GradeType, Int) -> Unit,
     changeGrade: (GradeType, Int, Int) -> Unit,
@@ -49,7 +49,7 @@ fun GradeBottomSheet(
             label = sheetState.getLabel(),
             gradeValue = sheetState.grade,
             isEntryValid = sheetState.isEntryValid,
-            onGradeChange = onGradeChange,
+            onValueChange = onValueChange,
             onCancel = onDismissRequest,
             onApply = {
                 if (sheetState.isEntryValid) {
@@ -66,7 +66,7 @@ fun GradeBottomSheetContent(
     label: String,
     gradeValue: String,
     isEntryValid: Boolean,
-    onGradeChange: (String) -> Unit,
+    onValueChange: (String) -> Unit,
     onCancel: () -> Unit,
     onApply: () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +79,7 @@ fun GradeBottomSheetContent(
 
         OutlinedTextField(
             value = gradeValue,
-            onValueChange = onGradeChange,
+            onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(label) },
             shape = RoundedCornerShape(8.dp),
@@ -116,7 +116,7 @@ fun GradeBottomSheetPreview() {
                 onApply = {},
                 onCancel = {},
                 gradeValue = "4",
-                onGradeChange = {},
+                onValueChange = {},
                 label = "Seminar grade",
                 isEntryValid = true,
                 modifier = Modifier
@@ -136,7 +136,7 @@ fun GradeBottomSheetDarkPreview() {
                 onCancel = {},
                 onApply = {},
                 gradeValue = "4",
-                onGradeChange = {},
+                onValueChange = {},
                 label = "Seminar grade",
                 isEntryValid = true,
                 modifier = Modifier

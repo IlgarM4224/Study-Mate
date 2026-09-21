@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components.subjectScreen
+package com.studymate.ui.screens.components.subjectDetailScreen
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState

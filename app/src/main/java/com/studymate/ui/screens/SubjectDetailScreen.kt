@@ -26,12 +26,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.data.GradeType
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.components.subjectScreen.GradeBottomSheet
-import com.studymate.ui.screens.components.subjectScreen.GradesCard
-import com.studymate.ui.screens.components.subjectScreen.LimitCard
-import com.studymate.ui.screens.components.subjectScreen.OverallScoreCard
+import com.studymate.ui.screens.components.subjectDetailScreen.GradeBottomSheet
+import com.studymate.ui.screens.components.subjectDetailScreen.GradesCard
+import com.studymate.ui.screens.components.subjectDetailScreen.LimitCard
+import com.studymate.ui.screens.components.subjectDetailScreen.OverallScoreCard
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
-import com.studymate.ui.screens.components.subjectScreen.SubjectNameCard
+import com.studymate.ui.screens.components.subjectDetailScreen.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 import com.studymate.util.averageForLabel
 
@@ -63,11 +63,18 @@ fun SubjectDetailScreen(
         changeGrade = { type,grade, index->
             viewModel.changeGrade(index,grade, type)
         },
-        onGradeChange = { viewModel.onGradeChange(it)},
+        onValueChange = { viewModel.onValueChange(it)},
         onMoreClick = { viewModel.onMoreClick() },
         onGradeClick = { type, gradeId ->
             viewModel.onGradeClick(type, gradeId)
         },
+        onGradeEditClick = { type, gradeId ->
+            viewModel.onGradeEditClick(type, gradeId)
+        },
+        onGradeDeleteClick = { type, gradeId ->
+            viewModel.onGradeDeleteClick(type, gradeId)
+        },
+        onGradeDismissRequest = { viewModel.onGradeDismissRequest() },
         addMissedLesson = { viewModel.addMissed() },
         onArrowClick = { viewModel.onArrowClick() },
         removeMissedLesson = { viewModel.removeMissed() }
@@ -85,7 +92,10 @@ fun SubjectDetailScreenContent(
     addGrade: (GradeType, Int) -> Unit,
     changeGrade: (GradeType, Int, Int) -> Unit,
     onGradeClick: (GradeType, Int) -> Unit,
-    onGradeChange: (String) -> Unit = {},
+    onValueChange: (String) -> Unit = {},
+    onGradeDismissRequest: () -> Unit = {},
+    onGradeEditClick: (GradeType, Int) -> Unit = {_, _ ->},
+    onGradeDeleteClick: (GradeType, Int) -> Unit = {_, _ ->},
     addMissedLesson: () -> Unit = {},
     removeMissedLesson: () -> Unit = {},
     onArrowClick: () -> Unit = {},
@@ -157,6 +167,12 @@ fun SubjectDetailScreenContent(
                 icon = Icons.Outlined.People,
                 onAddClick = onAddClick,
                 onGradeClick = onGradeClick,
+                showAddButton = true,
+                onDeleteClick = onGradeDeleteClick,
+                onEditClick = onGradeEditClick,
+                onDismissRequest = onGradeDismissRequest,
+                selectedGradeIndex = state.sheetState.selectedGradeIndex,
+                selectedGradeType = state.sheetState.type,
                 gradesList = state.subject.seminarGradesList
             )
 
@@ -170,6 +186,12 @@ fun SubjectDetailScreenContent(
                 icon = Icons.Outlined.School,
                 onAddClick = onAddClick,
                 gradesList = state.subject.colloquiumGradesList,
+                showAddButton = true,
+                onDeleteClick = onGradeDeleteClick,
+                onEditClick = onGradeEditClick,
+                onDismissRequest = onGradeDismissRequest,
+                selectedGradeIndex = state.sheetState.selectedGradeIndex,
+                selectedGradeType = state.sheetState.type,
                 onGradeClick = onGradeClick
             )
 
@@ -183,6 +205,12 @@ fun SubjectDetailScreenContent(
                 icon = Icons.Outlined.ContactPage,
                 onAddClick = onAddClick,
                 gradesList = state.subject.independentWorkGradesList,
+                showAddButton = state.independentWorkSum < 10,
+                onDeleteClick = onGradeDeleteClick,
+                onEditClick = onGradeEditClick,
+                onDismissRequest = onGradeDismissRequest,
+                selectedGradeIndex = state.sheetState.selectedGradeIndex,
+                selectedGradeType = state.sheetState.type,
                 onGradeClick = onGradeClick,
             )
 
@@ -191,7 +219,7 @@ fun SubjectDetailScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     sheetState = state.sheetState,
                     onDismissRequest = onDismissRequest,
-                    onGradeChange = onGradeChange,
+                    onValueChange = onValueChange,
                     addGrade = addGrade,
                     changeGrade = changeGrade
                 )

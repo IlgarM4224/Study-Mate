@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import com.studymate.ui.screens.components.subjectScreen.LimitButton
+import com.studymate.ui.screens.components.subjectDetailScreen.LimitButton
 
 /**
  * A horizontal row containing two buttons side by side.

@@ -4,10 +4,10 @@ import com.studymate.data.Subject
 import kotlin.math.pow
 import kotlin.math.roundToLong
 
-fun isValidGrade(grade: String): Boolean {
+fun isValidGrade(grade: String, maxScore: Int): Boolean {
     val numericGrade = grade.toIntOrNull() ?: return false
 
-    return numericGrade in 0..10
+    return numericGrade in 0..maxScore
 }
 
 /**
@@ -68,3 +68,8 @@ fun <T> List<T>.replaceAt(index: Int, newItem: T): List<T> {
     if (index !in indices) return this
     return mapIndexed { i, item -> if (i == index) newItem else item }
 }
+
+//fun <T> List<T>.removeAt(index: Int, newItem: T): List<T> {
+//    if (index !in indices) return this
+//    return mapIndexed { i, item -> if (i == index) newItem else item }
+//}

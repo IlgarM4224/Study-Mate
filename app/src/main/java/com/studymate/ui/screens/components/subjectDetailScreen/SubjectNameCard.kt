@@ -1,4 +1,4 @@
-package com.studymate.ui.screens.components.subjectScreen
+package com.studymate.ui.screens.components.subjectDetailScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
