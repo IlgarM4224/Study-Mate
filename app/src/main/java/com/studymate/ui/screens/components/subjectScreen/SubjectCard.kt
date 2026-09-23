@@ -9,25 +9,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.data.LessonType
 import com.studymate.data.Subject
+import com.studymate.data.TestData
+import com.studymate.ui.screens.components.general.SubjectName
 import com.studymate.ui.screens.components.scheduleScreen.LessonTypeChip
-import com.studymate.ui.screens.components.scheduleScreen.SubjectName
+import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
 fun SubjectCard(
     modifier: Modifier = Modifier,
     subject: Subject,
+    shape: Shape = CardDefaults.shape,
     onClick: (Int) -> Unit,
     onEditClick: () -> Unit,
 ) {
     Card(
         modifier = modifier,
+        shape = shape,
         onClick = { onClick(subject.id) }
     ) {
         Column(
@@ -73,6 +81,36 @@ fun SubjectCard(
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SubjectCardPreview() {
+    StudyMateTheme {
+        Surface {
+            SubjectCard(
+                subject = TestData.getSubjects()[0],
+                onClick = {},
+                onEditClick = {},
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SubjectCardDarkPreview() {
+    StudyMateTheme(darkTheme = true) {
+        Surface {
+            SubjectCard(
+                subject = TestData.getSubjects()[0],
+                onClick = {},
+                onEditClick = {},
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
         }
     }
 }

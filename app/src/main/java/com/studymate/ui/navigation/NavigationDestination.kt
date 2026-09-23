@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 interface NavigationDestination {
     /**
-     * Unique name to define the path for a composable
+     * Unique subjectName to define the path for a composable
      */
     val route: String
 

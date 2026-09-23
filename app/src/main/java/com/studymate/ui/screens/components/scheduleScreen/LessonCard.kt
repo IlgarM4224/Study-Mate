@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CoPresent
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,13 +28,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
 import com.studymate.data.LessonType
 import com.studymate.ui.screens.components.general.Chip
+import com.studymate.ui.screens.components.general.SubjectName
 import com.studymate.ui.theme.StudyMateTheme
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -134,42 +132,6 @@ private fun LessonStartEndTime(
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.primary
         )
-    }
-}
-
-@Composable
-fun SubjectName(
-    modifier: Modifier = Modifier,
-    name: String,
-    maxLines: Int = 1,
-    style: TextStyle = MaterialTheme.typography.titleLarge,
-    onEditClick: () -> Unit,
-){
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = name,
-            style = style,
-            fontWeight = FontWeight.Bold,
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-
-        IconButton(
-            onClick = onEditClick,
-            modifier = Modifier.size(32.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Edit,
-                contentDescription = "Edit lesson",
-                tint = MaterialTheme.colorScheme.outline,
-                modifier = Modifier.size(20.dp)
-            )
-        }
     }
 }
 

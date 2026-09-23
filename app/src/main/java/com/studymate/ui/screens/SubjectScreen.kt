@@ -47,7 +47,8 @@ fun SubjectScreen(
     modifier: Modifier,
     viewModel: SubjectScreenViewModel = viewModel(),
     navigateScheduleScreen: () -> Unit = {},
-    navigateToDetailScreen: (Int) -> Unit
+    navigateToDetailScreen: (Int) -> Unit,
+    navigateToSubjectAddScreen: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -55,7 +56,7 @@ fun SubjectScreen(
         state = state,
         onSubjectClick = navigateToDetailScreen,
         onEditClick = viewModel::onEditClick,
-        onFabClick = { viewModel.addNewSubject() },
+        onFabClick = navigateToSubjectAddScreen,
         navigateScheduleScreen = navigateScheduleScreen,
         modifier = modifier
     )
@@ -113,6 +114,7 @@ fun SubjectScreenContent(
                     subject = state.listOfSubjects[id],
                     onClick = onSubjectClick,
                     onEditClick = onEditClick,
+                    shape = RoundedCornerShape(24.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 6.dp)

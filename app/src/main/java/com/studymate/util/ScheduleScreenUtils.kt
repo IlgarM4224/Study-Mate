@@ -27,7 +27,7 @@ fun getWeekDays(currentDay: LocalDate): List<Day> {
 
 /**
  * Extension function converting a [LocalDate] into a [Day] UI data model.
- * Formats day name (e.g., "Mon") and date string (e.g., "14 Sep").
+ * Formats day subjectName (e.g., "Mon") and date string (e.g., "14 Sep").
  */
 fun LocalDate.toDay(): Day {
     val dayNameFormatter = DateTimeFormatter.ofPattern("EEE", Locale.ENGLISH)

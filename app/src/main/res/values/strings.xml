@@ -7,4 +7,6 @@
 
     <string name="lectures">Lectures</string>
     <string name="seminar">Seminar</string>
+    
+    <string name="subject_add_screen">Add a subject</string>
 </resources>
