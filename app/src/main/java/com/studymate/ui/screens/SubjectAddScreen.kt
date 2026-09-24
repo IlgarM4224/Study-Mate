@@ -2,9 +2,15 @@ package com.studymate.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -18,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
 import com.studymate.ui.navigation.NavigationDestination
+import com.studymate.ui.screens.components.general.RoundedButton
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.subjectAddScreen.SubjectInputCard
 import com.studymate.ui.screens.components.subjectAddScreen.SubjectMetricsInputCard
+import com.studymate.ui.screens.components.subjectAddScreen.TeacherInputCard
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectAddDestination: NavigationDestination {
@@ -41,6 +49,7 @@ fun SubjectAddScreen(
     SubjectAddScreenContent(
         modifier = modifier,
         navigateBack = navigateBack,
+        changeTeacherCount = { viewModel.changeTeacherCount(it) },
         state = uiState
     )
 }
@@ -49,6 +58,7 @@ fun SubjectAddScreen(
 fun SubjectAddScreenContent(
     modifier: Modifier = Modifier,
     state: SubjectAddState,
+    changeTeacherCount: (Int) -> Unit = {},
     navigateBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -65,19 +75,49 @@ fun SubjectAddScreenContent(
     ) { innerPadding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
-
+                .padding(8.dp)
         ) {
             SubjectInputCard(
                 value = state.subjectName,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp))
 
             SubjectMetricsInputCard(
                 hoursValue = "${state.hours ?: ""}",
                 creditValue = "${state.creditScore ?: ""}",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            TeacherInputCard(
+                teachersCount = state.teacherCount,
+                changeTeacherCount = changeTeacherCount,
+                lectureTeacherValue = state.teacherLecture,
+                seminarTeacherValue = state.teacherSeminar,
+                onLectureTeacherValueChange = {},
+                onSeminarTeacherValueChange = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+            )
+
+            Spacer(Modifier.weight(1f))
+
+            RoundedButton(
+                label = "Save subject",
+                labelStyle = MaterialTheme.typography.titleLarge,
+                onClick = {
+                    navigateBack()
+                },
+                icon = Icons.Default.Done,
+                iconSize = 36.dp,
+                tint = MaterialTheme.colorScheme.onPrimary,
+                spacer = 8.dp,
+                shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -91,9 +131,9 @@ fun SubjectAddScreenContentPreview() {
         Surface {
             SubjectAddScreenContent(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                state = SubjectAddState()
+                    .fillMaxSize()
+                    .padding(8.dp),
+                state = SubjectAddState(teacherCount = 2)
             )
         }
     }
@@ -106,8 +146,8 @@ fun SubjectAddScreenContentDarkPreview() {
         Surface {
             SubjectAddScreenContent(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .fillMaxSize()
+                    .padding(8.dp),
                 state = SubjectAddState()
             )
         }

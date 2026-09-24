@@ -12,10 +12,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +42,8 @@ fun SubjectAddCard(
             Text(
                 text = "• $label",
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
 
             Spacer(Modifier.height(8.dp))
@@ -66,7 +69,7 @@ fun TextFieldWhitName(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.outline,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
 
@@ -79,6 +82,9 @@ fun TextFieldWhitName(
             isError = isError,
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = keyboardOptions,
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.15f)
+            ),
             modifier = Modifier.fillMaxWidth()
         )
     }

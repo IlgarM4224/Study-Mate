@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,11 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.studymate.data.Day
 import com.studymate.data.TestData
 import com.studymate.ui.screens.WeekUiState
+import com.studymate.ui.screens.components.general.SegmentedToggle
+import com.studymate.ui.screens.components.general.ToggleOption
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
@@ -71,27 +70,12 @@ private fun WeekType(
     onNextWeekClick: () -> Unit
 ) {
     Column( modifier = modifier ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp)
-        ){
-            WeekChoiceButton(
-                label = "Current",
-                onClick = onCurrentWeekClick,
-                isCurrentWeek = isCurrentWeek,
-                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
-                modifier = Modifier.weight(1f)
-            )
-
-            WeekChoiceButton(
-                label = "Next",
-                onClick = onNextWeekClick,
-                isCurrentWeek = !isCurrentWeek,
-                shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
-                modifier = Modifier.weight(1f)
-            )
-        }
+        SegmentedToggle(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 4.dp),
+            options = listOf(ToggleOption("Current"), ToggleOption("Next")),
+            selectedIndex = if (isCurrentWeek) 0 else 1,
+            onSelect = { if (it == 0) onCurrentWeekClick() else onNextWeekClick() }
+        )
 
         Spacer(modifier = Modifier.padding(4.dp))
 
@@ -99,31 +83,8 @@ private fun WeekType(
             text = "$type week",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
-    }
-}
-
-@Composable
-private fun WeekChoiceButton(
-    label: String,
-    onClick: () -> Unit,
-    isCurrentWeek: Boolean,
-    shape: RoundedCornerShape? = null,
-    modifier: Modifier
-) {
-    val colorScheme = if (isCurrentWeek) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
-    Box(modifier = modifier) {
-        TextButton(
-            onClick = onClick,
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = colorScheme,
-            ),
-            shape = shape ?: ButtonDefaults.textShape,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = label)
-        }
     }
 }
 

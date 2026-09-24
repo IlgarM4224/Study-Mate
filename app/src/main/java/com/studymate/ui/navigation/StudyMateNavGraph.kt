@@ -90,7 +90,7 @@ fun StudyMateNavHost(
                 navigateBack = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(horizontal = 8.dp),
             )
         }
     }
