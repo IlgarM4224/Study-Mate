@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.studymate.ui.screens.ValidInput
 import com.studymate.ui.screens.components.general.SegmentedToggle
 import com.studymate.ui.screens.components.general.ToggleOption
 import com.studymate.ui.theme.StudyMateTheme
@@ -22,8 +23,8 @@ import com.studymate.ui.theme.StudyMateTheme
 fun TeacherInputCard(
     modifier: Modifier,
     teachersCount: Int = 1,
-    lectureTeacherValue: String? = null,
-    seminarTeacherValue: String? = null,
+    lectureTeacherValue: ValidInput<String?> = ValidInput(""),
+    seminarTeacherValue: ValidInput<String?> = ValidInput(""),
     changeTeacherCount: (Int) -> Unit,
     onLectureTeacherValueChange: (String) -> Unit,
     onSeminarTeacherValueChange: (String) -> Unit,
@@ -44,9 +45,9 @@ fun TeacherInputCard(
             modifier = Modifier.fillMaxWidth(),
             name = if(teachersCount == 1) "Teacher" else "Lecture teacher",
             placeholder = "Full name",
-            value = lectureTeacherValue,
+            value = lectureTeacherValue.value,
             onValueChange = onLectureTeacherValueChange,
-            isError = false,
+            isError = !lectureTeacherValue.isValid,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = if(teachersCount == 1) ImeAction.Done else ImeAction.Next
             ),
@@ -63,9 +64,9 @@ fun TeacherInputCard(
                 modifier = Modifier.fillMaxWidth(),
                 name = "Seminar teacher",
                 placeholder = "Full name",
-                value = seminarTeacherValue,
+                value = seminarTeacherValue.value,
                 onValueChange = onSeminarTeacherValueChange,
-                isError = false,
+                isError = !seminarTeacherValue.isValid,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),

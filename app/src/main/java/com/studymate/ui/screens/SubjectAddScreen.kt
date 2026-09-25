@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
+import com.studymate.data.LessonType
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.general.RoundedButton
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
@@ -50,6 +51,11 @@ fun SubjectAddScreen(
         modifier = modifier,
         navigateBack = navigateBack,
         changeTeacherCount = { viewModel.changeTeacherCount(it) },
+        changeSubjectName = { viewModel.subjectNameChange(it) },
+        changeTeacherName = { name, type -> viewModel.teacherNameChange(name, type) },
+        changeMetrics = { value, maxValue, isHours ->
+            viewModel.metricInputChange(value, maxValue, isHours)
+        },
         state = uiState
     )
 }
@@ -59,6 +65,9 @@ fun SubjectAddScreenContent(
     modifier: Modifier = Modifier,
     state: SubjectAddState,
     changeTeacherCount: (Int) -> Unit = {},
+    changeSubjectName: (String) -> Unit = {},
+    changeTeacherName: (String, LessonType) -> Unit = {_, _ ->},
+    changeMetrics: (String, Int, Boolean) -> Unit = {_, _, _ ->},
     navigateBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -81,15 +90,19 @@ fun SubjectAddScreenContent(
                 .padding(8.dp)
         ) {
             SubjectInputCard(
-                value = state.subjectName,
+                value = state.subjectName.value,
+                isError = !state.subjectName.isValid,
+                onValueChange = changeSubjectName,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(24.dp))
 
             SubjectMetricsInputCard(
-                hoursValue = "${state.hours ?: ""}",
-                creditValue = "${state.creditScore ?: ""}",
+                hours = state.hours,
+                creditScore = state.creditScore,
+                onHoursValueChange = { changeMetrics(it, state.maxHoursValue, true) },
+                onCreditValueChange = { changeMetrics(it, state.maxCreditScore, false) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -98,8 +111,8 @@ fun SubjectAddScreenContent(
                 changeTeacherCount = changeTeacherCount,
                 lectureTeacherValue = state.teacherLecture,
                 seminarTeacherValue = state.teacherSeminar,
-                onLectureTeacherValueChange = {},
-                onSeminarTeacherValueChange = {},
+                onLectureTeacherValueChange = { changeTeacherName(it, LessonType.LECTURES) },
+                onSeminarTeacherValueChange = { changeTeacherName(it, LessonType.SEMINAR) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 24.dp)
@@ -117,6 +130,7 @@ fun SubjectAddScreenContent(
                 iconSize = 36.dp,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 spacer = 8.dp,
+                enabled = state.isValidInput,
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.fillMaxWidth()
             )

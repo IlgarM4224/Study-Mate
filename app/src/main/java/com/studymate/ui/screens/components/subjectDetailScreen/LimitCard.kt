@@ -89,15 +89,15 @@ fun LimitCard(
 
             TwoButtons(
                 modifier = Modifier.fillMaxWidth(),
-                leftLabel = "Remove Missed",
+                leftLabel = "Remove",
                 leftEnabled = missed > 0,
                 leftIcon = Icons.Default.Remove,
                 leftOnClick = removeMissed,
-                rightLabel = "Add Missed",
+                rightLabel = "Add",
                 rightOnClick = addMissed,
                 rightIcon = Icons.Default.Add,
                 rightEnabled = missed < limit,
-                spacer = 1f,
+                spacerDp = 12.dp,
             )
         }
     }

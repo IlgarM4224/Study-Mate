@@ -75,10 +75,12 @@ fun TwoButtons(
             buttonColors = leftColors,
             icon = leftIcon,
             label = leftLabel,
+            labelStyle = MaterialTheme.typography.bodyMedium,
             labelColor = leftLabelColor,
             tint = leftIconTint,
             onClick = leftOnClick,
             enabled = leftEnabled,
+            modifier = Modifier.weight(1f)
         )
 
         if (spacer != null) Spacer(Modifier.weight(spacer))
@@ -88,10 +90,12 @@ fun TwoButtons(
             buttonColors = rightColors,
             icon = rightIcon,
             label = rightLabel,
+            labelStyle = MaterialTheme.typography.bodyMedium,
             labelColor = rightLabelColor,
             tint = rightIconTint,
             onClick = rightOnClick,
             enabled = rightEnabled,
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -109,7 +113,7 @@ fun TwoButtonsPreview() {
                 rightLabel = "Add Missed",
                 rightOnClick = {},
                 rightIcon = Icons.Default.Add,
-                spacer = 1f
+                spacerDp = 8.dp
             )
         }
     }

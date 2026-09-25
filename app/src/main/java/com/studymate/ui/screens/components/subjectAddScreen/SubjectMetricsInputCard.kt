@@ -13,15 +13,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.studymate.ui.screens.ValidInput
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
 fun SubjectMetricsInputCard(
     modifier: Modifier,
-    hoursValue: String = "",
-    creditValue: String = "",
-    isHoursError: Boolean = false,
-    isCreditError: Boolean = false,
+    hours: ValidInput<Int?> = ValidInput(null),
+    creditScore: ValidInput<Int?> = ValidInput(null),
     onHoursValueChange: (String) -> Unit = {},
     onCreditValueChange: (String) -> Unit = {}
 ) {
@@ -33,9 +32,9 @@ fun SubjectMetricsInputCard(
             TextFieldWhitName(
                 name = "Hours",
                 placeholder = "0",
-                value = hoursValue,
+                value = "${hours.value ?: ""}",
                 onValueChange = onHoursValueChange,
-                isError = isHoursError,
+                isError = !hours.isValid,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -48,9 +47,9 @@ fun SubjectMetricsInputCard(
             TextFieldWhitName(
                 name = "Credit",
                 placeholder = "0",
-                value = creditValue,
+                value = "${creditScore.value ?: ""}",
                 onValueChange = onCreditValueChange,
-                isError = isCreditError,
+                isError = !creditScore.isValid,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
