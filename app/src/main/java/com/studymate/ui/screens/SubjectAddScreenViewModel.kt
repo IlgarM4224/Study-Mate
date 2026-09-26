@@ -24,6 +24,8 @@ class SubjectAddScreenViewModel: ViewModel() {
             val isValid = isValidString(name)
             state.copy(subjectName = ValidInput(name, isValid), isValidInput = isValid)
         }
+
+        updateIsValidInput()
     }
 
     fun teacherNameChange(name: String, type: LessonType) {
@@ -42,6 +44,8 @@ class SubjectAddScreenViewModel: ViewModel() {
                 )
             }
         }
+
+        updateIsValidInput()
     }
 
     fun metricInputChange(metric: String, max: Int, isHours: Boolean) {
@@ -52,7 +56,12 @@ class SubjectAddScreenViewModel: ViewModel() {
                 state.copy(hours = ValidInput(metric.toIntOrNull(), isValid))
             } else state.copy(creditScore = ValidInput(metric.toIntOrNull(), isValid))
         }
+
+        updateIsValidInput()
     }
+
+    private fun updateIsValidInput() = _uiState.update { it.copy(isValidInput = canBeSaved(it)) }
+
 }
 
 data class SubjectAddState(
@@ -77,4 +86,12 @@ private fun isValidString(input: String, maxLength: Int = 50): Boolean {
             input.length <= maxLength &&
             !input.startsWith(" ") &&
             !input.first().isDigit()
+}
+
+private fun canBeSaved(state: SubjectAddState): Boolean {
+    return isValidString(state.subjectName.value) &&
+            state.hours.isValid &&
+            state.creditScore.isValid &&
+            state.teacherLecture.isValid &&
+            state.teacherSeminar.isValid
 }
