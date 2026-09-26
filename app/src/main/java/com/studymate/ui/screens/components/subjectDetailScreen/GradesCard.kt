@@ -46,7 +46,7 @@ fun GradesCard(
     gradeType: GradeType,
     selectedGradeIndex: Int?,
     selectedGradeType: GradeType,
-    showAddButton: Boolean,
+    showAddButton: Boolean = true,
     onAddClick: (GradeType) -> Unit = {},
     onGradeClick: (GradeType, Int) -> Unit,
     onDismissRequest: () -> Unit,

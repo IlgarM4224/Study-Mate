@@ -101,7 +101,7 @@ fun GradeBottomSheetContent(
             rightOnClick = onApply,
             rightIcon = Icons.Outlined.Done,
             rightEnabled = isEntryValid,
-            spacer = 1f,
+            spacerDp = 32.dp,
             modifier = Modifier.fillMaxWidth(),
         )
     }

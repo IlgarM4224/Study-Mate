@@ -20,9 +20,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.studymate.R
 import com.studymate.data.GradeType
 import com.studymate.data.TestData
 import com.studymate.ui.navigation.NavigationDestination
@@ -120,14 +122,10 @@ fun SubjectDetailScreenContent(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
+                .padding(4.dp)
         ) {
             SubjectNameCard(
-                subjectName = state.subject.name,
-                subjectCredit = state.subject.creditScore,
-                subjectHours = state.subject.hours,
-                showMore = state.showMore,
-                lecture = state.subject.teacherLecture,
-                seminar = state.subject.teacherSeminar,
+                state = state,
                 onArrowClick = onArrowClick,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -135,13 +133,8 @@ fun SubjectDetailScreenContent(
             Spacer(Modifier.height(16.dp))
 
             OverallScoreCard(
+                state = state,
                 modifier = Modifier.fillMaxWidth(),
-                maxScore = state.maxScore,
-                overallScore = state.overallScore ?: 0f,
-                averageColloquium = state.averageColloquium ?: 0f,
-                averageSeminar = state.averageSeminar ?: 0f,
-                independentWork = state.independentWorkSum,
-                attendanceScore = state.attendanceScore
             )
 
             if (state.limit != null) {
@@ -162,12 +155,11 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Seminar",
+                label = stringResource(R.string.seminar_grades),
                 gradeType = GradeType.SEMINAR,
                 icon = Icons.Outlined.People,
                 onAddClick = onAddClick,
                 onGradeClick = onGradeClick,
-                showAddButton = true,
                 onDeleteClick = onGradeDeleteClick,
                 onEditClick = onGradeEditClick,
                 onDismissRequest = onGradeDismissRequest,
@@ -181,12 +173,11 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Colloquium",
+                label = stringResource(R.string.colloquium_grades),
                 gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
                 onAddClick = onAddClick,
                 gradesList = state.subject.colloquiumGradesList,
-                showAddButton = true,
                 onDeleteClick = onGradeDeleteClick,
                 onEditClick = onGradeEditClick,
                 onDismissRequest = onGradeDismissRequest,
@@ -200,7 +191,7 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Independent work",
+                label = stringResource(R.string.independent_work_grades),
                 gradeType = GradeType.INDEPENDENT_WORK,
                 icon = Icons.Outlined.ContactPage,
                 onAddClick = onAddClick,
