@@ -2,12 +2,17 @@ package com.studymate.ui.screens
 
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.studymate.data.LessonType
+import com.studymate.data.Subject
+import com.studymate.data.Subject1
+import com.studymate.data.SubjectRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class SubjectAddScreenViewModel: ViewModel() {
+class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository): ViewModel() {
     private val _uiState = MutableStateFlow(SubjectAddState())
 
     val uiState = _uiState.asStateFlow()
@@ -58,6 +63,22 @@ class SubjectAddScreenViewModel: ViewModel() {
         }
 
         updateIsValidInput()
+    }
+
+    fun addSubject() {
+        val state = _uiState.value
+
+        viewModelScope.launch {
+            subjectRepository.addSubject(
+                Subject1(
+                    name = state.subjectName.value,
+                    teacherLecture = state.teacherLecture.value,
+                    teacherSeminar = state.teacherSeminar.value,
+                    hours = state.hours.value,
+                    creditScore = state.creditScore.value,
+                )
+            )
+        }
     }
 
     private fun updateIsValidInput() = _uiState.update { it.copy(isValidInput = canBeSaved(it)) }

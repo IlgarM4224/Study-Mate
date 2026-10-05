@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
 import com.studymate.data.LessonType
+import com.studymate.ui.AppViewModelProvider
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.general.RoundedButton
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
@@ -44,7 +45,7 @@ object SubjectAddDestination: NavigationDestination {
 fun SubjectAddScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit = {},
-    viewModel: SubjectAddScreenViewModel = viewModel(),
+    viewModel: SubjectAddScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -57,6 +58,7 @@ fun SubjectAddScreen(
         changeMetrics = { value, maxValue, isHours ->
             viewModel.metricInputChange(value, maxValue, isHours)
         },
+        onSaveClick = viewModel::addSubject,
         state = uiState
     )
 }
@@ -69,6 +71,7 @@ fun SubjectAddScreenContent(
     changeSubjectName: (String) -> Unit = {},
     changeTeacherName: (String, LessonType) -> Unit = {_, _ ->},
     changeMetrics: (String, Int, Boolean) -> Unit = {_, _, _ ->},
+    onSaveClick: () -> Unit = {},
     navigateBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -126,6 +129,7 @@ fun SubjectAddScreenContent(
                 label = "Save subject",
                 labelStyle = MaterialTheme.typography.titleLarge,
                 onClick = {
+                    onSaveClick()
                     navigateBack()
                 },
                 icon = Icons.Default.Done,
