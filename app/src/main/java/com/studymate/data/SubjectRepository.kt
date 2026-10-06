@@ -1,5 +1,5 @@
 package com.studymate.data
 
 interface SubjectRepository {
-    suspend fun addSubject(subject: Subject1)
+    suspend fun addSubject(subject: Subject)
 }

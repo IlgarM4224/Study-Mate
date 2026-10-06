@@ -5,6 +5,6 @@ import androidx.room.Insert
 
 @Dao
 interface SubjectDao {
-    @Insert(entity = Subject1::class)
-    suspend fun addSubject(subject: Subject1)
+    @Insert(entity = Subject::class)
+    suspend fun addSubject(subject: Subject)
 }

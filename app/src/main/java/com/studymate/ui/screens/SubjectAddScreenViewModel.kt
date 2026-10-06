@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.studymate.data.LessonType
 import com.studymate.data.Subject
-import com.studymate.data.Subject1
 import com.studymate.data.SubjectRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,7 +69,7 @@ class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository
 
         viewModelScope.launch {
             subjectRepository.addSubject(
-                Subject1(
+                Subject(
                     name = state.subjectName.value,
                     teacherLecture = state.teacherLecture.value,
                     teacherSeminar = state.teacherSeminar.value,
