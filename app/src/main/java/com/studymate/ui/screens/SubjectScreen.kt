@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
 import com.studymate.data.TestData
+import com.studymate.ui.AppViewModelProvider
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.general.StudyMateBottomAppBar
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
@@ -45,7 +46,7 @@ object SubjectDestination: NavigationDestination {
 @Composable
 fun SubjectScreen(
     modifier: Modifier,
-    viewModel: SubjectScreenViewModel = viewModel(),
+    viewModel: SubjectScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateScheduleScreen: () -> Unit = {},
     navigateToDetailScreen: (Int) -> Unit,
     navigateToSubjectAddScreen: () -> Unit,
