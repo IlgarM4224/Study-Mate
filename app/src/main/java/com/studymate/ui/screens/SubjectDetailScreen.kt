@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
 import com.studymate.data.GradeType
 import com.studymate.data.TestData
+import com.studymate.ui.AppViewModelProvider
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.subjectDetailScreen.GradeBottomSheet
 import com.studymate.ui.screens.components.subjectDetailScreen.GradesCard
@@ -49,7 +50,7 @@ object SubjectDetailDestination: NavigationDestination {
 fun SubjectDetailScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit = {},
-    viewModel: SubjectDetailScreenViewModel = viewModel(),
+    viewModel: SubjectDetailScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
