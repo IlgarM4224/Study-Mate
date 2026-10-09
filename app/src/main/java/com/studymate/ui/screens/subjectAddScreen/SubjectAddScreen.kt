@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectAddScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +32,7 @@ import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.subjectAddScreen.SubjectInputCard
 import com.studymate.ui.screens.components.subjectAddScreen.SubjectMetricsInputCard
 import com.studymate.ui.screens.components.subjectAddScreen.TeacherInputCard
+import com.studymate.ui.screens.subjectScreen.SubjectDestination
 import com.studymate.ui.theme.StudyMateTheme
 
 object SubjectAddDestination: NavigationDestination {
@@ -51,6 +52,7 @@ fun SubjectAddScreen(
 
     SubjectAddScreenContent(
         modifier = modifier,
+        title = stringResource(SubjectDestination.titleRes),
         navigateBack = navigateBack,
         changeTeacherCount = { viewModel.changeTeacherCount(it) },
         changeSubjectName = { viewModel.subjectNameChange(it) },
@@ -66,6 +68,7 @@ fun SubjectAddScreen(
 @Composable
 fun SubjectAddScreenContent(
     modifier: Modifier = Modifier,
+    title: String = "Add a subject",
     state: SubjectAddState,
     changeTeacherCount: (Int) -> Unit = {},
     changeSubjectName: (String) -> Unit = {},
@@ -77,7 +80,7 @@ fun SubjectAddScreenContent(
     Scaffold(
         topBar = {
             StudyMateTopAppBar(
-                title = stringResource(SubjectAddDestination.titleRes),
+                title = title,
                 titleStyle = MaterialTheme.typography.displaySmall,
                 canNavigateBack = true,
                 onNavigateClick = navigateBack,

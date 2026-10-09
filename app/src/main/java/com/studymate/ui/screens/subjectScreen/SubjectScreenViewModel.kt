@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,8 +30,6 @@ class SubjectScreenViewModel(subjectRepository: SubjectRepository): ViewModel() 
             )
 
     fun onEditClick() {} // TODO: Implement edit functionality or navigation
-
-    fun addNewSubject() {} // TODO: Implement logic to insert a new subject into _uiState
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

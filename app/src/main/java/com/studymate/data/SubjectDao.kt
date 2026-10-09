@@ -1,6 +1,7 @@
 package com.studymate.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -15,8 +16,11 @@ interface SubjectDao {
     fun getAllSubjects(): Flow<List<Subject>>
 
     @Query("SELECT * FROM subject WHERE id = :id")
-    fun getSubjectById(id: Int): Flow<Subject>
+    fun getSubjectById(id: Int): Flow<Subject?>
 
     @Update
     suspend fun updateSubject(subject: Subject)
+
+    @Delete
+    suspend fun deleteSubject(subject: Subject)
 }

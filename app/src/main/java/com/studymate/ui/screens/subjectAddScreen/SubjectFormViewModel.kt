@@ -1,18 +1,18 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectAddScreen
 
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.studymate.data.LessonType
-import com.studymate.data.Subject
-import com.studymate.data.SubjectRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository): ViewModel() {
-    private val _uiState = MutableStateFlow(SubjectAddState())
+/**
+ * The general logic of the subject form
+ * SubjectAddScreenViewModel and SubjectEditScreenViewModel inherit from it
+ */
+abstract class SubjectFormViewModel : ViewModel() {
+    protected val _uiState = MutableStateFlow(SubjectAddState())
 
     val uiState = _uiState.asStateFlow()
 
@@ -25,8 +25,7 @@ class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository
 
     fun subjectNameChange(name: String) {
         _uiState.update { state ->
-            val isValid = isValidString(name)
-            state.copy(subjectName = ValidInput(name, isValid), isValidInput = isValid)
+            state.copy(subjectName = ValidInput(name, isValidString(name)))
         }
 
         updateIsValidInput()
@@ -43,8 +42,8 @@ class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository
                 )
             } else {
                 state.copy(
-                    teacherLecture = if(type == LessonType.LECTURES) ValidInput(name, isValid) else state.teacherLecture,
-                    teacherSeminar = if(type == LessonType.SEMINAR) ValidInput(name, isValid) else state.teacherSeminar
+                    teacherLecture = if (type == LessonType.LECTURES) ValidInput(name, isValid) else state.teacherLecture,
+                    teacherSeminar = if (type == LessonType.SEMINAR) ValidInput(name, isValid) else state.teacherSeminar
                 )
             }
         }
@@ -64,24 +63,7 @@ class SubjectAddScreenViewModel(private val subjectRepository: SubjectRepository
         updateIsValidInput()
     }
 
-    fun addSubject() {
-        val state = _uiState.value
-
-        viewModelScope.launch {
-            subjectRepository.addSubject(
-                Subject(
-                    name = state.subjectName.value,
-                    teacherLecture = state.teacherLecture.value,
-                    teacherSeminar = state.teacherSeminar.value,
-                    hours = state.hours.value,
-                    creditScore = state.creditScore.value,
-                )
-            )
-        }
-    }
-
-    private fun updateIsValidInput() = _uiState.update { it.copy(isValidInput = canBeSaved(it)) }
-
+    protected fun updateIsValidInput() = _uiState.update { it.copy(isValidInput = canBeSaved(it)) }
 }
 
 data class SubjectAddState(
@@ -101,14 +83,14 @@ data class ValidInput<T>(
     val isValid: Boolean = true
 )
 
-private fun isValidString(input: String, maxLength: Int = 50): Boolean {
+internal fun isValidString(input: String, maxLength: Int = 50): Boolean {
     return input.isNotEmpty() &&
             input.length <= maxLength &&
             !input.startsWith(" ") &&
             !input.first().isDigit()
 }
 
-private fun canBeSaved(state: SubjectAddState): Boolean {
+internal fun canBeSaved(state: SubjectAddState): Boolean {
     return isValidString(state.subjectName.value) &&
             state.hours.isValid &&
             state.creditScore.isValid &&

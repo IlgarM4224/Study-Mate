@@ -31,7 +31,7 @@ fun SubjectCard(
     subject: Subject,
     shape: Shape = CardDefaults.shape,
     onClick: (Int) -> Unit,
-    onEditClick: () -> Unit,
+    onEditClick: (Int) -> Unit,
 ) {
     Card(
         modifier = modifier,
@@ -45,7 +45,7 @@ fun SubjectCard(
         ) {
             SubjectName(
                 name = subject.name,
-                onEditClick = onEditClick,
+                onEditClick = { onEditClick(subject.id) },
                 style = MaterialTheme.typography.headlineSmall,
                 maxLines = 2,
                 modifier = Modifier

@@ -22,8 +22,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.ScheduleDestination
-import com.studymate.ui.screens.SubjectDestination
+import com.studymate.ui.screens.scheduleScreen.ScheduleDestination
+import com.studymate.ui.screens.subjectScreen.SubjectDestination
 import com.studymate.ui.theme.StudyMateTheme
 
 
@@ -50,7 +50,8 @@ fun StudyMateTopAppBar(
     onMoreClick: () -> Unit = {},
     title: String?,
     titleStyle: TextStyle = MaterialTheme.typography.displayMedium,
-    titleColor: Color = MaterialTheme.colorScheme.primary
+    titleColor: Color = MaterialTheme.colorScheme.primary,
+    content: @Composable (() -> Unit) = {}
 ) {
     TopAppBar(
         title = {
@@ -65,7 +66,7 @@ fun StudyMateTopAppBar(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-        } ,
+        },
 
         navigationIcon = {
             // Back button shown only when navigation back is allowed
@@ -90,6 +91,7 @@ fun StudyMateTopAppBar(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+                content()
             }
         },
 

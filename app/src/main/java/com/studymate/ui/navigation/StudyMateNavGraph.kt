@@ -10,14 +10,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.studymate.ui.screens.ScheduleDestination
-import com.studymate.ui.screens.ScheduleScreen
-import com.studymate.ui.screens.SubjectAddDestination
-import com.studymate.ui.screens.SubjectAddScreen
-import com.studymate.ui.screens.SubjectDestination
-import com.studymate.ui.screens.SubjectDetailDestination
-import com.studymate.ui.screens.SubjectDetailScreen
-import com.studymate.ui.screens.SubjectScreen
+import com.studymate.ui.screens.scheduleScreen.ScheduleDestination
+import com.studymate.ui.screens.scheduleScreen.ScheduleScreen
+import com.studymate.ui.screens.subjectAddScreen.SubjectAddDestination
+import com.studymate.ui.screens.subjectAddScreen.SubjectAddScreen
+import com.studymate.ui.screens.subjectScreen.SubjectDestination
+import com.studymate.ui.screens.subjectDetailScreen.SubjectDetailDestination
+import com.studymate.ui.screens.subjectDetailScreen.SubjectDetailScreen
+import com.studymate.ui.screens.subjectEditScreen.SubjectEditDestination
+import com.studymate.ui.screens.subjectEditScreen.SubjectEditScreen
+import com.studymate.ui.screens.subjectScreen.SubjectScreen
 
 
 /**
@@ -54,14 +56,15 @@ fun StudyMateNavHost(
         // Subjects Overview Screen Route
         composable(route = SubjectDestination.route) {
             SubjectScreen(
-                navigateScheduleScreen = {
-                    navController.popBackStack()
-                } ,
+                navigateScheduleScreen = { navController.popBackStack() } ,
                 navigateToDetailScreen = {
                     navController.navigate(route = "${SubjectDetailDestination.route}/${it}")
                 },
                 navigateToSubjectAddScreen = {
                     navController.navigate(route = SubjectAddDestination.route)
+                },
+                navigateToSubjectEditScreen = {
+                    navController.navigate(route = "${SubjectEditDestination.route}/${it}")
                 },
                 modifier = Modifier
                     .fillMaxSize()
@@ -79,6 +82,9 @@ fun StudyMateNavHost(
         ) {
             SubjectDetailScreen(
                 navigateBack = { navController.popBackStack() },
+                navigateToEditScreen = {
+                    navController.navigate(route = "${SubjectEditDestination.route}/${it}")
+                },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),
@@ -87,6 +93,18 @@ fun StudyMateNavHost(
 
         composable(route = SubjectAddDestination.route) {
             SubjectAddScreen(
+                navigateBack = { navController.popBackStack() },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
+            )
+        }
+
+        composable(
+            route = SubjectEditDestination.routeWithArgs,
+            arguments = listOf(navArgument(SubjectEditDestination.SUBJECT_ID_ARG) { type = NavType.IntType })
+        ) {
+            SubjectEditScreen(
                 navigateBack = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxSize()

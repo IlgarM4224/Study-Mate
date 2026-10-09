@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectDetailScreen
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,28 +29,46 @@ class SubjectDetailScreenViewModel(
 
     // Extract the subject ID from the passed navigation arguments
     private val subjectId: Int = checkNotNull(savedStateHandle[SubjectDetailDestination.SUBJECT_ID_ARG])
-    private val _uiState = MutableStateFlow(SubjectDetailState(Subject(subjectId, "")))
+    private val _uiState = MutableStateFlow(MutableSubjectDetailState())
     val uiState: StateFlow<SubjectDetailState> = combine(
-        subjectRepository.getSubjectByIdStream(subjectId),
+        subjectRepository.getSubjectByIdStream(subjectId).filterNotNull(),
         _uiState
     ) { subject, currentState ->
-        currentState.copy(
+        SubjectDetailState(
             subject = subject,
-            averageSeminar = subject.seminarGradesList.averageForLabel(),
-            averageColloquium = subject.colloquiumGradesList.averageForLabel(),
-            independentWorkSum = subject.independentWorkGradesList.sum(),
-            attendanceScore = subject.calculateAttendanceScore(),
-            limit = subject.calculateLimit(),
-            overallScore = subject.getOverallScore()
+            state = currentState.copy(
+                averageSeminar = subject.seminarGradesList.averageForLabel(),
+                averageColloquium = subject.colloquiumGradesList.averageForLabel(),
+                independentWorkSum = subject.independentWorkGradesList.sum(),
+                attendanceScore = subject.calculateAttendanceScore(),
+                limit = subject.calculateLimit(),
+                overallScore = subject.getOverallScore()
+            ),
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SubjectDetailState(Subject(subjectId, ""))
+        initialValue = SubjectDetailState(
+            Subject(subjectId, ""),
+            state = MutableSubjectDetailState()
+        )
     )
 
     // UI actions
-    fun onMoreClick() { /* TODO: Implement logic for clicking the ":" button */}
+    fun onMoreClick() {
+        _uiState.update { it.copy(showMoreActions = true) }
+    }
+
+    fun onMoreDismissRequest() {
+        _uiState.update { it.copy(showMoreActions = false) }
+    }
+
+    fun deleteSubject() {
+        _uiState.update { it.copy(showMoreActions = false) }
+        viewModelScope.launch {
+            subjectRepository.deleteSubject(uiState.value.subject)
+        }
+    }
 
     fun addMissed() = updateMissed(1) // Increments the missed classes counter by 1
     fun removeMissed() = updateMissed(-1) // Decrements the missed classes counter by 1
@@ -98,6 +117,8 @@ class SubjectDetailScreenViewModel(
     }
 
     fun changeGrade(index: Int, grade: Int, type: GradeType) {
+        _uiState.update { it.copy(sheetState = BottomSheetState()) }
+
         when (type) {
             GradeType.SEMINAR -> updateGradesInDb { it.copy(seminarGradesList = it.seminarGradesList.replaceAt(index, grade)) }
             GradeType.COLLOQUIUM -> updateGradesInDb { it.copy(colloquiumGradesList = it.colloquiumGradesList.replaceAt(index, grade)) }
@@ -118,7 +139,7 @@ class SubjectDetailScreenViewModel(
     fun onGradeDismissRequest() {
         _uiState.update {
             state -> state.copy(
-                sheetState =  BottomSheetState(),
+                sheetState = BottomSheetState(),
             )
         }
     }

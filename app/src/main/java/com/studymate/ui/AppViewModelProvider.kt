@@ -6,9 +6,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.studymate.StudyMateApplication
-import com.studymate.ui.screens.SubjectAddScreenViewModel
-import com.studymate.ui.screens.SubjectDetailScreenViewModel
-import com.studymate.ui.screens.SubjectScreenViewModel
+import com.studymate.ui.screens.subjectAddScreen.SubjectAddScreenViewModel
+import com.studymate.ui.screens.subjectDetailScreen.SubjectDetailScreenViewModel
+import com.studymate.ui.screens.subjectEditScreen.SubjectEditScreenViewModel
+import com.studymate.ui.screens.subjectScreen.SubjectScreenViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -22,6 +23,13 @@ object AppViewModelProvider {
 
         initializer {
             SubjectDetailScreenViewModel(
+                savedStateHandle = this.createSavedStateHandle(),
+                subjectRepository = studyMateApplication().container.subjectRepository
+            )
+        }
+
+        initializer {
+            SubjectEditScreenViewModel(
                 savedStateHandle = this.createSavedStateHandle(),
                 subjectRepository = studyMateApplication().container.subjectRepository
             )

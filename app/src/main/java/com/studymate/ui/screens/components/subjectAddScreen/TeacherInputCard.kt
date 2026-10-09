@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.ValidInput
+import com.studymate.ui.screens.subjectAddScreen.ValidInput
 import com.studymate.ui.screens.components.general.SegmentedToggle
 import com.studymate.ui.screens.components.general.ToggleOption
 import com.studymate.ui.theme.StudyMateTheme

@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -50,13 +50,14 @@ fun SubjectScreen(
     navigateScheduleScreen: () -> Unit = {},
     navigateToDetailScreen: (Int) -> Unit,
     navigateToSubjectAddScreen: () -> Unit,
+    navigateToSubjectEditScreen: (Int) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     SubjectScreenContent(
         state = state,
         onSubjectClick = navigateToDetailScreen,
-        onEditClick = viewModel::onEditClick,
+        onEditClick = navigateToSubjectEditScreen,
         onFabClick = navigateToSubjectAddScreen,
         navigateScheduleScreen = navigateScheduleScreen,
         modifier = modifier
@@ -68,7 +69,7 @@ fun SubjectScreenContent(
     modifier: Modifier = Modifier,
     state: SubjectUiState,
     onSubjectClick: (Int) -> Unit = {},
-    onEditClick: () -> Unit = {},
+    onEditClick: (Int) -> Unit = {},
     onFabClick: () -> Unit = {},
     navigateScheduleScreen: () -> Unit = {},
 ) {

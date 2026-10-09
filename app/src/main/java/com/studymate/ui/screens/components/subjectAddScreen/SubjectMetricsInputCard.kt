@@ -13,7 +13,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.studymate.ui.screens.ValidInput
+import com.studymate.ui.screens.subjectAddScreen.ValidInput
 import com.studymate.ui.theme.StudyMateTheme
 
 @Composable

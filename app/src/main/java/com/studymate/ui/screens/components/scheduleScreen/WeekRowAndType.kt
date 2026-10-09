@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.data.Day
 import com.studymate.data.TestData
-import com.studymate.ui.screens.WeekUiState
+import com.studymate.ui.screens.scheduleScreen.WeekUiState
 import com.studymate.ui.screens.components.general.SegmentedToggle
 import com.studymate.ui.screens.components.general.ToggleOption
 import com.studymate.ui.theme.StudyMateTheme

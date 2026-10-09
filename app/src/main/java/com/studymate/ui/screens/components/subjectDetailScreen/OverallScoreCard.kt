@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.data.TestData
-import com.studymate.ui.screens.SubjectDetailState
+import com.studymate.ui.screens.subjectDetailScreen.MutableSubjectDetailState
 import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.theme.StudyMateTheme
 import com.studymate.util.averageForLabel
@@ -44,7 +44,8 @@ import com.studymate.util.getOverallScore
 
 @Composable
 fun OverallScoreCard(
-    state: SubjectDetailState,
+    state: MutableSubjectDetailState,
+    maxScore: Int,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier) {
@@ -66,7 +67,7 @@ fun OverallScoreCard(
             ) {
                 OverallScoreDiagram(
                     overallScore = state.overallScore,
-                    maxScore = state.maxScore,
+                    maxScore = maxScore,
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
@@ -221,13 +222,13 @@ fun OverallScoreCardPreview() {
     StudyMateTheme {
         Surface {
             OverallScoreCard(
-                state = SubjectDetailState(
-                    subject = testSubject,
+                state = MutableSubjectDetailState(
                     averageSeminar = testSubject.seminarGradesList.averageForLabel(),
                     averageColloquium = testSubject.colloquiumGradesList.averageForLabel(),
                     attendanceScore = testSubject.calculateAttendanceScore(),
                     overallScore = testSubject.getOverallScore()
                 ),
+                maxScore = 50,
                 modifier = modifierForPreview
             )
         }
@@ -240,13 +241,13 @@ fun OverallScoreCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             OverallScoreCard(
-                state = SubjectDetailState(
-                    subject = testSubject,
+                state = MutableSubjectDetailState(
                     averageSeminar = testSubject.seminarGradesList.averageForLabel(),
                     averageColloquium = testSubject.colloquiumGradesList.averageForLabel(),
                     attendanceScore = testSubject.calculateAttendanceScore(),
                     overallScore = testSubject.getOverallScore()
                 ),
+                maxScore = 50,
                 modifier = modifierForPreview
             )
         }

@@ -9,6 +9,7 @@
     <string name="seminar">Seminar</string>
     
     <string name="subject_add_screen">Add a subject</string>
+    <string name="subject_edit_screen">Edit the subject</string>
 
     <string name="seminar_grades">Grades for Seminar</string>
     <string name="colloquium_grades">Grades for Colloquium</string>

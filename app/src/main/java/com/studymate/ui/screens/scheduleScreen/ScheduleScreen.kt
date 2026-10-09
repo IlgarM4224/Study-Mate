@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.scheduleScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -118,7 +118,10 @@ fun ScheduleScreenContentLightPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons(), clickedCardId = 0),
+                lessonCardUIState = LessonCardUIState(
+                    lessons = TestData.getLessons(),
+                    clickedCardId = 0
+                ),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",
@@ -144,7 +147,10 @@ fun ScheduleScreenContentDarkPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                lessonCardUIState = LessonCardUIState(lessons = TestData.getLessons(), clickedCardId = 0),
+                lessonCardUIState = LessonCardUIState(
+                    lessons = TestData.getLessons(),
+                    clickedCardId = 0
+                ),
                 weekUiState = WeekUiState(
                     week = TestData.getWeek(),
                     weekType = "Upper",
