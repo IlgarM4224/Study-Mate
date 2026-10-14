@@ -70,6 +70,10 @@ class SubjectDetailScreenViewModel(
         }
     }
 
+    fun onEditClick() {
+        _uiState.update { it.copy(showMoreActions = false) }
+    }
+
     fun addMissed() = updateMissed(1) // Increments the missed classes counter by 1
     fun removeMissed() = updateMissed(-1) // Decrements the missed classes counter by 1
 

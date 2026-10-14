@@ -31,6 +31,7 @@ import com.studymate.ui.theme.StudyMateTheme
 fun RoundedButton(
     modifier: Modifier = Modifier,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
+    borderColor: Color = MaterialTheme.colorScheme.primary,
     icon: ImageVector?,
     iconSize: Dp? = null,
     label: String? = null,
@@ -49,7 +50,7 @@ fun RoundedButton(
         enabled = enabled,
         border = if(enabled) BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.primary
+            color = borderColor
         ) else null,
         modifier = modifier
     ) {

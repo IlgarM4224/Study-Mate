@@ -72,7 +72,10 @@ fun SubjectDetailScreen(
         onMoreClick = { viewModel.onMoreClick() },
         onMoreDismissRequest = { viewModel.onMoreDismissRequest() },
         deleteSubject = { viewModel.deleteSubject() },
-        editSubject = { navigateToEditScreen(uiState.subject.id) },
+        editSubject = {
+            viewModel.onEditClick()
+            navigateToEditScreen(uiState.subject.id)
+        },
         onGradeClick = { type, gradeId ->
             viewModel.onGradeClick(type, gradeId)
         },

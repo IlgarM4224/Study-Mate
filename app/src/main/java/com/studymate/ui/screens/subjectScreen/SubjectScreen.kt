@@ -107,20 +107,27 @@ fun SubjectScreenContent(
         floatingActionButtonPosition = FabPosition.End,
         modifier = modifier
     ) { innerPadding ->
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            items(state.listOfSubjects.size) { id ->
-                SubjectCard(
-                    subject = state.listOfSubjects[id],
-                    onClick = onSubjectClick,
-                    onEditClick = onEditClick,
-                    shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                )
+        if (state.listOfSubjects.isEmpty()) {
+            EmptySubjectsPlaceholder(
+                modifier = Modifier.padding(innerPadding),
+                onAddClick = onFabClick
+            )
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                items(state.listOfSubjects.size) { id ->
+                    SubjectCard(
+                        subject = state.listOfSubjects[id],
+                        onClick = onSubjectClick,
+                        onEditClick = onEditClick,
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    )
+                }
             }
         }
     }
@@ -135,7 +142,10 @@ fun SubjectScreenPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                state = SubjectUiState(listOfSubjects = TestData.getSubjects())
+                state = SubjectUiState(
+                    listOfSubjects = TestData.getSubjects()
+                    //listOfSubjects = emptyList()
+                )
             )
         }
     }
@@ -150,7 +160,10 @@ fun SubjectScreenDarkPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                state = SubjectUiState(listOfSubjects = TestData.getSubjects())
+                state = SubjectUiState(
+                    listOfSubjects = TestData.getSubjects()
+                    //listOfSubjects = emptyList()
+                )
             )
         }
     }

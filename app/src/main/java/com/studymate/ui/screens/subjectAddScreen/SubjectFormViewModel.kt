@@ -80,14 +80,17 @@ data class SubjectAddState(
 
 data class ValidInput<T>(
     val value: T,
-    val isValid: Boolean = true
+    val isValid: Boolean = true,
 )
 
+
 internal fun isValidString(input: String, maxLength: Int = 50): Boolean {
-    return input.isNotEmpty() &&
+    val isValid = input.isNotEmpty() &&
             input.length <= maxLength &&
             !input.startsWith(" ") &&
             !input.first().isDigit()
+
+    return isValid
 }
 
 internal fun canBeSaved(state: SubjectAddState): Boolean {

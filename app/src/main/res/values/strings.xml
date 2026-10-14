@@ -14,4 +14,17 @@
     <string name="seminar_grades">Grades for Seminar</string>
     <string name="colloquium_grades">Grades for Colloquium</string>
     <string name="independent_work_grades">Grades for Independent work</string>
+
+    <string name="save_subject">Save subject</string>
+    <string name="delete_subject">Delete subject</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_start">Cannot start with a space or number</string>
+    <string name="error_max_length">Maximum %1$d characters allowed</string>
+    <string name="error_digits_only">Please enter numbers only</string>
+    <string name="error_max_value">Cannot exceed %1$d</string>
+
+    <string name="empty_subjects_title">No subjects yet</string>
+    <string name="empty_subjects_description">Add your first subject to start building your schedule</string>
+    <string name="empty_subjects_button">Add subject</string>
 </resources>

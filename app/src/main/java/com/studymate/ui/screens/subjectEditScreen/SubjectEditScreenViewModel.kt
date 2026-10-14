@@ -46,6 +46,14 @@ class SubjectEditScreenViewModel(
             )
         }
     }
+    fun deleteSubject() {
+        val subject = original
+        viewModelScope.launch {
+            if (subject != null) {
+                subjectRepository.deleteSubject(subject)
+            }
+        }
+    }
 }
 
 private fun Subject.toState() = SubjectAddState(

@@ -25,6 +25,7 @@ object SubjectEditDestination : NavigationDestination {
 fun SubjectEditScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit = {},
+    navigateToSubjectScreen: () -> Unit,
     viewModel: SubjectEditScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -33,6 +34,11 @@ fun SubjectEditScreen(
         modifier = modifier,
         title = stringResource(SubjectEditDestination.titleRes),
         navigateBack = navigateBack,
+        showDeleteButton = true,
+        onDeleteClick = {
+            viewModel.deleteSubject()
+            navigateToSubjectScreen()
+        },
         changeTeacherCount = { viewModel.changeTeacherCount(it) },
         changeSubjectName = { viewModel.subjectNameChange(it) },
         changeTeacherName = { name, type: LessonType -> viewModel.teacherNameChange(name, type) },

@@ -1,17 +1,21 @@
 package com.studymate.ui.screens.subjectAddScreen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -70,11 +74,13 @@ fun SubjectAddScreenContent(
     modifier: Modifier = Modifier,
     title: String = "Add a subject",
     state: SubjectAddState,
+    showDeleteButton: Boolean = false,
     changeTeacherCount: (Int) -> Unit = {},
     changeSubjectName: (String) -> Unit = {},
     changeTeacherName: (String, LessonType) -> Unit = {_, _ ->},
     changeMetrics: (String, Int, Boolean) -> Unit = {_, _, _ ->},
     onSaveClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
     navigateBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -128,21 +134,45 @@ fun SubjectAddScreenContent(
 
             Spacer(Modifier.weight(1f))
 
-            RoundedButton(
-                label = "Save subject",
-                labelStyle = MaterialTheme.typography.titleLarge,
-                onClick = {
-                    onSaveClick()
-                    navigateBack()
-                },
-                icon = Icons.Default.Done,
-                iconSize = 36.dp,
-                tint = MaterialTheme.colorScheme.onPrimary,
-                spacer = 8.dp,
-                enabled = state.isValidInput,
-                shape = RoundedCornerShape(24.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
+            Row{
+                if (showDeleteButton) {
+                    RoundedButton(
+                        label = stringResource(R.string.delete_subject),
+                        labelStyle = MaterialTheme.typography.titleLarge,
+                        onClick = { onDeleteClick() },
+                        icon = Icons.Default.Delete,
+                        iconSize = 36.dp,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        spacer = 8.dp,
+                        shape = RoundedCornerShape(24.dp),
+                        buttonColors = ButtonDefaults.buttonColors()
+                            .copy(
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            ),
+                        borderColor = MaterialTheme.colorScheme.errorContainer,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(Modifier.width(8.dp))
+                }
+
+                RoundedButton(
+                    label = stringResource(R.string.save_subject),
+                    labelStyle = MaterialTheme.typography.titleLarge,
+                    onClick = {
+                        onSaveClick()
+                        navigateBack()
+                    },
+                    icon = Icons.Default.Done,
+                    iconSize = 36.dp,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    spacer = 8.dp,
+                    enabled = state.isValidInput,
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
