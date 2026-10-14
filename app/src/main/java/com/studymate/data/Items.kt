@@ -1,5 +1,8 @@
 package com.studymate.data
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.DayOfWeek
 import java.time.LocalTime
 
@@ -49,18 +52,20 @@ data class Day(
  * @property colloquiumGradesList List of grades earned in colloquiums/midterms.
  * @property independentWorkGradesList List of grades earned for independent assignments.
  */
+
+@Entity(tableName = "subject")
 data class Subject(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val creditScore: Int? = null,
+    @ColumnInfo("credit_score") val creditScore: Int? = null,
     val hours: Int? = null,
-    val teacherLecture: String? = null,
-    val teacherSeminar: String? = teacherLecture,
+    @ColumnInfo("teacher_lecture") val teacherLecture: String? = null,
+    @ColumnInfo("teacher_seminar") val teacherSeminar: String? = null,
+    @ColumnInfo("missed_lessons") val missedLessons: Int = 0,
+    @ColumnInfo("seminar_grades_list") val seminarGradesList: List<Int> = emptyList(),
+    @ColumnInfo("colloquim_grades_list") val colloquiumGradesList: List<Int> = emptyList(),
+    @ColumnInfo("independent_work_list") val independentWorkGradesList: List<Int> = emptyList(),
     val semester: Int? = null,
-    val missedLessons: Int = 0,
-    val seminarGradesList: List<Int>,
-    val colloquiumGradesList: List<Int>,
-    val independentWorkGradesList: List<Int> = emptyList()
 )
 
 /**

@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.data.GradeType
-import com.studymate.ui.screens.BottomSheetState
+import com.studymate.ui.screens.subjectDetailScreen.BottomSheetState
 import com.studymate.ui.screens.components.general.TwoButtons
 import com.studymate.ui.theme.StudyMateTheme
 
@@ -101,7 +101,7 @@ fun GradeBottomSheetContent(
             rightOnClick = onApply,
             rightIcon = Icons.Outlined.Done,
             rightEnabled = isEntryValid,
-            spacer = 1f,
+            spacerDp = 32.dp,
             modifier = Modifier.fillMaxWidth(),
         )
     }

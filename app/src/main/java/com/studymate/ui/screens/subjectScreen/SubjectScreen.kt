@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.studymate.R
 import com.studymate.data.TestData
+import com.studymate.ui.AppViewModelProvider
 import com.studymate.ui.navigation.NavigationDestination
 import com.studymate.ui.screens.components.general.StudyMateBottomAppBar
 import com.studymate.ui.screens.components.general.StudyMateTopAppBar
@@ -45,17 +46,19 @@ object SubjectDestination: NavigationDestination {
 @Composable
 fun SubjectScreen(
     modifier: Modifier,
-    viewModel: SubjectScreenViewModel = viewModel(),
+    viewModel: SubjectScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateScheduleScreen: () -> Unit = {},
-    navigateToDetailScreen: (Int) -> Unit
+    navigateToDetailScreen: (Int) -> Unit,
+    navigateToSubjectAddScreen: () -> Unit,
+    navigateToSubjectEditScreen: (Int) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     SubjectScreenContent(
         state = state,
         onSubjectClick = navigateToDetailScreen,
-        onEditClick = viewModel::onEditClick,
-        onFabClick = { viewModel.addNewSubject() },
+        onEditClick = navigateToSubjectEditScreen,
+        onFabClick = navigateToSubjectAddScreen,
         navigateScheduleScreen = navigateScheduleScreen,
         modifier = modifier
     )
@@ -66,7 +69,7 @@ fun SubjectScreenContent(
     modifier: Modifier = Modifier,
     state: SubjectUiState,
     onSubjectClick: (Int) -> Unit = {},
-    onEditClick: () -> Unit = {},
+    onEditClick: (Int) -> Unit = {},
     onFabClick: () -> Unit = {},
     navigateScheduleScreen: () -> Unit = {},
 ) {
@@ -104,19 +107,27 @@ fun SubjectScreenContent(
         floatingActionButtonPosition = FabPosition.End,
         modifier = modifier
     ) { innerPadding ->
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            items(state.listOfSubjects.size) { id ->
-                SubjectCard(
-                    subject = state.listOfSubjects[id],
-                    onClick = onSubjectClick,
-                    onEditClick = onEditClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                )
+        if (state.listOfSubjects.isEmpty()) {
+            EmptySubjectsPlaceholder(
+                modifier = Modifier.padding(innerPadding),
+                onAddClick = onFabClick
+            )
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                items(state.listOfSubjects.size) { id ->
+                    SubjectCard(
+                        subject = state.listOfSubjects[id],
+                        onClick = onSubjectClick,
+                        onEditClick = onEditClick,
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    )
+                }
             }
         }
     }
@@ -131,7 +142,10 @@ fun SubjectScreenPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                state = SubjectUiState(listOfSubjects = TestData.getSubjects())
+                state = SubjectUiState(
+                    listOfSubjects = TestData.getSubjects()
+                    //listOfSubjects = emptyList()
+                )
             )
         }
     }
@@ -146,7 +160,10 @@ fun SubjectScreenDarkPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-                state = SubjectUiState(listOfSubjects = TestData.getSubjects())
+                state = SubjectUiState(
+                    listOfSubjects = TestData.getSubjects()
+                    //listOfSubjects = emptyList()
+                )
             )
         }
     }

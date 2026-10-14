@@ -15,13 +15,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.studymate.ui.navigation.NavigationDestination
-import com.studymate.ui.screens.ScheduleDestination
-import com.studymate.ui.screens.SubjectDestination
+import com.studymate.ui.screens.scheduleScreen.ScheduleDestination
+import com.studymate.ui.screens.subjectScreen.SubjectDestination
 import com.studymate.ui.theme.StudyMateTheme
 
 
@@ -46,7 +48,10 @@ fun StudyMateTopAppBar(
     canNavigateBack: Boolean = false,
     showMore: Boolean = false,
     onMoreClick: () -> Unit = {},
-    title: String?
+    title: String?,
+    titleStyle: TextStyle = MaterialTheme.typography.displayMedium,
+    titleColor: Color = MaterialTheme.colorScheme.primary,
+    content: @Composable (() -> Unit) = {}
 ) {
     TopAppBar(
         title = {
@@ -54,14 +59,14 @@ fun StudyMateTopAppBar(
             if (title != null) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.primary,
+                    style = titleStyle,
+                    color = titleColor,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-        } ,
+        },
 
         navigationIcon = {
             // Back button shown only when navigation back is allowed
@@ -86,6 +91,7 @@ fun StudyMateTopAppBar(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+                content()
             }
         },
 

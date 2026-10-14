@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.subjectDetailScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -20,17 +20,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.studymate.R
 import com.studymate.data.GradeType
 import com.studymate.data.TestData
+import com.studymate.ui.AppViewModelProvider
 import com.studymate.ui.navigation.NavigationDestination
+import com.studymate.ui.screens.components.general.StudyMateTopAppBar
 import com.studymate.ui.screens.components.subjectDetailScreen.GradeBottomSheet
 import com.studymate.ui.screens.components.subjectDetailScreen.GradesCard
 import com.studymate.ui.screens.components.subjectDetailScreen.LimitCard
 import com.studymate.ui.screens.components.subjectDetailScreen.OverallScoreCard
-import com.studymate.ui.screens.components.general.StudyMateTopAppBar
+import com.studymate.ui.screens.components.subjectDetailScreen.SubjectDropdownMenu
 import com.studymate.ui.screens.components.subjectDetailScreen.SubjectNameCard
 import com.studymate.ui.theme.StudyMateTheme
 import com.studymate.util.averageForLabel
@@ -47,13 +51,14 @@ object SubjectDetailDestination: NavigationDestination {
 fun SubjectDetailScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit = {},
-    viewModel: SubjectDetailScreenViewModel = viewModel(),
+    navigateToEditScreen: (Int) -> Unit,
+    viewModel: SubjectDetailScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     SubjectDetailScreenContent(
         modifier = modifier,
-        state = uiState,
+        uiState = uiState,
         navigateBack = navigateBack,
         onAddClick = { viewModel.onAddClick(it)},
         onDismissRequest = { viewModel.onDismissRequest() },
@@ -65,6 +70,12 @@ fun SubjectDetailScreen(
         },
         onValueChange = { viewModel.onValueChange(it)},
         onMoreClick = { viewModel.onMoreClick() },
+        onMoreDismissRequest = { viewModel.onMoreDismissRequest() },
+        deleteSubject = { viewModel.deleteSubject() },
+        editSubject = {
+            viewModel.onEditClick()
+            navigateToEditScreen(uiState.subject.id)
+        },
         onGradeClick = { type, gradeId ->
             viewModel.onGradeClick(type, gradeId)
         },
@@ -87,6 +98,9 @@ fun SubjectDetailScreenContent(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit = {},
     onMoreClick: () -> Unit = {},
+    onMoreDismissRequest: () -> Unit = {},
+    deleteSubject: () -> Unit = {},
+    editSubject: () -> Unit = {},
     onAddClick: (GradeType) -> Unit = {},
     onDismissRequest: () -> Unit = {},
     addGrade: (GradeType, Int) -> Unit,
@@ -99,7 +113,7 @@ fun SubjectDetailScreenContent(
     addMissedLesson: () -> Unit = {},
     removeMissedLesson: () -> Unit = {},
     onArrowClick: () -> Unit = {},
-    state: SubjectDetailState
+    uiState: SubjectDetailState
 ) {
     Scaffold(
         modifier = modifier,
@@ -112,7 +126,19 @@ fun SubjectDetailScreenContent(
                 showMore = true,
                 onMoreClick = onMoreClick,
                 modifier = Modifier.fillMaxWidth()
-            )
+            ) {
+                SubjectDropdownMenu(
+                    expanded = uiState.state.showMoreActions,
+                    onDismissRequest = onMoreDismissRequest,
+                    onDeleteClick = {
+                        deleteSubject()
+                        navigateBack()
+                    },
+                    onEditClick = {
+                        editSubject()
+                    },
+                )
+            }
         },
     ) { innerPadding ->
         Column(
@@ -120,14 +146,10 @@ fun SubjectDetailScreenContent(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
+                .padding(4.dp)
         ) {
             SubjectNameCard(
-                subjectName = state.subject.name,
-                subjectCredit = state.subject.creditScore,
-                subjectHours = state.subject.hours,
-                showMore = state.showMore,
-                lecture = state.subject.teacherLecture,
-                seminar = state.subject.teacherSeminar,
+                cardState = uiState,
                 onArrowClick = onArrowClick,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -135,23 +157,19 @@ fun SubjectDetailScreenContent(
             Spacer(Modifier.height(16.dp))
 
             OverallScoreCard(
+                state = uiState.state,
+                maxScore = uiState.maxScore,
                 modifier = Modifier.fillMaxWidth(),
-                maxScore = state.maxScore,
-                overallScore = state.overallScore ?: 0f,
-                averageColloquium = state.averageColloquium ?: 0f,
-                averageSeminar = state.averageSeminar ?: 0f,
-                independentWork = state.independentWorkSum,
-                attendanceScore = state.attendanceScore
             )
 
-            if (state.limit != null) {
+            if (uiState.state.limit != null) {
                 Spacer(Modifier.height(16.dp))
 
                 LimitCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    limit = state.limit,
-                    missed = state.subject.missedLessons,
+                    limit = uiState.state.limit,
+                    missed = uiState.subject.missedLessons,
                     addMissed = addMissedLesson,
                     removeMissed = removeMissedLesson
                 )
@@ -162,18 +180,17 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Seminar",
+                label = stringResource(R.string.seminar_grades),
                 gradeType = GradeType.SEMINAR,
                 icon = Icons.Outlined.People,
                 onAddClick = onAddClick,
                 onGradeClick = onGradeClick,
-                showAddButton = true,
                 onDeleteClick = onGradeDeleteClick,
                 onEditClick = onGradeEditClick,
                 onDismissRequest = onGradeDismissRequest,
-                selectedGradeIndex = state.sheetState.selectedGradeIndex,
-                selectedGradeType = state.sheetState.type,
-                gradesList = state.subject.seminarGradesList
+                selectedGradeIndex = uiState.state.sheetState.selectedGradeIndex,
+                selectedGradeType = uiState.state.sheetState.type,
+                gradesList = uiState.subject.seminarGradesList
             )
 
             Spacer(Modifier.height(16.dp))
@@ -181,17 +198,16 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Colloquium",
+                label = stringResource(R.string.colloquium_grades),
                 gradeType = GradeType.COLLOQUIUM,
                 icon = Icons.Outlined.School,
                 onAddClick = onAddClick,
-                gradesList = state.subject.colloquiumGradesList,
-                showAddButton = true,
+                gradesList = uiState.subject.colloquiumGradesList,
                 onDeleteClick = onGradeDeleteClick,
                 onEditClick = onGradeEditClick,
                 onDismissRequest = onGradeDismissRequest,
-                selectedGradeIndex = state.sheetState.selectedGradeIndex,
-                selectedGradeType = state.sheetState.type,
+                selectedGradeIndex = uiState.state.sheetState.selectedGradeIndex,
+                selectedGradeType = uiState.state.sheetState.type,
                 onGradeClick = onGradeClick
             )
 
@@ -200,24 +216,24 @@ fun SubjectDetailScreenContent(
             GradesCard(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = "Grades for Independent work",
+                label = stringResource(R.string.independent_work_grades),
                 gradeType = GradeType.INDEPENDENT_WORK,
                 icon = Icons.Outlined.ContactPage,
                 onAddClick = onAddClick,
-                gradesList = state.subject.independentWorkGradesList,
-                showAddButton = state.independentWorkSum < 10,
+                gradesList = uiState.subject.independentWorkGradesList,
+                showAddButton = uiState.state.independentWorkSum < 10,
                 onDeleteClick = onGradeDeleteClick,
                 onEditClick = onGradeEditClick,
                 onDismissRequest = onGradeDismissRequest,
-                selectedGradeIndex = state.sheetState.selectedGradeIndex,
-                selectedGradeType = state.sheetState.type,
+                selectedGradeIndex = uiState.state.sheetState.selectedGradeIndex,
+                selectedGradeType = uiState.state.sheetState.type,
                 onGradeClick = onGradeClick,
             )
 
-            AnimatedVisibility(visible = state.activeGradeType != GradeType.NONE) {
+            AnimatedVisibility(visible = uiState.state.activeGradeType != GradeType.NONE) {
                 GradeBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
-                    sheetState = state.sheetState,
+                    sheetState = uiState.state.sheetState,
                     onDismissRequest = onDismissRequest,
                     onValueChange = onValueChange,
                     addGrade = addGrade,
@@ -236,14 +252,16 @@ fun SubjectDetailScreenPreview() {
             val test = TestData.getSubjects()[0]
             SubjectDetailScreenContent(
                 modifier = Modifier.padding(16.dp),
-                state = SubjectDetailState(
-                    subject = TestData.getSubjects()[0],
-                    sheetState = BottomSheetState(),
-                    showMore = false,
-                    limit = 9,
-                    overallScore = 40f,
-                    averageColloquium = test.colloquiumGradesList.averageForLabel(),
-                    averageSeminar = test.seminarGradesList.averageForLabel(),
+                uiState = SubjectDetailState(
+                    subject = test,
+                    state = MutableSubjectDetailState(
+                        sheetState = BottomSheetState(),
+                        showMore = false,
+                        limit = 9,
+                        overallScore = 40f,
+                        averageColloquium = test.colloquiumGradesList.averageForLabel(),
+                        averageSeminar = test.seminarGradesList.averageForLabel(),
+                    )
                 ),
                 addGrade = { _, _ -> },
                 onGradeClick = { _, _ -> },
@@ -261,14 +279,16 @@ fun SubjectDetailScreenDarkPreview() {
             val test = TestData.getSubjects()[0]
             SubjectDetailScreenContent(
                 modifier = Modifier.padding(16.dp),
-                state = SubjectDetailState(
-                    subject = TestData.getSubjects()[0],
-                    sheetState = BottomSheetState(),
-                    showMore = false,
-                    limit = 9,
-                    overallScore = 40f,
-                    averageColloquium = test.colloquiumGradesList.averageForLabel(),
-                    averageSeminar = test.seminarGradesList.averageForLabel(),
+                uiState = SubjectDetailState(
+                    subject = test,
+                    state = MutableSubjectDetailState(
+                        sheetState = BottomSheetState(),
+                        showMore = false,
+                        limit = 9,
+                        overallScore = 40f,
+                        averageColloquium = test.colloquiumGradesList.averageForLabel(),
+                        averageSeminar = test.seminarGradesList.averageForLabel(),
+                    )
                 ),
                 addGrade = { _, _ -> },
                 onGradeClick = { _, _ -> },

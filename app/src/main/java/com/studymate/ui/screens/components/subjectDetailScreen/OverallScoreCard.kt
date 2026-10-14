@@ -34,18 +34,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.studymate.data.TestData
+import com.studymate.ui.screens.subjectDetailScreen.MutableSubjectDetailState
 import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.theme.StudyMateTheme
+import com.studymate.util.averageForLabel
+import com.studymate.util.calculateAttendanceScore
+import com.studymate.util.getOverallScore
 
 @Composable
 fun OverallScoreCard(
-    modifier: Modifier = Modifier,
-    overallScore: Float,
-    averageColloquium: Float = 0f,
-    averageSeminar: Float = 0f,
-    independentWork: Int = 0,
-    attendanceScore: Float = 0f,
+    state: MutableSubjectDetailState,
     maxScore: Int,
+    modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier) {
         Column(
@@ -65,7 +66,7 @@ fun OverallScoreCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OverallScoreDiagram(
-                    overallScore = overallScore,
+                    overallScore = state.overallScore,
                     maxScore = maxScore,
                     modifier = Modifier
                         .weight(1f)
@@ -77,10 +78,10 @@ fun OverallScoreCard(
                 OverallScoreDiagramComponents(
                     modifier = Modifier
                         .weight(1f),
-                    colloquiumScore = averageColloquium,
-                    seminarScore = averageSeminar,
-                    independentWork = independentWork,
-                    attendanceScore = attendanceScore
+                    colloquiumScore = state.averageColloquium,
+                    seminarScore = state.averageSeminar,
+                    independentWork = state.independentWorkSum,
+                    attendanceScore = state.attendanceScore
                 )
             }
         }
@@ -90,10 +91,10 @@ fun OverallScoreCard(
 @Composable
 private fun OverallScoreDiagramComponents(
     modifier: Modifier = Modifier,
-    colloquiumScore: Float = 0f,
-    seminarScore: Float = 0f,
-    independentWork: Int = 0,
-    attendanceScore: Float = 0f
+    colloquiumScore: Float? = 0f,
+    seminarScore: Float? = 0f,
+    independentWork: Int? = 0,
+    attendanceScore: Float? = 0f
 ) {
     Column(modifier = modifier) {
         OverallScoreElement(
@@ -114,7 +115,7 @@ private fun OverallScoreDiagramComponents(
 
         OverallScoreElement(
             name = "Independent Work",
-            score = independentWork.toFloat(),
+            score = independentWork?.toFloat(),
             icon = Icons.Outlined.ContactPage
         )
 
@@ -134,7 +135,7 @@ private fun OverallScoreElement(
     icon: ImageVector? = null,
     iconDescription: String? = null,
     name: String,
-    score: Float,
+    score: Float?,
     maxScore: Int = 10
 ) {
     Row(modifier = modifier) {
@@ -154,7 +155,7 @@ private fun OverallScoreElement(
                 )
 
                 Text(
-                    text = "$score / $maxScore",
+                    text = "${score ?: 0} / $maxScore",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 4.dp)
                 )
@@ -166,11 +167,11 @@ private fun OverallScoreElement(
 @Composable
 private fun OverallScoreDiagram(
     modifier: Modifier = Modifier,
-    overallScore: Float,
+    overallScore: Float?,
     maxScore: Int
 ) {
     val animatedProgress by animateFloatAsState(
-        targetValue = overallScore / maxScore.toFloat(),
+        targetValue = (overallScore ?: 0f) / maxScore.toFloat(),
         animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
         label = "progress_animation"
     )
@@ -194,7 +195,7 @@ private fun OverallScoreDiagram(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = overallScore.toString(),
+                text = (overallScore ?: 0).toString(),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
@@ -213,6 +214,7 @@ private fun OverallScoreDiagram(
 }
 
 private val modifierForPreview = Modifier.fillMaxWidth().padding(16.dp)
+private val testSubject = TestData.getSubjects()[1]
 
 @Preview(group = "Overall Score Card")
 @Composable
@@ -220,8 +222,13 @@ fun OverallScoreCardPreview() {
     StudyMateTheme {
         Surface {
             OverallScoreCard(
+                state = MutableSubjectDetailState(
+                    averageSeminar = testSubject.seminarGradesList.averageForLabel(),
+                    averageColloquium = testSubject.colloquiumGradesList.averageForLabel(),
+                    attendanceScore = testSubject.calculateAttendanceScore(),
+                    overallScore = testSubject.getOverallScore()
+                ),
                 maxScore = 50,
-                overallScore = 12f,
                 modifier = modifierForPreview
             )
         }
@@ -234,8 +241,13 @@ fun OverallScoreCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             OverallScoreCard(
+                state = MutableSubjectDetailState(
+                    averageSeminar = testSubject.seminarGradesList.averageForLabel(),
+                    averageColloquium = testSubject.colloquiumGradesList.averageForLabel(),
+                    attendanceScore = testSubject.calculateAttendanceScore(),
+                    overallScore = testSubject.getOverallScore()
+                ),
                 maxScore = 50,
-                overallScore = 42.89f,
                 modifier = modifierForPreview
             )
         }

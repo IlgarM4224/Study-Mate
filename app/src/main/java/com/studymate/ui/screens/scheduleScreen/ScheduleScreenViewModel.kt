@@ -1,4 +1,4 @@
-package com.studymate.ui.screens
+package com.studymate.ui.screens.scheduleScreen
 
 import androidx.lifecycle.ViewModel
 import com.studymate.data.Day

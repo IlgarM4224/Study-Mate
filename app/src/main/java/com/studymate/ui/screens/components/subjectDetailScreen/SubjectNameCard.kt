@@ -42,6 +42,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.studymate.R
 import com.studymate.data.LessonType
+import com.studymate.data.TestData
+import com.studymate.ui.screens.subjectDetailScreen.MutableSubjectDetailState
+import com.studymate.ui.screens.subjectDetailScreen.SubjectDetailState
 import com.studymate.ui.screens.components.general.CardLabel
 import com.studymate.ui.screens.components.general.RoundedIcon
 import com.studymate.ui.screens.components.scheduleScreen.LessonTypeChip
@@ -49,14 +52,9 @@ import com.studymate.ui.theme.StudyMateTheme
 
 @Composable
 fun SubjectNameCard(
+    cardState: SubjectDetailState,
     modifier: Modifier = Modifier,
     onArrowClick: () -> Unit = {},
-    showMore: Boolean = false,
-    subjectName: String,
-    subjectHours: Int? = null,
-    subjectCredit: Int? = null,
-    lecture: String? = null,
-    seminar: String? = null
 ) {
     Card(modifier = modifier) {
         Column(
@@ -74,31 +72,31 @@ fun SubjectNameCard(
                 Spacer(Modifier.width(8.dp))
 
                 CardLabel(
-                    leftLabel = subjectName,
+                    leftLabel = cardState.subject.name,
                     leftLabelColor = MaterialTheme.colorScheme.primary,
                     textStyle = MaterialTheme.typography.headlineSmall,
-                    leftMaxLine = if (showMore) 2 else 1,
+                    leftMaxLine = if (cardState.state.showMore) 2 else 1,
                     modifier = Modifier.weight(1f),
                 )
 
                 IconButton(onClick = onArrowClick) {
                     Icon(
-                        imageVector = if (showMore) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        imageVector = if (cardState.state.showMore) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
 
-            AnimatedVisibility(visible = showMore) {
+            AnimatedVisibility(visible = cardState.state.showMore) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
                     SubjectInfo(
-                        hours = subjectHours,
-                        credit = subjectCredit,
+                        hours = cardState.subject.hours,
+                        credit = cardState.subject.creditScore,
                         cardColors = CardDefaults.cardColors().copy(
                             containerColor = MaterialTheme.colorScheme.outlineVariant,
                         ),
@@ -111,8 +109,8 @@ fun SubjectNameCard(
                         cardColors = CardDefaults.cardColors().copy(
                             containerColor = MaterialTheme.colorScheme.outlineVariant,
                         ),
-                        lecture = lecture,
-                        seminar = seminar,
+                        lecture = cardState.subject.teacherLecture,
+                        seminar = cardState.subject.teacherSeminar,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -289,8 +287,10 @@ fun SubjectNameCardPreview() {
     StudyMateTheme {
         Surface {
             SubjectNameCard(
-                subjectName = "Programming basics",
-                showMore = true,
+                cardState = SubjectDetailState(
+                    subject = TestData.getSubjects()[0],
+                    state = MutableSubjectDetailState(showMore = true)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -305,12 +305,10 @@ fun SubjectNameCardDarkPreview() {
     StudyMateTheme(darkTheme = true) {
         Surface {
             SubjectNameCard(
-                subjectName = "Programming basics",
-                subjectHours = 60,
-                subjectCredit = 6,
-                lecture = "Hicran",
-                seminar = "Ramzi",
-                showMore = true,
+                cardState = SubjectDetailState(
+                    subject = TestData.getSubjects()[0],
+                    state = MutableSubjectDetailState(showMore = true)
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)

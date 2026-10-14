@@ -59,3 +59,47 @@ fun GradeDropdownMenu(
         )
     }
 }
+
+@Composable
+fun SubjectDropdownMenu(
+    modifier: Modifier = Modifier,
+    expanded: Boolean = true,
+    onDismissRequest: () -> Unit = {},
+    onEditClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = "Change",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
+            onClick = { onEditClick() }
+        )
+
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = "Delete",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            onClick = { onDeleteClick() }
+        )
+    }
+}

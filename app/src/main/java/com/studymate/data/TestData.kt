@@ -86,7 +86,8 @@ object TestData {
             semester = 1,
             missedLessons = 4,
             seminarGradesList = emptyList(),
-            colloquiumGradesList = emptyList()
+            colloquiumGradesList = emptyList(),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -98,7 +99,8 @@ object TestData {
             semester = 1,
             missedLessons = 3,
             seminarGradesList = listOf(8,7,9),
-            colloquiumGradesList = listOf(9,8,10)
+            colloquiumGradesList = listOf(9,8,10),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -110,7 +112,8 @@ object TestData {
             semester = 1,
             missedLessons = 1,
             seminarGradesList = listOf(7,7,9),
-            colloquiumGradesList = listOf(7,9,8)
+            colloquiumGradesList = listOf(7,9,8),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -122,7 +125,8 @@ object TestData {
             semester = 1,
             missedLessons = 0,
             seminarGradesList = listOf(7,7,7),
-            colloquiumGradesList = listOf(8,7,7)
+            colloquiumGradesList = listOf(8,7,7),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -134,7 +138,8 @@ object TestData {
             semester = 1,
             missedLessons = 1,
             seminarGradesList = listOf(7,8,8),
-            colloquiumGradesList = listOf(7,9,7)
+            colloquiumGradesList = listOf(7,9,7),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -146,7 +151,8 @@ object TestData {
             semester = 1,
             missedLessons = 0,
             seminarGradesList = listOf(9,8,10),
-            colloquiumGradesList = listOf(9,9,10)
+            colloquiumGradesList = listOf(9,9,10),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -158,7 +164,8 @@ object TestData {
             semester = 1,
             missedLessons = 4,
             seminarGradesList = listOf(10,9,10),
-            colloquiumGradesList = listOf(9,9,10)
+            colloquiumGradesList = listOf(9,9,10),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -170,7 +177,8 @@ object TestData {
             semester = 1,
             missedLessons = 2,
             seminarGradesList = listOf(8,8,8),
-            colloquiumGradesList = listOf(8,7,10)
+            colloquiumGradesList = listOf(8,7,10),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -182,7 +190,8 @@ object TestData {
             semester = 1,
             missedLessons = 1,
             seminarGradesList = listOf(7,8,8),
-            colloquiumGradesList = listOf(8,7,7)
+            colloquiumGradesList = listOf(8,7,7),
+            independentWorkGradesList = emptyList()
         ),
 
         Subject(
@@ -194,7 +203,8 @@ object TestData {
             semester = 1,
             missedLessons = 0,
             seminarGradesList = emptyList(),
-            colloquiumGradesList = listOf(9,6)
+            colloquiumGradesList = listOf(9,6),
+            independentWorkGradesList = emptyList()
         ),
     )
 }
